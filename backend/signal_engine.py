@@ -8,7 +8,7 @@ from strategies import (
     evaluate_reversal
 )
 
-def analyze_stock(symbol: str, df: pd.DataFrame, timeframe: str) -> List[Dict[str, Any]]:
+def analyze_stock(symbol: str, market: str, df: pd.DataFrame, timeframe: str) -> List[Dict[str, Any]]:
     if df.empty or len(df) < 200:
         return []
 
@@ -58,6 +58,7 @@ def analyze_stock(symbol: str, df: pd.DataFrame, timeframe: str) -> List[Dict[st
 
             signals.append({
                 "symbol": symbol,
+                "market": market,
                 "strategy": st_name,
                 "signal": signal_type,
                 "score": score,
@@ -84,6 +85,7 @@ def analyze_stock(symbol: str, df: pd.DataFrame, timeframe: str) -> List[Dict[st
         unique_reasons = list(set(confluence_reasons))
         signals.append({
             "symbol": symbol,
+            "market": market,
             "strategy": "High Confluence",
             "signal": confluence_signal_type,
             "score": round(avg_score, 1),

@@ -15,29 +15,39 @@ const STRATEGIES = [
   "High Confluence"
 ];
 
+const MARKETS = [
+  { id: 'USA', label: 'USA', icon: '🇺🇸' },
+  { id: 'INDIA', label: 'INDIA', icon: '🇮🇳' },
+  { id: 'CRYPTO', label: 'CRYPTO', icon: '🪙' },
+  { id: 'COMMODITIES', label: 'COMMODITIES', icon: '🛢' }
+];
+
 export default function StrategiesPage() {
-  const { timeframe } = useStore();
+  const { timeframe, market, setMarket } = useStore();
   const [signals, setSignals] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadSignals = async () => {
       setLoading(true);
-      const data = await fetcher(`/signals?timeframe=${timeframe}`);
+      const data = await fetcher(`/signals?timeframe=${timeframe}&market=${market}`);
       if (data) setSignals(data);
       setLoading(false);
     };
     loadSignals();
-  }, [timeframe]);
+  }, [timeframe, market]);
 
   const renderSignalsForStrategy = (strategy: string) => {
     const filtered = signals.filter(s => s.strategy === strategy);
-    if (loading) return <div className="text-slate-400 py-8">Scanning for {strategy} setups...</div>;
-    if (filtered.length === 0) return <div className="text-slate-400 py-8">No setups found for {strategy} in the current timeframe.</div>;
+    if (loading) return <div className="text-slate-400 py-8">Scanning for {strategy} setups in {market}...</div>;
+    
+    const displaySignals = market === 'INDIA' ? filtered : filtered.slice(0, 5);
+    
+    if (displaySignals.length === 0) return <div className="text-slate-400 py-8 text-center border border-dashed border-slate-800 rounded-lg">No setups found for {strategy} in {market} ({timeframe}).</div>;
     
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-        {filtered.map((sig, i) => (
+        {displaySignals.map((sig, i) => (
           <SignalCard key={i} signal={sig} />
         ))}
       </div>
@@ -48,9 +58,22 @@ export default function StrategiesPage() {
     <div className="flex h-screen overflow-hidden bg-slate-950 text-slate-200">
       <Sidebar />
       <main className="flex-1 overflow-y-auto p-8">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white tracking-tight">Strategy Scanner</h2>
-          <p className="text-slate-400 mt-1">Filtering patterns for {timeframe} mode.</p>
+        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h2 className="text-3xl font-bold text-white tracking-tight">Strategy Scanner</h2>
+            <p className="text-slate-400 mt-1">Filtering patterns for {market} ({timeframe})</p>
+          </div>
+          <div className="flex bg-slate-900 p-1 rounded-lg border border-slate-800">
+            {MARKETS.map(m => (
+              <button
+                key={m.id}
+                onClick={() => setMarket(m.id as any)}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${market === m.id ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
+              >
+                {m.icon} {m.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <Tabs defaultValue="Trend Continuation" className="w-full">

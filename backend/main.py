@@ -26,8 +26,8 @@ async def startup_event():
     start_scheduler()
 
 @app.get("/signals", response_model=List[SignalModel])
-async def get_signals(timeframe: Optional[str] = "intraday", symbol: Optional[str] = None):
-    query = {"timeframe": timeframe}
+async def get_signals(timeframe: Optional[str] = "intraday", market: Optional[str] = "USA", symbol: Optional[str] = None):
+    query = {"timeframe": timeframe, "market": market}
     if symbol:
         query["symbol"] = symbol.upper()
     cursor = signals_collection.find(query).sort("score", -1)
@@ -35,8 +35,8 @@ async def get_signals(timeframe: Optional[str] = "intraday", symbol: Optional[st
     return signals
 
 @app.get("/signals/strategy/{strategy}", response_model=List[SignalModel])
-async def get_signals_by_strategy(strategy: str, timeframe: Optional[str] = "intraday"):
-    cursor = signals_collection.find({"strategy": strategy, "timeframe": timeframe}).sort("score", -1)
+async def get_signals_by_strategy(strategy: str, market: Optional[str] = "USA", timeframe: Optional[str] = "intraday"):
+    cursor = signals_collection.find({"strategy": strategy, "timeframe": timeframe, "market": market}).sort("score", -1)
     signals = await cursor.to_list(length=100)
     return signals
 
@@ -47,12 +47,12 @@ async def get_stock_detail(symbol: str):
     return signals
 
 @app.get("/market-summary")
-async def get_market_summary():
-    summary = await market_summary_collection.find_one({}, sort=[("timestamp", -1)])
+async def get_market_summary(market: Optional[str] = "USA"):
+    summary = await market_summary_collection.find_one({"market": market}, sort=[("timestamp", -1)])
     if summary:
         summary["_id"] = str(summary["_id"])
         return summary
-    return {"status": "Unknown", "bullish_count": 0, "bearish_count": 0}
+    return {"market": market, "status": "Unknown", "bullish_count": 0, "bearish_count": 0}
 
 class WatchlistAdd(BaseModel):
     symbol: str

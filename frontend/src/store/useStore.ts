@@ -9,6 +9,8 @@ interface MarketSummary {
 }
 
 interface AppState {
+  market: 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES';
+  setMarket: (m: 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES') => void;
   timeframe: 'intraday' | 'swing';
   setTimeframe: (tf: 'intraday' | 'swing') => void;
   marketSummary: MarketSummary | null;
@@ -18,6 +20,8 @@ interface AppState {
 }
 
 export const useStore = create<AppState>((set) => ({
+  market: 'USA',
+  setMarket: (m) => set({ market: m }),
   timeframe: 'intraday',
   setTimeframe: (tf) => set({ timeframe: tf }),
   marketSummary: null,

@@ -4,6 +4,7 @@ from datetime import datetime
 
 class SignalModel(BaseModel):
     symbol: str
+    market: str
     strategy: str
     signal: str  # "bullish", "bearish", "neutral"
     score: float
