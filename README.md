@@ -1,90 +1,79 @@
 # 🚀 Trading Intelligence Platform
 
-A production-ready **Trading Intelligence System** built with modern technologies to help traders identify high-probability setups for **intraday and swing trading**.
+A **production-ready, multi-market Trading Intelligence System** designed to help traders identify high-probability setups for **intraday and swing trading**.
 
-> ⚡ Not a trading app — this platform focuses on **analysis, signals, and decision-making**.
-
----
-
-# 🧠 Core Idea
-
-This system acts like a simplified **Bloomberg-style terminal** for personal use:
-
-* Scans markets automatically
-* Detects trading setups
-* Shows top opportunities
-* Explains **WHY** a stock is selected
+> ⚡ This is NOT a trading platform (no buy/sell).
+> It is a **decision engine** that scans markets and shows the best opportunities.
 
 ---
 
-# 🏗 Tech Stack
+# 🧠 What This Platform Does
 
-### Frontend
-
-* Next.js (App Router)
-* TypeScript
-* Tailwind CSS
-* ShadCN UI
-* Zustand
-* Recharts
-
-### Backend
-
-* Python (FastAPI)
-* Pandas, NumPy
-* TA (technical indicators)
-* APScheduler (background jobs)
-
-### Database
-
-* MongoDB (Atlas)
+* Scans **India 🇮🇳, USA 🇺🇸, Crypto 🪙, Commodities 🛢**
+* Detects trading setups automatically
+* Shows **Top Opportunities (not cluttered data)**
+* Explains **WHY a stock is selected**
+* Supports **intraday + swing trading**
+* Uses **pattern detection (VCP, Rocket Base, Breakouts, etc.)**
 
 ---
 
-# ⚙️ Features
+# 🔥 Key Features
 
-## 📊 Dashboard
+## 📊 Smart Dashboard
 
-* Market trend (Bullish / Bearish / Sideways)
-* Top intraday setups
-* Top swing setups
+* Market status (Open / Closed)
+* India & US time display
+* Top 5 opportunities per market
 * Sector strength overview
 
 ---
 
-## 📈 Strategy-Based Scanning (Not Indicator-Based)
+## 🌍 Multi-Market Support
 
-* **Trend Continuation**
-* **Pullback Setups**
-* **Breakout Scanner**
-* **Reversal Detection**
-* **High Confluence (Best Setups)**
+* 🇮🇳 India (NSE stocks like RELIANCE.NS)
+* 🇺🇸 USA (AAPL, TSLA, etc.)
+* 🪙 Crypto (BTC-USD, ETH-USD)
+* 🛢 Commodities (Gold, Silver)
 
 ---
 
-## ⚡ Intraday + Swing Mode
+## 📈 Strategy-Based Analysis (Not Indicators)
 
-* Intraday → 5m / 15m + VWAP logic
-* Swing → Daily / Weekly + EMA logic
+* Trend Continuation
+* Pullback Setups
+* Breakout Scanner
+* Reversal Detection
+* High Confluence (Best setups only)
+
+---
+
+## 🧠 Pattern Detection (Advanced)
+
+* VCP (Volatility Contraction Pattern)
+* Rocket Base Pattern
+* Breakout structures
+* Volume + consolidation logic
 
 ---
 
 ## 🔍 Stock Detail Page
 
+When you click a stock:
+
 * TradingView chart
-* Signal explanation
 * Entry / Stop Loss / Target
-* Risk-Reward calculation
+* Risk-Reward
+* Pattern explanation
+* Probability insight
 
 ---
 
-## 🧠 Smart Scoring System
+## ⚡ Near Real-Time Updates
 
-Each stock gets a score (0–10) based on:
-
-* Trend strength
-* Volume
-* Structure
+* Backend updates every **1–5 minutes**
+* Auto-refresh frontend
+* Optimized for trading (not HFT)
 
 ---
 
@@ -98,81 +87,188 @@ Each stock gets a score (0–10) based on:
 
 ## ⭐ Watchlist
 
-* Personal / family watchlist
-* Track selected stocks only
+* Family watchlist
+* Track selected stocks
+* Focused signals
 
 ---
 
-## ⏱ Near Real-Time System
+# 🏗 Tech Stack
 
-* Backend scans every **1–5 minutes**
-* Frontend auto-refreshes
-* Not tick-by-tick (no HFT)
+### Frontend
+
+* Next.js (TypeScript)
+* Tailwind CSS + ShadCN UI
+
+### Backend
+
+* FastAPI (Python)
+* Pandas, NumPy
+* Technical Analysis (TA)
+* APScheduler
+
+### Database
+
+* MongoDB (Atlas)
 
 ---
 
-# 🏗 Project Structure
+# 📁 Project Structure
 
-```
+```id="proj-struct"
 tradingplatform/
  ├── backend/
  │    ├── main.py
- │    ├── requirements.txt
+ │    ├── database.py
  │    ├── services/
+ │    ├── requirements.txt
  │    └── venv/
  │
  ├── frontend/
  │    ├── app/
  │    ├── components/
- │    └── package.json
+ │    ├── package.json
+ │    └── next.config.js
 ```
 
 ---
 
-# 🚀 Setup Guide
+# 🚀 How to Run Locally (Step-by-Step)
 
-## 1️⃣ Backend Setup
+Follow carefully 👇
 
-```bash
-cd backend
+---
+
+## 🟢 1️⃣ Setup Backend
+
+### Step 1: Go to backend
+
+```bash id="b1"
+cd tradingplatform/backend
+```
+
+---
+
+### Step 2: Create virtual environment
+
+```bash id="b2"
 python -m venv venv
-source venv/Scripts/activate   # (Windows Git Bash)
+```
 
+---
+
+### Step 3: Activate venv
+
+#### Windows (Git Bash):
+
+```bash id="b3"
+source venv/Scripts/activate
+```
+
+#### Windows (CMD):
+
+```bash id="b4"
+venv\Scripts\activate
+```
+
+---
+
+### Step 4: Install dependencies
+
+```bash id="b5"
 pip install -r requirements.txt
+```
+
+---
+
+### Step 5: Run backend server
+
+```bash id="b6"
 uvicorn main:app --reload
 ```
 
-👉 Open: http://localhost:8000/docs
+---
+
+### Step 6: Verify backend
+
+Open:
+
+👉 http://localhost:8000/docs
+
+If you see API docs → ✅ Backend is working
 
 ---
 
-## 2️⃣ Frontend Setup
+## 🟡 2️⃣ Setup Frontend
 
-```bash
-cd frontend
+Open a new terminal:
+
+```bash id="f1"
+cd tradingplatform/frontend
+```
+
+---
+
+### Install dependencies
+
+```bash id="f2"
 npm install
+```
+
+---
+
+### Run frontend
+
+```bash id="f3"
 npm run dev
 ```
 
-👉 Open: http://localhost:3000
+---
+
+### Open app
+
+👉 http://localhost:3000
 
 ---
 
-## 3️⃣ MongoDB
+## 🔵 3️⃣ Setup MongoDB
 
-* Use MongoDB Atlas
-* Add your connection string in `.env`
+### Option A (Recommended)
 
----
+Use MongoDB Atlas:
 
-# 🔗 System Flow
+1. Create free cluster
+2. Get connection string
+3. Add to `.env` file
 
+Example:
+
+```env id="env1"
+MONGO_URI=your_mongodb_connection_string
 ```
-Next.js (Frontend)
+
+---
+
+### Option B (Local MongoDB)
+
+Run:
+
+```bash id="m1"
+mongod
+```
+
+---
+
+# 🔗 How System Works
+
+```id="flow"
+Frontend (Next.js)
         ↓
-FastAPI (Backend)
+Backend (FastAPI)
         ↓
 MongoDB (Database)
+        ↓
+Market APIs (yfinance)
 ```
 
 ---
@@ -180,38 +276,39 @@ MongoDB (Database)
 # ⚠️ Important Notes
 
 * This app is for **analysis only**
-* No trading execution is included
-* Always validate signals before trading
+* Always verify signals before trading
+* Market data may have slight delay
+* Not suitable for high-frequency trading
 
 ---
 
 # 🧠 Philosophy
 
-> “Don’t build a tool that shows data…
-> build a system that makes decisions.”
+> “Don’t look at 100 charts…
+> Let the system tell you the best 5.”
 
 ---
 
-# 🔥 Future Scope
+# 🔮 Future Scope
 
 * Options (F&O) integration
 * OI & IV analysis
-* AI-based trade explanations
-* Telegram/WhatsApp alerts
+* AI trade explanations
+* Telegram / WhatsApp alerts
 
 ---
 
-# 👨‍💻 About
+# 👨‍💻 Author
 
-Built for personal & family trading use.
+Built for personal & family trading system.
 
-If you found this useful, you can follow:
+Follow for more:
 
 👉 https://instagram.com/neelsheth2007
 
 ---
 
-# ⭐ Final Note
+# ⭐ Final Thought
 
 > Traders look at charts.
 > Builders create systems that scan charts.

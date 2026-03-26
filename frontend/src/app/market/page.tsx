@@ -5,10 +5,11 @@ import { Sidebar } from '@/components/Sidebar';
 import { useStore } from '@/store/useStore';
 import { fetcher } from '@/lib/api';
 import { SignalCard } from '@/components/SignalCard';
+import type { Signal } from '@/lib/market';
 
 export default function MarketOverview() {
   const { market, timeframe } = useStore();
-  const [allSignals, setAllSignals] = useState<any[]>([]);
+  const [allSignals, setAllSignals] = useState<Signal[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function MarketOverview() {
       setLoading(true);
       // Fetch for the selected market
       const data = await fetcher(`/signals?market=${market}&timeframe=${timeframe}`) || [];
-      setAllSignals(data);
+      setAllSignals(data as Signal[]);
       setLoading(false);
     };
     loadData();

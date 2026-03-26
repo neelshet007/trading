@@ -3,12 +3,16 @@
 import { useEffect, useState } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { fetcher } from '@/lib/api';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 
+interface WatchlistItem {
+  symbol: string;
+  added_at: string;
+}
+
 export default function WatchlistPage() {
-  const [watchlist, setWatchlist] = useState<any[]>([]);
+  const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
   const [newSymbol, setNewSymbol] = useState('');
 
   const loadWatchlist = async () => {
@@ -17,7 +21,10 @@ export default function WatchlistPage() {
   };
 
   useEffect(() => {
-    loadWatchlist();
+    const initialLoad = window.setTimeout(() => {
+      void loadWatchlist();
+    }, 0);
+    return () => clearTimeout(initialLoad);
   }, []);
 
   const handleAdd = async (e: React.FormEvent) => {
@@ -29,12 +36,12 @@ export default function WatchlistPage() {
       body: JSON.stringify({ symbol: newSymbol })
     });
     setNewSymbol('');
-    loadWatchlist();
+    void loadWatchlist();
   };
 
   const handleRemove = async (symbol: string) => {
     await fetcher(`/watchlist/${symbol}`, { method: 'DELETE' });
-    loadWatchlist();
+    void loadWatchlist();
   };
 
   return (

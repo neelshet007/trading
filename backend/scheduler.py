@@ -4,22 +4,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from data_fetcher import fetch_multiple
 from signal_engine import analyze_stock
 from database import signals_collection, market_summary_collection
-from datetime import datetime, time
-import pytz
+from market_utils import get_market_clock, utc_now
 
 logger = logging.getLogger(__name__)
-
-IST = pytz.timezone('Asia/Kolkata')
-
-def is_indian_market_open():
-    now_ist = datetime.now(IST)
-    # Market open: Mon-Fri, 9:15 AM - 3:30 PM
-    if now_ist.weekday() >= 5: # Saturday/Sunday
-        return False
-    
-    start_time = time(9, 15)
-    end_time = time(15, 30)
-    return start_time <= now_ist.time() <= end_time
 
 MARKETS = {
     "USA": ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "SPY", "QQQ"],
@@ -28,10 +15,15 @@ MARKETS = {
     "COMMODITIES": ["GC=F", "SI=F", "CL=F"] # Gold, Silver, Crude Oil
 }
 
+
+def can_run_intraday_scan(market: str) -> bool:
+    clock = get_market_clock(market)
+    return clock["is_open"] or market in {"CRYPTO", "COMMODITIES"}
+
 async def process_signals(market: str, timeframe: str, interval: str, period: str):
     logger.info(f"Starting {market} {timeframe} market scan...")
     symbols = MARKETS[market]
-    data_map = fetch_multiple(symbols, interval=interval, period=period)
+    data_map = fetch_multiple(symbols, interval=interval, period=period, market=market)
     
     all_signals = []
     bullish_count = 0
@@ -56,13 +48,17 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
     if total > 0:
         if bullish_count / total > 0.6: status = "Bullish"
         elif bearish_count / total > 0.6: status = "Bearish"
-        
+
+    now_utc = utc_now()
     summary = {
         "market": market,
         "status": status,
         "bullish_count": bullish_count,
         "bearish_count": bearish_count,
-        "timestamp": datetime.utcnow()
+        "sector_strength": {},
+        "timestamp": now_utc,
+        "timestamp_display_ist": get_market_clock(market, now_utc)["india_time"],
+        "market_clock": get_market_clock(market, now_utc),
     }
     
     await market_summary_collection.delete_many({"market": market})
@@ -70,8 +66,8 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
     logger.info(f"{market} Summary updated. Status: {status}")
 
 def run_market_scan(market: str, is_intraday: bool):
-    if market == "INDIA" and is_intraday and not is_indian_market_open():
-        logger.info("Skipping Indian Intraday scan (Market Closed).")
+    if is_intraday and not can_run_intraday_scan(market):
+        logger.info("Skipping %s intraday scan because session is not open.", market)
         return
 
     tf = "intraday" if is_intraday else "swing"

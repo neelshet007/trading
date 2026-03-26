@@ -1,22 +1,15 @@
 import { create } from 'zustand';
-
-interface MarketSummary {
-  status: string;
-  bullish_count: number;
-  bearish_count: number;
-  sector_strength: Record<string, string>;
-  timestamp: string;
-}
+import type { MarketKey, MarketSummary } from '@/lib/market';
 
 interface AppState {
-  market: 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES';
-  setMarket: (m: 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES') => void;
+  market: MarketKey;
+  setMarket: (m: MarketKey) => void;
   timeframe: 'intraday' | 'swing';
   setTimeframe: (tf: 'intraday' | 'swing') => void;
   marketSummary: MarketSummary | null;
   setMarketSummary: (summary: MarketSummary) => void;
   watchlist: { symbol: string; added_at: string }[];
-  setWatchlist: (list: any[]) => void;
+  setWatchlist: (list: { symbol: string; added_at: string }[]) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
