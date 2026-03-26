@@ -1,71 +1,219 @@
-# Trading Intelligence Platform
+# 🚀 Trading Intelligence Platform
 
-A production-ready AI-driven market scanning and trading setups platform built with FastAPI, MongoDB, Next.js, and Tailwind CSS.
+A production-ready **Trading Intelligence System** built with modern technologies to help traders identify high-probability setups for **intraday and swing trading**.
 
-## 🚀 Features
-- **Smart Market Scanning**: Automated scanning of multiple tickers using advanced strategies (Trend Continuation, Pullback, Breakouts, Reversals, High Confluence).
-- **Background Engine**: APScheduler periodically analyzes intraday data (every 5 mins) and swing data (daily).
-- **Beginner-friendly Dashboard**: Clean, jargon-free UI with ShadCN built for quick decision making.
-- **Stock Analysis View**: TradingView charts embedded with automated Trade Plan generation (Entry, Stop Loss, Target).
-- **Family Watchlist**: Shared MongoDB-backed watchlist to track setups for monitored stocks.
+> ⚡ Not a trading app — this platform focuses on **analysis, signals, and decision-making**.
 
 ---
 
-## 🏗️ Prerequisites
-- Python 3.10+
-- Node.js 18+
-- MongoDB Atlas cluster URL
+# 🧠 Core Idea
+
+This system acts like a simplified **Bloomberg-style terminal** for personal use:
+
+* Scans markets automatically
+* Detects trading setups
+* Shows top opportunities
+* Explains **WHY** a stock is selected
 
 ---
 
-## 🛠️ Step-by-Step Setup
+# 🏗 Tech Stack
 
-### 1. Database Setup
-1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-2. Get your connection string.
-3. Replace `<username>` and `<password>` in `backend/.env`.
+### Frontend
 
-### 2. Backend Setup (FastAPI)
-Open a terminal and navigate to the `backend` folder:
+* Next.js (App Router)
+* TypeScript
+* Tailwind CSS
+* ShadCN UI
+* Zustand
+* Recharts
+
+### Backend
+
+* Python (FastAPI)
+* Pandas, NumPy
+* TA (technical indicators)
+* APScheduler (background jobs)
+
+### Database
+
+* MongoDB (Atlas)
+
+---
+
+# ⚙️ Features
+
+## 📊 Dashboard
+
+* Market trend (Bullish / Bearish / Sideways)
+* Top intraday setups
+* Top swing setups
+* Sector strength overview
+
+---
+
+## 📈 Strategy-Based Scanning (Not Indicator-Based)
+
+* **Trend Continuation**
+* **Pullback Setups**
+* **Breakout Scanner**
+* **Reversal Detection**
+* **High Confluence (Best Setups)**
+
+---
+
+## ⚡ Intraday + Swing Mode
+
+* Intraday → 5m / 15m + VWAP logic
+* Swing → Daily / Weekly + EMA logic
+
+---
+
+## 🔍 Stock Detail Page
+
+* TradingView chart
+* Signal explanation
+* Entry / Stop Loss / Target
+* Risk-Reward calculation
+
+---
+
+## 🧠 Smart Scoring System
+
+Each stock gets a score (0–10) based on:
+
+* Trend strength
+* Volume
+* Structure
+
+---
+
+## 🔔 Alerts (Extendable)
+
+* Breakout alerts
+* Pullback alerts
+* Trend alerts
+
+---
+
+## ⭐ Watchlist
+
+* Personal / family watchlist
+* Track selected stocks only
+
+---
+
+## ⏱ Near Real-Time System
+
+* Backend scans every **1–5 minutes**
+* Frontend auto-refreshes
+* Not tick-by-tick (no HFT)
+
+---
+
+# 🏗 Project Structure
+
+```
+tradingplatform/
+ ├── backend/
+ │    ├── main.py
+ │    ├── requirements.txt
+ │    ├── services/
+ │    └── venv/
+ │
+ ├── frontend/
+ │    ├── app/
+ │    ├── components/
+ │    └── package.json
+```
+
+---
+
+# 🚀 Setup Guide
+
+## 1️⃣ Backend Setup
+
 ```bash
 cd backend
 python -m venv venv
-
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
+source venv/Scripts/activate   # (Windows Git Bash)
 
 pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
-Start the backend server:
-```bash
-uvicorn main:app --reload --port 8000
-```
-*Note: The APScheduler will automatically start scanning markets in the background on startup.*
-
-### 3. Frontend Setup (Next.js)
-Open a new terminal and navigate to the `frontend` folder:
-```bash
-cd frontend
-npm install
-```
-
-Start the frontend development server:
-```bash
-npm run dev
-```
-
-### 4. Open the Application
-Navigate to [http://localhost:3000](http://localhost:3000) in your browser. All API requests point to `http://localhost:8000` by default.
+👉 Open: http://localhost:8000/docs
 
 ---
 
-## 📂 Architecture Overview
-- **`backend/data_fetcher.py`**: Integration with `yfinance` to pull historical and real-time interval data.
-- **`backend/indicators.py`**: Computes EMA, VWAP, RSI, ATR limits.
-- **`backend/strategies.py`**: Defines exact logic for triggering stock setups based on structure.
-- **`backend/signal_engine.py`**: Loops through provided symbols, analyzes using strategies, builds Risk-Reward variables, assigns Smart Score (1-10 level).
-- **`frontend/src/store/useStore.ts`**: Zustand state handling timeframe toggling and real-time dashboard data caching.
-- **`frontend/src/app`**: Next.js App router containing Pages and Dashboards.
+## 2️⃣ Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+👉 Open: http://localhost:3000
+
+---
+
+## 3️⃣ MongoDB
+
+* Use MongoDB Atlas
+* Add your connection string in `.env`
+
+---
+
+# 🔗 System Flow
+
+```
+Next.js (Frontend)
+        ↓
+FastAPI (Backend)
+        ↓
+MongoDB (Database)
+```
+
+---
+
+# ⚠️ Important Notes
+
+* This app is for **analysis only**
+* No trading execution is included
+* Always validate signals before trading
+
+---
+
+# 🧠 Philosophy
+
+> “Don’t build a tool that shows data…
+> build a system that makes decisions.”
+
+---
+
+# 🔥 Future Scope
+
+* Options (F&O) integration
+* OI & IV analysis
+* AI-based trade explanations
+* Telegram/WhatsApp alerts
+
+---
+
+# 👨‍💻 About
+
+Built for personal & family trading use.
+
+If you found this useful, you can follow:
+
+👉 https://instagram.com/neelsheth2007
+
+---
+
+# ⭐ Final Note
+
+> Traders look at charts.
+> Builders create systems that scan charts.
+
+---

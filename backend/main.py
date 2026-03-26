@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import requests
 from typing import List, Optional
 from database import setup_db, signals_collection, market_summary_collection, watchlist_collection
 from models import SignalModel, MarketSummaryModel, WatchlistModel
@@ -14,7 +15,7 @@ app = FastAPI(title="Trading Intelligence Platform API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -70,6 +71,20 @@ async def add_to_watchlist(item: WatchlistAdd):
     new_item = {"symbol": item.symbol.upper(), "added_at": __import__("datetime").datetime.utcnow()}
     await watchlist_collection.insert_one(new_item)
     return {"msg": "Added to watchlist"}
+
+@app.get("/search/{query}")
+def search_ticker(query: str):
+    url = f"https://query2.finance.yahoo.com/v1/finance/search?q={query}&quotesCount=5&newsCount=0"
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+    try:
+        resp = requests.get(url, headers=headers, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            quotes = data.get("quotes", [])
+            return [{"symbol": q["symbol"], "name": q.get("shortname", q.get("longname", q["symbol"]))} for q in quotes if "symbol" in q]
+    except Exception as e:
+        logging.error(f"Search API error: {e}")
+    return []
 
 @app.delete("/watchlist/{symbol}")
 async def remove_from_watchlist(symbol: str):
