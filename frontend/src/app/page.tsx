@@ -51,7 +51,7 @@ export default function Home() {
     };
   }, [timeframe, market, setMarketSummary]);
 
-  const topSignals = signals.slice(0, market === 'INDIA' ? 8 : 5);
+  const topSignals = signals.slice(0, 10);
   const marketClock = marketSummary?.market_clock;
 
   return (

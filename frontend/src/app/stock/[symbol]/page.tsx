@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   formatDisplayDate,
   formatDisplayTime,
+  get_tv_symbol,
   getSignalClasses,
   getStatusBadgeClasses,
   type MarketClock,
@@ -33,6 +34,7 @@ export default function StockDetailPage() {
 
   const latestSignal = signals[0];
   const market = latestSignal?.market || (symbol.toUpperCase().endsWith('.NS') ? 'INDIA' : 'USA');
+  const tvSymbol = get_tv_symbol(symbol);
 
   useEffect(() => {
     const loadSignals = async () => {
@@ -62,7 +64,7 @@ export default function StockDetailPage() {
       if (tradingViewWindow.TradingView) {
         new tradingViewWindow.TradingView.widget({
           autosize: true,
-          symbol,
+          symbol: tvSymbol,
           interval: 'D',
           timezone: market === 'INDIA' ? 'Asia/Kolkata' : market === 'USA' ? 'America/New_York' : 'Etc/UTC',
           theme: 'dark',
@@ -79,7 +81,7 @@ export default function StockDetailPage() {
       }
     };
     chartContainerRef.current.appendChild(script);
-  }, [symbol, market]);
+  }, [tvSymbol, market]);
 
   const patternDescriptions = useMemo(() => {
     if (!latestSignal?.pattern_details) return [];

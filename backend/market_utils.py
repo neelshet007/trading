@@ -41,10 +41,15 @@ MARKET_CONFIG: Dict[str, Dict[str, Any]] = {
 }
 
 INDIA_SUFFIX = ".NS"
+BSE_SUFFIX = ".BO"
 
 
 def utc_now() -> datetime:
     return datetime.now(UTC)
+
+
+def ist_now() -> datetime:
+    return datetime.now(IST)
 
 
 def ensure_utc(dt: datetime | None = None) -> datetime:
@@ -125,15 +130,20 @@ def normalize_symbol(symbol: str, market: str | None = None) -> str:
     if market == "INDIA":
         if base.startswith("^"):
             return base
-        return base if base.endswith(INDIA_SUFFIX) else f"{base}{INDIA_SUFFIX}"
+        if base.endswith(INDIA_SUFFIX) or base.endswith(BSE_SUFFIX):
+            return base
+        return f"{base}{INDIA_SUFFIX}"
     return base
 
 
 def candidate_symbols(symbol: str, market: str | None = None) -> Tuple[str, ...]:
     base = symbol.strip().upper()
     if market == "INDIA":
-        normalized = normalize_symbol(base, "INDIA")
-        if normalized == base:
-            return (base, base.removesuffix(INDIA_SUFFIX))
-        return (base, normalized)
+        if base.endswith(INDIA_SUFFIX):
+            root = base.removesuffix(INDIA_SUFFIX)
+            return (base, f"{root}{BSE_SUFFIX}", root)
+        if base.endswith(BSE_SUFFIX):
+            root = base.removesuffix(BSE_SUFFIX)
+            return (base, f"{root}{INDIA_SUFFIX}", root)
+        return (base, f"{base}{INDIA_SUFFIX}", f"{base}{BSE_SUFFIX}")
     return (base,)

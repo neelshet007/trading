@@ -24,6 +24,8 @@ STRATEGY_CATEGORY_MAP = {
     "High Confluence": "Momentum Scanner",
 }
 
+TOP_SIGNAL_LIMIT = 10
+
 
 def _safe_ratio(numerator: float, denominator: float) -> float:
     return 0.0 if denominator == 0 else numerator / denominator
@@ -309,4 +311,4 @@ def analyze_stock(symbol: str, market: str, df: pd.DataFrame, timeframe: str) ->
         ),
         reverse=True,
     )
-    return sorted_signals
+    return sorted_signals[:TOP_SIGNAL_LIMIT]

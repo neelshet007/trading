@@ -46,6 +46,26 @@ export interface Signal {
   analysis_summary?: AnalysisSummary;
 }
 
+export interface SearchResult {
+  symbol: string;
+  clean_symbol?: string;
+  fetch_symbol?: string;
+  name: string;
+  market: MarketKey;
+  exchange?: string;
+  signal?: 'bullish' | 'bearish' | 'neutral' | string;
+  rating?: string;
+  categories?: string[];
+  analysis?: {
+    why_now?: string;
+  } | null;
+  price?: number | null;
+  change_percent?: number | null;
+  rsi?: number | null;
+  volume?: number | null;
+  updated_at?: string | null;
+}
+
 export interface MarketClock {
   market: MarketKey;
   timestamp_utc: string;
@@ -106,4 +126,13 @@ export function formatDisplayDate(timestamp?: string, timeZone = 'Asia/Kolkata')
 export function getWhyNow(signal?: Signal | null) {
   if (!signal) return 'No fresh catalyst has been recorded yet.';
   return signal.analysis_summary?.why_now || signal.reasons?.[0] || 'Price and volume are aligning for a possible move.';
+}
+
+export function get_tv_symbol(ticker: string) {
+  const normalized = ticker.trim().toUpperCase();
+  if (!normalized) return normalized;
+  if (normalized.includes(':')) return normalized;
+  if (normalized.endsWith('.NS')) return `NSE:${normalized.slice(0, -3)}`;
+  if (normalized.endsWith('.BO')) return `BSE:${normalized.slice(0, -3)}`;
+  return normalized;
 }

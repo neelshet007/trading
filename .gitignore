@@ -1,0 +1,109 @@
+# 🚫 .gitignore (Root Level)
+
+# -------------------------
+
+# 🔐 ENV FILES (IMPORTANT)
+
+# -------------------------
+
+.env
+.env.local
+.env.*.local
+
+# Backend env files
+
+backend/.env
+backend/.env.*
+
+# Frontend env files
+
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+
+# -------------------------
+
+# 🐍 PYTHON (BACKEND)
+
+# -------------------------
+
+backend/venv/
+backend/**pycache**/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.pytest_cache/
+backend/.mypy_cache/
+
+# -------------------------
+
+# 📦 NODE / NEXT.JS (FRONTEND)
+
+# -------------------------
+
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Logs
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# -------------------------
+
+# 🧠 DATABASE / CACHE
+
+# -------------------------
+
+*.log
+*.sqlite
+*.db
+
+# -------------------------
+
+# 🧾 OS FILES
+
+# -------------------------
+
+.DS_Store
+Thumbs.db
+
+# -------------------------
+
+# 🧪 TEST / TEMP FILES
+
+# -------------------------
+
+*.tmp
+*.temp
+*.swp
+
+# -------------------------
+
+# 🔒 SECRET FILES
+
+# -------------------------
+
+*.key
+*.pem
+*.crt
+
+# -------------------------
+
+# 🚀 OPTIONAL (IF ADDED LATER)
+
+# -------------------------
+
+# Redis / Celery
+
+celerybeat-schedule
+dump.rdb
+
+# Docker
+
+docker-compose.override.yml
