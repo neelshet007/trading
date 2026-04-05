@@ -14,9 +14,11 @@ import { TerminalFeed } from '@/components/dashboard/TerminalFeed';
 import { MTFChart } from '@/components/dashboard/MTFChart';
 import { TradeDetailsModal } from '@/components/dashboard/TradeDetailsModal';
 import {
+  emptyMarketSummary,
   formatDisplayDate,
   formatDisplayTime,
   getStatusBadgeClasses,
+  toApiMarket,
   type MarketSummary,
   type Signal,
 } from '@/lib/market';
@@ -39,6 +41,7 @@ export default function Home() {
   const [isScanning, setIsScanning] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -46,13 +49,25 @@ export default function Home() {
 
   useEffect(() => {
     const loadData = async () => {
+      const apiMarket = toApiMarket(market);
       const [summary, signalsData] = await Promise.all([
-        fetcher(`/market-summary?market=${market}`),
-        fetcher(`/signals?timeframe=${timeframe}&market=${market}`),
+        fetcher(`/market-summary?market=${apiMarket}`),
+        fetcher(`/signals?timeframe=${timeframe}&market=${apiMarket}`),
       ]);
 
-      if (summary) setMarketSummary(summary as MarketSummary);
-      if (signalsData) setSignals(signalsData as Signal[]);
+      if (summary) {
+        setMarketSummary(summary as MarketSummary);
+        setConnectionError(null);
+      } else {
+        setMarketSummary(emptyMarketSummary(market));
+        setConnectionError('Backend is not responding. Check the FastAPI server.');
+      }
+
+      if (signalsData) {
+        setSignals(signalsData as Signal[]);
+      } else {
+        setSignals([]);
+      }
     };
 
     const initialLoad = window.setTimeout(() => {
@@ -154,6 +169,12 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {connectionError && (
+          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {connectionError}
+          </div>
+        )}
 
         <div className="mb-8 grid grid-cols-1 gap-6 xl:grid-cols-4">
           <div className="xl:col-span-1 border border-slate-800 rounded-xl bg-slate-950/80 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.4)] flex flex-col h-[600px]">

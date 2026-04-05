@@ -5,6 +5,7 @@ import logging
 import random
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import StringIO
 from typing import Any, Optional, Tuple
 import requests
@@ -64,27 +65,45 @@ POLLING_MARKETS = {
     "CRYPTO": ["BTC-USD", "ETH-USD", "SOL-USD"],
     "COMMODITIES": ["GC=F", "SI=F", "CL=F"],
 }
+YFINANCE_TIMEOUT_SECONDS = 8
+FETCH_POOL_WORKERS = 4
 
 
 def _clean_history(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df
+    frame = df.copy()
+    if isinstance(frame.columns, pd.MultiIndex):
+        flattened_columns: list[str] = []
+        for column in frame.columns:
+            if isinstance(column, tuple):
+                flattened_columns.append(next((str(part) for part in column if part and part != ""), str(column[0])))
+            else:
+                flattened_columns.append(str(column))
+        frame.columns = flattened_columns
+    else:
+        frame.columns = [str(col) for col in frame.columns]
+
+    frame = frame.loc[:, ~frame.columns.duplicated()]
     if isinstance(df.index, pd.DatetimeIndex):
         if df.index.tz is None:
-            df.index = df.index.tz_localize("UTC")
+            frame.index = frame.index.tz_localize("UTC")
         else:
-            df.index = df.index.tz_convert("UTC")
-    return df.dropna(how="all")
+            frame.index = frame.index.tz_convert("UTC")
+    return frame.dropna(how="all")
 
 
 def _download_history(symbol: str, interval: str, period: str) -> pd.DataFrame:
-    ticker = yf.Ticker(symbol)
-    history = ticker.history(
+    history = yf.download(
+        tickers=symbol,
         period=period,
         interval=interval,
         auto_adjust=False,
         actions=False,
-        prepost=True,
+        progress=False,
+        threads=False,
+        timeout=YFINANCE_TIMEOUT_SECONDS,
+        group_by="column",
     )
     return _clean_history(history)
 
@@ -225,7 +244,10 @@ def _polling_params(market: str) -> tuple[str, str]:
 def _latest_price(df: pd.DataFrame) -> Optional[float]:
     if df.empty or "Close" not in df.columns:
         return None
-    close_series = df["Close"].dropna()
+    close_series = df["Close"]
+    if isinstance(close_series, pd.DataFrame):
+        close_series = close_series.iloc[:, 0]
+    close_series = pd.to_numeric(close_series, errors="coerce").dropna()
     if close_series.empty:
         return None
     return float(close_series.iloc[-1])
@@ -278,12 +300,25 @@ def fetch_data(symbol: str, interval: str = "1m", period: str = "1d", market: Op
 
 def fetch_multiple(symbols: list, interval: str = "1m", period: str = "1d", market: Optional[str] = None) -> dict:
     data = {}
-    for sym in symbols:
-        resolved_symbol, df = validate_symbol(sym, market=market, interval=interval, period=period)
-        if resolved_symbol and not df.empty:
-            data[resolved_symbol] = df
-        else:
-            logger.warning("Skipping invalid or empty symbol: %s", sym)
+    if not symbols:
+        return data
+
+    max_workers = min(FETCH_POOL_WORKERS, len(symbols))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_map = {
+            executor.submit(validate_symbol, sym, market, interval, period): sym
+            for sym in symbols
+        }
+        for future in as_completed(future_map):
+            sym = future_map[future]
+            try:
+                resolved_symbol, df = future.result()
+                if resolved_symbol and not df.empty:
+                    data[resolved_symbol] = df
+                else:
+                    logger.warning("Skipping invalid or empty symbol: %s", sym)
+            except Exception as exc:
+                logger.warning("Symbol fetch crashed for %s: %s", sym, exc)
     return data
 
 
@@ -472,11 +507,14 @@ async def update_market_data():
         previous_quotes = {quote.get("symbol"): quote for quote in (summary.get("live_quotes", []) if summary else [])}
         interval, period = _polling_params(market)
         live_quotes: list[dict[str, Any]] = []
+        data_map = await asyncio.to_thread(fetch_multiple, symbols, interval, period, market)
 
         for symbol in symbols:
-            resolved_symbol, df = validate_symbol(symbol, market=market, interval=interval, period=period)
-            quote_symbol = resolved_symbol or normalize_symbol(symbol, market if market == "INDIA" else None)
-            live_quotes.append(_build_quote_snapshot(quote_symbol, market, df, previous_quotes.get(quote_symbol)))
+            quote_symbol = normalize_symbol(symbol, market if market == "INDIA" else None)
+            resolved_symbol = next((key for key in data_map.keys() if key == quote_symbol or key == symbol), None)
+            df = data_map.get(resolved_symbol, pd.DataFrame())
+            final_symbol = resolved_symbol or quote_symbol
+            live_quotes.append(_build_quote_snapshot(final_symbol, market, df, previous_quotes.get(final_symbol) or previous_quotes.get(quote_symbol)))
 
         updated_at = db_updated_at()
         market_clock = get_market_clock(market, updated_at)

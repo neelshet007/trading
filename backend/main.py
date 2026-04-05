@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import re
 from datetime import timedelta
@@ -45,6 +46,10 @@ def _infer_market_from_symbol(symbol: str) -> str:
     upper = symbol.upper()
     if upper.endswith(".NS") or upper.endswith(".BO") or upper.startswith("^NSE") or upper.startswith("^BSE"):
         return "INDIA"
+    if upper.endswith("=F"):
+        return "COMMODITIES"
+    if upper.endswith("USD") and "-" not in upper:
+        return "FOREX"
     if "-USD" in upper:
         return "CRYPTO"
     return "USA"
@@ -252,11 +257,15 @@ async def _latest_or_live_signal(symbol: str, market: str, timeframe: str = "swi
 @app.on_event("startup")
 async def startup_event():
     await setup_db()
+    start_scheduler()
+    asyncio.create_task(_refresh_ticker_universe_in_background())
+
+
+async def _refresh_ticker_universe_in_background():
     try:
         await refresh_indian_ticker_universe()
     except Exception as exc:
-        logging.warning("Ticker universe refresh skipped during startup: %s", exc)
-    start_scheduler()
+        logging.warning("Ticker universe refresh skipped during background startup refresh: %s", exc)
 
 
 @app.get("/signals", response_model=List[SignalModel])
@@ -306,13 +315,21 @@ async def download_backtest(
     start: str = "2023-01-01",
     end: str = "2025-12-31",
     initial_capital: float = 10000.0,
+    market: Optional[str] = None,
 ):
     """Run the SMC/ICT backtest and return a downloadable Excel report."""
     try:
-        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end, initial_capital=initial_capital)
+        trades, stats = await asyncio.to_thread(
+            run_smc_backtest,
+            symbol,
+            start,
+            end,
+            initial_capital,
+            market,
+        )
         if not trades:
             raise HTTPException(status_code=404, detail="No SMC trades found in the given period.")
-        excel_bytes = generate_excel_report(trades, stats, symbol)
+        excel_bytes = await asyncio.to_thread(generate_excel_report, trades, stats, symbol)
         filename = f"SMC_Backtest_{symbol.replace('-','_')}_{start[:4]}_{end[:4]}.xlsx"
         return StreamingResponse(
             io.BytesIO(excel_bytes),
@@ -328,10 +345,18 @@ async def get_backtest_stats(
     start: str = "2023-01-01",
     end: str = "2025-12-31",
     initial_capital: float = 10000.0,
+    market: Optional[str] = None,
 ):
     """Run the SMC/ICT backtest and return JSON performance stats + trade log."""
     try:
-        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end, initial_capital=initial_capital)
+        trades, stats = await asyncio.to_thread(
+            run_smc_backtest,
+            symbol,
+            start,
+            end,
+            initial_capital,
+            market,
+        )
         return JSONResponse(content={"stats": stats, "trades": trades})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

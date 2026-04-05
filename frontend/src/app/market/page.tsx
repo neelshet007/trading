@@ -10,9 +10,11 @@ import { SignalCard } from '@/components/SignalCard';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  emptyMarketSummary,
   formatDisplayDate,
   formatDisplayTime,
   getStatusBadgeClasses,
+  toApiMarket,
   type MarketKey,
   type MarketSummary,
   type Signal,
@@ -30,6 +32,7 @@ export default function MarketOverview() {
   const [marketBoards, setMarketBoards] = useState<Record<MarketKey, MarketBoardData>>({
     USA: { summary: null, signals: [] },
     INDIA: { summary: null, signals: [] },
+    'F&O INDIA': { summary: null, signals: [] },
     CRYPTO: { summary: null, signals: [] },
     COMMODITIES: { summary: null, signals: [] },
   });
@@ -40,11 +43,18 @@ export default function MarketOverview() {
       setLoading(true);
       const responses = await Promise.all(
         MARKET_ORDER.map(async (marketKey) => {
+          const apiMarket = toApiMarket(marketKey);
           const [summary, signals] = await Promise.all([
-            fetcher(`/market-summary?market=${marketKey}`),
-            fetcher(`/signals?market=${marketKey}&timeframe=${timeframe}`),
+            fetcher(`/market-summary?market=${apiMarket}`),
+            fetcher(`/signals?market=${apiMarket}&timeframe=${timeframe}`),
           ]);
-          return [marketKey, { summary: (summary as MarketSummary) || null, signals: (signals as Signal[]) || [] }] as const;
+          return [
+            marketKey,
+            {
+              summary: (summary as MarketSummary) || emptyMarketSummary(marketKey),
+              signals: (signals as Signal[]) || [],
+            },
+          ] as const;
         })
       );
 

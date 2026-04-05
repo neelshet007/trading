@@ -18,13 +18,30 @@ type TradingViewWindow = Window & {
   };
 };
 
+function inferMarket(symbol: string): 'INDIA' | 'USA' | 'CRYPTO' | 'COMMODITIES' | 'FOREX' {
+  const upper = symbol.toUpperCase();
+  if (upper.endsWith('.NS') || upper.endsWith('.BO') || upper.startsWith('^NSE') || upper.startsWith('^BSE')) {
+    return 'INDIA';
+  }
+  if (upper.endsWith('=F')) {
+    return 'COMMODITIES';
+  }
+  if (upper.endsWith('USD') && !upper.includes('-')) {
+    return 'FOREX';
+  }
+  if (upper.includes('-USD')) {
+    return 'CRYPTO';
+  }
+  return 'USA';
+}
+
 export default function StockDetailPage() {
   const params = useParams();
   const symbol = params.symbol as string;
   const [forensicData, setForensicData] = useState<any>(null);
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
-  const market = symbol.toUpperCase().endsWith('.NS') ? 'INDIA' : 'USA';
+  const market = inferMarket(symbol);
   const tvSymbol = get_tv_symbol(symbol);
 
   // Fetch Intensive Forensic Data

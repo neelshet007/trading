@@ -18,6 +18,13 @@ MARKETS = {
     "COMMODITIES": ["GC=F", "SI=F", "CL=F"] # Gold, Silver, Crude Oil
 }
 
+INITIAL_WARMUP_SCANS = [
+    ("CRYPTO", True),
+    ("USA", True),
+    ("COMMODITIES", True),
+    ("USA", False),
+]
+
 
 def can_run_intraday_scan(market: str) -> bool:
     clock = get_market_clock(market)
@@ -29,7 +36,8 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
     existing_summary = await market_summary_collection.find_one({"market": market}, sort=[("timestamp", -1)])
     tracked_symbols = existing_summary.get("tracked_symbols", []) if existing_summary else []
     symbols = list(dict.fromkeys([*MARKETS[market], *tracked_symbols]))
-    data_map = fetch_multiple(symbols, interval=interval, period=period, market=market)
+    data_map = await asyncio.to_thread(fetch_multiple, symbols, interval, period, market)
+    logger.info("Fetched %s/%s datasets for %s %s scan.", len(data_map), len(symbols), market, timeframe)
     
     all_signals = []
     bullish_count = 0
@@ -135,12 +143,16 @@ def start_scheduler():
         logger.info("Multi-market Scheduler started.")
 
         asyncio.create_task(update_market_data())
-        asyncio.create_task(update_india_market_scan())
-
-        # Initial scans
-        for m in MARKETS.keys():
-            if m != "INDIA":
-                run_market_scan(m, True)
-            run_market_scan(m, False)
+        asyncio.create_task(_warmup_scans())
 
         return _scheduler
+
+
+async def _warmup_scans():
+    await asyncio.sleep(2)
+    for market, is_intraday in INITIAL_WARMUP_SCANS:
+        try:
+            run_market_scan(market, is_intraday)
+        except Exception as exc:
+            logger.warning("Warmup scan failed for %s %s: %s", market, "intraday" if is_intraday else "swing", exc)
+        await asyncio.sleep(2)

@@ -1,4 +1,4 @@
-export type MarketKey = 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES';
+export type MarketKey = 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES' | 'F&O INDIA';
 
 export interface ProbabilityInsight {
   breakout: string;
@@ -89,6 +89,37 @@ export interface MarketSummary {
   timestamp: string;
   timestamp_display_ist?: string;
   market_clock: MarketClock;
+}
+
+export function toApiMarket(market: MarketKey): 'USA' | 'INDIA' | 'CRYPTO' | 'COMMODITIES' {
+  if (market === 'F&O INDIA') return 'INDIA';
+  return market;
+}
+
+export function emptyMarketSummary(market: MarketKey): MarketSummary {
+  const apiMarket = toApiMarket(market);
+  return {
+    market,
+    status: 'Unavailable',
+    bullish_count: 0,
+    bearish_count: 0,
+    sector_strength: {},
+    timestamp: new Date(0).toISOString(),
+    timestamp_display_ist: '--',
+    market_clock: {
+      market: apiMarket,
+      timestamp_utc: new Date().toISOString(),
+      india_time: '--:--',
+      india_label: 'IST',
+      display_timezone: apiMarket === 'USA' || apiMarket === 'COMMODITIES' ? 'America/New_York' : apiMarket === 'CRYPTO' ? 'UTC' : 'Asia/Kolkata',
+      local_time: '--:--',
+      local_label: apiMarket === 'USA' || apiMarket === 'COMMODITIES' ? 'ET' : apiMarket === 'CRYPTO' ? 'UTC' : 'IST',
+      phase: 'closed',
+      status_text: 'Backend unavailable',
+      status_color: 'red',
+      is_open: false,
+    },
+  };
 }
 
 export function getStatusBadgeClasses(color?: string) {
