@@ -32,7 +32,7 @@ const MARKET_ICONS: Record<string, string> = {
 export default function Home() {
   const { timeframe, setTimeframe, market, setMarket, marketSummary, setMarketSummary } = useStore();
   const [signals, setSignals] = useState<Signal[]>([]);
-  
+
   // SMC Terminal State
   const [smcSetups, setSmcSetups] = useState<SetupData[]>([]);
   const [selectedSetup, setSelectedSetup] = useState<SetupData | null>(null);
@@ -71,20 +71,20 @@ export default function Home() {
     setIsScanning(true);
     try {
       // For demo purposes, we scan a basket of Nifty 50 and popular symbols
-      const symbolsToScan = market === 'INDIA' 
+      const symbolsToScan = market === 'INDIA'
         ? ['RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS', 'LT.NS']
         : market === 'F&O INDIA'
-        ? ['^NSEI', '^NSEBANK', 'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS', 'LT.NS', 'HINDUNILVR.NS', 'AXISBANK.NS', 'ASIANPAINT.NS', 'MARUTI.NS', 'SUNPHARMA.NS', 'TITAN.NS', 'ULTRACEMCO.NS', 'BAJFINANCE.NS', 'M&M.NS', 'TATASTEEL.NS', 'POWERGRID.NS', 'NTPC.NS', 'NESTLEIND.NS', 'BAJAJFINSV.NS', 'GRASIM.NS', 'DRREDDY.NS', 'ADANIPORTS.NS', 'WIPRO.NS', 'HCLTECH.NS', 'INDUSINDBK.NS', 'APOLLOHOSP.NS', 'BRITANNIA.NS', 'EICHERMOT.NS', 'CIPLA.NS', 'BPCL.NS', 'HEROMOTOCO.NS', 'DIVISLAB.NS', 'COALINDIA.NS', 'ONGC.NS', 'HINDALCO.NS', 'TECHM.NS', 'LTIM.NS', 'TATACONSUM.NS', 'BAJAJ-AUTO.NS', 'SHRIRAMFIN.NS', 'ADANIENT.NS', 'TATASTLLP.NS']
-        : market === 'CRYPTO'
-        ? ['BTC-USD', 'ETH-USD', 'SOL-USD', 'XRP-USD', 'ADA-USD', 'BNB-USD', 'DOGE-USD', 'MATIC-USD', 'LINK-USD', 'DOT-USD', 'AVAX-USD', 'UNI-USD']
-        : ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'META', 'GOOGL', 'NFLX', 'AMD', 'SPY'];
-        
+          ? ['^NSEI', '^NSEBANK', 'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS', 'LT.NS', 'HINDUNILVR.NS', 'AXISBANK.NS', 'ASIANPAINT.NS', 'MARUTI.NS', 'SUNPHARMA.NS', 'TITAN.NS', 'ULTRACEMCO.NS', 'BAJFINANCE.NS', 'M&M.NS', 'TATASTEEL.NS', 'POWERGRID.NS', 'NTPC.NS', 'NESTLEIND.NS', 'BAJAJFINSV.NS', 'GRASIM.NS', 'DRREDDY.NS', 'ADANIPORTS.NS', 'WIPRO.NS', 'HCLTECH.NS', 'INDUSINDBK.NS', 'APOLLOHOSP.NS', 'BRITANNIA.NS', 'EICHERMOT.NS', 'CIPLA.NS', 'BPCL.NS', 'HEROMOTOCO.NS', 'DIVISLAB.NS', 'COALINDIA.NS', 'ONGC.NS', 'HINDALCO.NS', 'TECHM.NS', 'LTIM.NS', 'TATACONSUM.NS', 'BAJAJ-AUTO.NS', 'SHRIRAMFIN.NS', 'ADANIENT.NS', 'TATASTLLP.NS']
+          : market === 'CRYPTO'
+            ? ['BTC-USD', 'ETH-USD', 'SOL-USD', 'XRP-USD', 'ADA-USD', 'BNB-USD', 'DOGE-USD', 'MATIC-USD', 'LINK-USD', 'DOT-USD', 'AVAX-USD', 'UNI-USD']
+            : ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'META', 'GOOGL', 'NFLX', 'AMD', 'SPY'];
+
       const response = await fetch('http://localhost:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(symbolsToScan),
       });
-      
+
       const data = await response.json();
       if (data && data.opportunities) {
         setSmcSetups(data.opportunities);
@@ -159,39 +159,39 @@ export default function Home() {
           <div className="xl:col-span-1 border border-slate-800 rounded-xl bg-slate-950/80 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.4)] flex flex-col h-[600px]">
             <div className="p-4 border-b border-slate-800/80 bg-slate-900 flex justify-between items-center">
               <h3 className="font-bold tracking-widest text-[#22d3ee] uppercase text-sm">Control Panel</h3>
-              <button 
+              <button
                 onClick={handleScanSMC}
                 disabled={isScanning}
                 className="px-4 py-1.5 bg-[#22d3ee]/20 hover:bg-[#22d3ee]/30 text-[#22d3ee] rounded shadow-[0_0_10px_rgba(34,211,238,0.4)] transition-all flex items-center gap-2 border border-[#22d3ee]/50 text-xs font-bold disabled:opacity-50"
               >
-                {isScanning ? <Activity className="w-4 h-4 animate-spin"/> : <Radar className="w-4 h-4" />}
+                {isScanning ? <Activity className="w-4 h-4 animate-spin" /> : <Radar className="w-4 h-4" />}
                 {isScanning ? 'SCANNING...' : 'SCAN SMC'}
               </button>
             </div>
             <div className="flex-1 overflow-hidden">
-             <TerminalFeed setups={smcSetups} onSelectSetup={setSelectedSetup} selectedSymbol={selectedSetup?.symbol} />
+              <TerminalFeed setups={smcSetups} onSelectSetup={setSelectedSetup} selectedSymbol={selectedSetup?.symbol} />
             </div>
           </div>
-          
+
           <div className="xl:col-span-3 flex flex-col gap-6">
             {selectedSetup ? (
-               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
-                 <div className="hidden lg:block absolute inset-0 bg-[#22d3ee]/5 rounded-xl blur-2xl z-0 pointer-events-none" />
-                 <div className="lg:col-span-1 z-10 relative cursor-pointer hover:ring-2 ring-cyan-500/50 rounded-xl transition-all" onClick={() => setShowDetailsModal(true)}>
-                   <TradeCards setup={selectedSetup} />
-                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-700 text-[10px] uppercase text-cyan-400 px-3 py-1 rounded-full shadow-lg z-20">Click for Detailed Analysis</div>
-                 </div>
-                 <div className="lg:col-span-2 h-[380px] z-10 relative">
-                   <MTFChart setup={selectedSetup} />
-                 </div>
-               </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+                <div className="hidden lg:block absolute inset-0 bg-[#22d3ee]/5 rounded-xl blur-2xl z-0 pointer-events-none" />
+                <div className="lg:col-span-1 z-10 relative cursor-pointer hover:ring-2 ring-cyan-500/50 rounded-xl transition-all" onClick={() => setShowDetailsModal(true)}>
+                  <TradeCards setup={selectedSetup} />
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-700 text-[10px] uppercase text-cyan-400 px-3 py-1 rounded-full shadow-lg z-20">Click for Detailed Analysis</div>
+                </div>
+                <div className="lg:col-span-2 h-[380px] z-10 relative">
+                  <MTFChart setup={selectedSetup} />
+                </div>
+              </div>
             ) : (
-               <div className="h-[380px] border border-dashed border-slate-800 rounded-xl bg-slate-900/30 flex items-center justify-center">
-                  <div className="text-center">
-                    <Activity className="mx-auto h-12 w-12 text-slate-700 mb-3" />
-                    <p className="text-slate-500 font-mono">Terminal Standby. Initiate Scan.</p>
-                  </div>
-               </div>
+              <div className="h-[380px] border border-dashed border-slate-800 rounded-xl bg-slate-900/30 flex items-center justify-center">
+                <div className="text-center">
+                  <Activity className="mx-auto h-12 w-12 text-slate-700 mb-3" />
+                  <p className="text-slate-500 font-mono">Terminal Standby. Initiate Scan.</p>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -225,3 +225,6 @@ export default function Home() {
     </div>
   );
 }
+
+
+//v1.0.0
