@@ -55,6 +55,9 @@ interface TradeLog {
   account_equity?: number;
   result?: string;
   confluence_score?: number;
+  trade_balance_before?: number;
+  dollar_risk?: number;
+  position_size?: number;
 }
 
 interface BacktestStats {
@@ -62,6 +65,7 @@ interface BacktestStats {
   win_rate_pct: number;
   profit_factor: number;
   max_drawdown_pct: number;
+  max_drawdown_usd: number;
   sharpe_ratio: number;
   total_return_pct: number;
   final_equity_usd: number;
@@ -84,6 +88,7 @@ export default function BacktestPage() {
   const [symbol, setSymbol] = useState('BTC-USD');
   const [start, setStart]   = useState('2023-01-01');
   const [end, setEnd]       = useState('2025-12-31');
+  const [initialCapital, setInitialCapital] = useState('10000');
   const [loading, setLoading]     = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [result, setResult] = useState<BacktestResult | null>(null);
@@ -97,8 +102,9 @@ export default function BacktestPage() {
     setError(null);
     setResult(null);
     try {
+      const cap = parseFloat(initialCapital) || 10000;
       const res = await fetch(
-        `${API}/backtest/stats?symbol=${encodeURIComponent(symbol)}&start=${start}&end=${end}`
+        `${API}/backtest/stats?symbol=${encodeURIComponent(symbol)}&start=${start}&end=${end}&initial_capital=${cap}`
       );
       if (!res.ok) {
         const err = await res.json();
@@ -116,8 +122,9 @@ export default function BacktestPage() {
   const downloadExcel = async () => {
     setDownloading(true);
     try {
+      const cap = parseFloat(initialCapital) || 10000;
       const res = await fetch(
-        `${API}/backtest/download?symbol=${encodeURIComponent(symbol)}&start=${start}&end=${end}`
+        `${API}/backtest/download?symbol=${encodeURIComponent(symbol)}&start=${start}&end=${end}&initial_capital=${cap}`
       );
       if (!res.ok) throw new Error('Export failed');
       const blob = await res.blob();
@@ -141,7 +148,7 @@ export default function BacktestPage() {
     ? [
         { label: 'Win Rate',       value: fmtPct(stats.win_rate_pct),            icon: ShieldCheck,  color: 'emerald', pos: (stats.win_rate_pct ?? 0) >= 50 },
         { label: 'Profit Factor',  value: `${fmtNum(stats.profit_factor)}x`,     icon: BarChart3,    color: 'cyan',    pos: (stats.profit_factor ?? 0) >= 1  },
-        { label: 'Max Drawdown',   value: `-${fmtPct(stats.max_drawdown_pct)}`,  icon: TrendingDown, color: 'rose',    pos: false                              },
+        { label: 'Max Drawdown',   value: `-${fmtPct(stats.max_drawdown_pct)} (${fmtUsd(stats.max_drawdown_usd)})`, icon: TrendingDown, color: 'rose', pos: false },
         { label: 'Sharpe Ratio',   value: fmtNum(stats.sharpe_ratio),            icon: Activity,     color: 'violet',  pos: (stats.sharpe_ratio ?? 0) >= 1    },
         { label: 'Total Return',   value: fmtPct(stats.total_return_pct, true),  icon: TrendingUp,   color: 'emerald', pos: (stats.total_return_pct ?? 0) > 0  },
         { label: 'Final Equity',   value: fmtUsd(stats.final_equity_usd),        icon: TrendingUp,   color: 'cyan',    pos: (stats.final_equity_usd ?? 0) > 10000 },
@@ -179,7 +186,7 @@ export default function BacktestPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-5">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
               <div>
                 <label className="text-[10px] uppercase text-slate-500 font-bold mb-1.5 block tracking-widest">Symbol</label>
                 <select
@@ -204,6 +211,14 @@ export default function BacktestPage() {
                   type="date" value={end}
                   onChange={(e) => setEnd(e.target.value)}
                   className="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded px-3 py-2.5 text-sm focus:ring-1 focus:ring-violet-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] uppercase text-slate-500 font-bold mb-1.5 block tracking-widest">Initial Capital ($)</label>
+                <input
+                  type="number" value={initialCapital}
+                  onChange={(e) => setInitialCapital(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded px-3 py-2.5 text-sm focus:ring-1 focus:ring-violet-500 outline-none font-mono"
                 />
               </div>
               <button
@@ -364,13 +379,35 @@ export default function BacktestPage() {
                               <tr key={`${idx}-detail`} className="border-b border-slate-800 bg-slate-900/60">
                                 <td colSpan={11} className="px-6 py-4">
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                      <div className="text-[10px] uppercase text-violet-400 font-bold mb-1 tracking-widest">📍 SMC Trigger (Why)</div>
-                                      <div className="text-slate-300 text-xs leading-relaxed">{trade.trigger_why ?? '—'}</div>
+                                    <div className="space-y-4">
+                                      <div>
+                                        <div className="text-[10px] uppercase text-violet-400 font-bold mb-1 tracking-widest">📍 SMC Trigger (Why)</div>
+                                        <div className="text-slate-300 text-xs leading-relaxed">{trade.trigger_why ?? '—'}</div>
+                                      </div>
+                                      <div>
+                                        <div className="text-[10px] uppercase text-cyan-400 font-bold mb-1 tracking-widest">📊 Market Context</div>
+                                        <div className="text-slate-300 text-xs leading-relaxed">{trade.market_context ?? '—'}</div>
+                                      </div>
                                     </div>
-                                    <div>
-                                      <div className="text-[10px] uppercase text-cyan-400 font-bold mb-1 tracking-widest">📊 Market Context</div>
-                                      <div className="text-slate-300 text-xs leading-relaxed">{trade.market_context ?? '—'}</div>
+                                    <div className="border border-slate-700/50 bg-slate-900/50 rounded-lg p-3 grid grid-cols-2 gap-3">
+                                      <div>
+                                        <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">Risk Amount</div>
+                                        <div className="text-amber-400 font-mono text-sm font-bold">{fmtUsd(trade.dollar_risk)}</div>
+                                      </div>
+                                      <div>
+                                        <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">Pos Size (Units)</div>
+                                        <div className="text-slate-200 font-mono text-sm">{trade.position_size?.toLocaleString(undefined, { maximumFractionDigits: 4 }) ?? '—'}</div>
+                                      </div>
+                                      <div>
+                                        <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">Bal Before Trade</div>
+                                        <div className="text-slate-300 font-mono text-sm">{fmtUsd(trade.trade_balance_before)}</div>
+                                      </div>
+                                      <div>
+                                        <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">Net PnL</div>
+                                        <div className={`font-mono text-sm font-bold ${(trade.pnl_dollars ?? 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                          {fmtUsd(trade.pnl_dollars)}
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </td>

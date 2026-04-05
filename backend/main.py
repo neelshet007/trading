@@ -305,10 +305,11 @@ async def download_backtest(
     symbol: str = "BTC-USD",
     start: str = "2023-01-01",
     end: str = "2025-12-31",
+    initial_capital: float = 10000.0,
 ):
     """Run the SMC/ICT backtest and return a downloadable Excel report."""
     try:
-        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end)
+        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end, initial_capital=initial_capital)
         if not trades:
             raise HTTPException(status_code=404, detail="No SMC trades found in the given period.")
         excel_bytes = generate_excel_report(trades, stats, symbol)
@@ -326,10 +327,11 @@ async def get_backtest_stats(
     symbol: str = "BTC-USD",
     start: str = "2023-01-01",
     end: str = "2025-12-31",
+    initial_capital: float = 10000.0,
 ):
     """Run the SMC/ICT backtest and return JSON performance stats + trade log."""
     try:
-        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end)
+        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end, initial_capital=initial_capital)
         return JSONResponse(content={"stats": stats, "trades": trades})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

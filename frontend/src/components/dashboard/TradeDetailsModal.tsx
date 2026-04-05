@@ -32,12 +32,17 @@ export function TradeDetailsModal({ setup, onClose }: TradeDetailsModalProps) {
         
         <CardContent className="p-6 space-y-8">
           
-          {/* Executive Summary */}
+           {/* Executive Summary */}
           <div className="space-y-4">
              <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-2 opacity-10"><LocateFixed className="w-16 h-16 text-cyan-400"/></div>
                 <h4 className="text-xs uppercase tracking-widest text-cyan-500 mb-1 font-semibold">Execution Rationale</h4>
-                <div className="text-lg text-slate-200 font-medium">{narrative.reason}</div>
+                <div className="text-lg text-slate-200 font-medium mb-3">{narrative.reason}</div>
+                {narrative.zoom_reason && (
+                  <div className="text-sm font-semibold text-violet-400 bg-violet-500/10 p-2 rounded border border-violet-500/20">
+                    🔬 {narrative.zoom_reason}
+                  </div>
+                )}
              </div>
              <div>
                 <h4 className="text-xs uppercase tracking-widest text-slate-500 mb-1">Market Context</h4>

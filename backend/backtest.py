@@ -195,6 +195,7 @@ def run_smc_backtest(
     symbol: str = "BTC-USD",
     start:  str = "2023-01-01",
     end:    str = "2025-12-31",
+    initial_capital: float = 10000.0,
 ) -> tuple[list[dict], dict]:
 
     logger.info("Starting SMC+TA backtest for %s (%s → %s)", symbol, start, end)
@@ -210,7 +211,7 @@ def run_smc_backtest(
     df = add_indicators(df)
 
     trades    : list[dict] = []
-    equity    : float      = INITIAL_EQUITY
+    equity    : float      = initial_capital
     in_trade  : bool       = False
     cur_trade : Optional[dict] = None
 
@@ -249,9 +250,8 @@ def run_smc_backtest(
                 entry      = cur_trade["entry_price"]
                 pnl_pct    = ((exit_px - entry) / entry * 100) if dirn == "LONG" \
                               else ((entry - exit_px) / entry * 100)
-                risk_amt   = equity * RISK_PER_TRADE
-                rr         = abs(target - entry) / abs(sl - entry) if abs(sl - entry) else 0
-                pnl_dollars = risk_amt * rr if hit_tp else -risk_amt
+                pnl_dollars = round((exit_px - entry) * cur_trade["position_size"], 2) if dirn == "LONG" \
+                               else round((entry - exit_px) * cur_trade["position_size"], 2)
                 equity      = max(equity + pnl_dollars, 0.01)
 
                 cur_trade.update(
@@ -289,6 +289,10 @@ def run_smc_backtest(
             trigger = " → ".join(reasons_long)
             context = f"Bullish Bias | 1H SMC+TA | Fib {fp:.2f} | Score {sc_long}/8"
 
+            dollar_risk = round(equity * RISK_PER_TRADE, 2)
+            sl_distance = abs(entry - sl)
+            pos_size = dollar_risk / sl_distance if sl_distance > 0 else 0
+
             cur_trade = dict(
                 date_time     = str(df.index[i]),
                 market_context= context,
@@ -300,6 +304,9 @@ def run_smc_backtest(
                 target        = target,
                 risk_reward   = RR_LONG,
                 confluence_score = sc_long,
+                trade_balance_before = round(equity, 2),
+                dollar_risk    = dollar_risk,
+                position_size  = round(pos_size, 6),
             )
             in_trade = True
             continue
@@ -325,6 +332,10 @@ def run_smc_backtest(
             trigger = " → ".join(reasons_short)
             context = f"Bearish Bias | 1H SMC+TA | Fib {fp:.2f} | Score {sc_short}/8"
 
+            dollar_risk = round(equity * RISK_PER_TRADE, 2)
+            sl_distance = abs(sl - entry)
+            pos_size = dollar_risk / sl_distance if sl_distance > 0 else 0
+
             cur_trade = dict(
                 date_time     = str(df.index[i]),
                 market_context= context,
@@ -336,6 +347,9 @@ def run_smc_backtest(
                 target        = target,
                 risk_reward   = RR_SHORT,
                 confluence_score = sc_short,
+                trade_balance_before = round(equity, 2),
+                dollar_risk    = dollar_risk,
+                position_size  = round(pos_size, 6),
             )
             in_trade = True
 
@@ -347,16 +361,18 @@ def run_smc_backtest(
         dirn    = cur_trade["direction"]
         pnl_pct = ((exit_px - entry) / entry * 100) if dirn == "LONG" \
                    else ((entry - exit_px) / entry * 100)
+        pnl_dollars = round((exit_px - entry) * cur_trade["position_size"], 2) if dirn == "LONG" \
+                       else round((entry - exit_px) * cur_trade["position_size"], 2)
         cur_trade.update(
             exit_price    = round(exit_px, 4),
             pnl_pct       = round(pnl_pct, 2),
-            pnl_dollars   = round(equity * RISK_PER_TRADE * (pnl_pct / 100), 2),
-            account_equity= round(equity, 2),
+            pnl_dollars   = round(pnl_dollars, 2),
+            account_equity= round(equity + pnl_dollars, 2),
             result        = "Open at End ⏳",
         )
         trades.append(cur_trade)
 
-    stats = _compute_stats(trades, df_daily, INITIAL_EQUITY)
+    stats = _compute_stats(trades, df_daily, initial_capital)
     return trades, stats
 
 
@@ -378,11 +394,15 @@ def _compute_stats(trades: list[dict], df_daily: pd.DataFrame, init: float) -> d
     for t in completed:
         eq_curve.append(eq_curve[-1] + t["pnl_dollars"])
 
-    peak = eq_curve[0]; max_dd = 0.0
+    peak = eq_curve[0]
+    max_dd_pct = 0.0
+    max_dd_usd = 0.0
     for eq in eq_curve:
         if eq > peak: peak = eq
         dd = (peak - eq) / peak * 100
-        if dd > max_dd: max_dd = dd
+        dd_usd = peak - eq
+        if dd > max_dd_pct: max_dd_pct = dd
+        if dd_usd > max_dd_usd: max_dd_usd = dd_usd
 
     ret = pd.Series(eq_curve).pct_change().dropna()
     sharpe = float((ret.mean() / ret.std() * (252**0.5)) if ret.std() > 0 else 0)
@@ -400,7 +420,8 @@ def _compute_stats(trades: list[dict], df_daily: pd.DataFrame, init: float) -> d
         "losses":              len(losses),
         "win_rate_pct":        round(len(wins) / len(completed) * 100, 1),
         "profit_factor":       round(gross_profit / gross_loss, 2),
-        "max_drawdown_pct":    round(max_dd, 2),
+        "max_drawdown_pct":    round(max_dd_pct, 2),
+        "max_drawdown_usd":    round(max_dd_usd, 2),
         "sharpe_ratio":        round(sharpe, 2),
         "total_return_pct":    round(total_ret, 2),
         "final_equity_usd":    round(final_eq, 2),
@@ -440,8 +461,9 @@ def generate_excel_report(trades: list[dict], stats: dict, symbol: str) -> bytes
     LEFT   = Alignment(horizontal="left",   vertical="center", wrap_text=True)
 
     headers = ["Date_Time","Market_Context","Type","Direction","Trigger_Why",
-               "Score","Entry","SL","Target","Exit","PnL_%","PnL_$","Equity","Result"]
-    col_widths = [22,40,10,10,80,7,14,14,14,14,10,12,16,18]
+               "Score", "Balance_Before", "Dollar_Risk", "Entry", "SL", "Target", "Pos_Size_Units",
+               "Exit", "PnL_%", "Net_PnL_USD", "Cumulative_Equity", "Result"]
+    col_widths = [22,40,10,10,80,7,16,14,14,14,14,16,14,10,14,18,18]
 
     for ci, h in enumerate(headers, 1):
         c = ws.cell(row=1, column=ci, value=h)
@@ -461,9 +483,12 @@ def generate_excel_report(trades: list[dict], stats: dict, symbol: str) -> bytes
             trade.get("direction",""),
             trade.get("trigger_why",""),
             trade.get("confluence_score",""),
+            trade.get("trade_balance_before",""),
+            trade.get("dollar_risk",""),
             trade.get("entry_price",""),
             trade.get("stop_loss",""),
             trade.get("target",""),
+            trade.get("position_size",""),
             trade.get("exit_price",""),
             trade.get("pnl_pct",""),
             trade.get("pnl_dollars",""),
@@ -474,13 +499,16 @@ def generate_excel_report(trades: list[dict], stats: dict, symbol: str) -> bytes
             c = ws.cell(row=ri, column=ci, value=val)
             c.fill = bg; c.border = BRD
             c.alignment = LEFT if ci in (2,5) else Alignment(horizontal="right", vertical="center")
-            if ci == 11:   # PnL%
+            if ci == 14:   # PnL%
                 c.font = GFONT if (val or 0) > 0 else RFONT
                 c.number_format = "+0.00%;-0.00%"
-            elif ci == 12:   # PnL$
+            elif ci in (7, 8, 15):   # Balance_Before, Dollar_Risk, Net_PnL_USD
                 c.font = GFONT if (val or 0) > 0 else RFONT
+                if ci == 8: c.font = RFONT # Risk is red
                 c.number_format = '"$"#,##0.00'
-            elif ci == 13:
+            elif ci == 12: # Pos size units
+                c.font = WFONT; c.number_format = '#,##0.0000'
+            elif ci == 16: # Cum Equity
                 c.font = WFONT; c.number_format = '"$"#,##0.00'
             else:
                 c.font = GRAY
@@ -496,7 +524,7 @@ def generate_excel_report(trades: list[dict], stats: dict, symbol: str) -> bytes
         ("── SMC + TA Confluence Backtest ──", ""),
         ("Symbol",           symbol),
         ("Period",           "Custom Range"),
-        ("Initial Capital",  f"${INITIAL_EQUITY:,.0f}"),
+        ("Initial Capital",  f'${stats.get("final_equity_usd",0) / (1 + (stats.get("total_return_pct",0)/100)):,.2f}'),
         ("Min Confluence Score", f"{MIN_SCORE}/8"),
         ("",""),
         ("── Trade Stats ──", ""),
@@ -510,7 +538,8 @@ def generate_excel_report(trades: list[dict], stats: dict, symbol: str) -> bytes
         ("Total Return",     f"{stats.get('total_return_pct',0):.2f}%"),
         ("Final Equity",     f"${stats.get('final_equity_usd',0):,.2f}"),
         ("Profit Factor",    f"{stats.get('profit_factor',0):.2f}x"),
-        ("Max Drawdown",     f"{stats.get('max_drawdown_pct',0):.2f}%"),
+        ("Max Drawdown (Pct)",  f"{stats.get('max_drawdown_pct',0):.2f}%"),
+        ("Max Drawdown (USD)",  f"${stats.get('max_drawdown_usd',0):,.2f}"),
         ("Sharpe Ratio",     f"{stats.get('sharpe_ratio',0):.2f}"),
         ("",""),
         ("── vs Buy & Hold ──", ""),

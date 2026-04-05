@@ -14,6 +14,7 @@ class NarrativeDetail(BaseModel):
     context: str
     score_breakdown: List[str]
     timeline: List[str]
+    zoom_reason: Optional[str] = None
 
 class ChecklistDetails(BaseModel):
     htf_aligned: bool
@@ -35,6 +36,10 @@ class ForensicReport(BaseModel):
     stop_loss: float
     take_profit: float
     risk_reward: float
+    zoom_resolution: Optional[str] = None
+    trade_classification: Optional[str] = None
+    margin_multiple: Optional[str] = None
+    auto_square_off: Optional[str] = None
 
 class SetupResponse(BaseModel):
     symbol: str
@@ -48,6 +53,10 @@ class SetupResponse(BaseModel):
     narrative: Optional[NarrativeDetail] = None
     ob_top: Optional[float] = None
     ob_bottom: Optional[float] = None
+    zoom_resolution: Optional[str] = None
+    trade_classification: Optional[str] = None
+    margin_multiple: Optional[str] = None
+    auto_square_off: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 class ScanResult(BaseModel):

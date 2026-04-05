@@ -142,8 +142,18 @@ export default function StockDetailPage() {
                     <Card className="border-slate-800 bg-slate-950/70 h-full relative overflow-hidden">
                       <div className="absolute opacity-5 -right-5 -bottom-5"><Search className="w-48 h-48" /></div>
                       <CardHeader className="border-b border-slate-800 pb-3 relative z-10">
-                          <CardTitle className="text-sm font-semibold tracking-widest text-white flex items-center gap-2">
-                             <Radar className="h-4 w-4 text-rose-400" /> Forensic "Why & Where"
+                          <CardTitle className="text-sm font-semibold tracking-widest text-white flex items-center justify-between">
+                             <span className="flex items-center gap-2"><Radar className="h-4 w-4 text-rose-400" /> Forensic "Why & Where"</span>
+                             {forensicData.trade_classification && (
+                               <div className="flex gap-2">
+                                 <span className="text-[10px] px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 font-bold">
+                                   {forensicData.trade_classification}
+                                 </span>
+                                 <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+                                   {forensicData.margin_multiple}
+                                 </span>
+                               </div>
+                             )}
                           </CardTitle>
                       </CardHeader>
                       <CardContent className="pt-5 space-y-5 relative z-10">

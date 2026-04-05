@@ -18,6 +18,7 @@ export interface NarrativeDetail {
   context: string;
   score_breakdown: string[];
   timeline: string[];
+  zoom_reason?: string;
 }
 
 export interface SetupData {
@@ -32,6 +33,10 @@ export interface SetupData {
   narrative?: NarrativeDetail;
   ob_top?: number;
   ob_bottom?: number;
+  trade_classification?: string;
+  zoom_resolution?: string;
+  margin_multiple?: string;
+  auto_square_off?: string;
 }
 
 interface TradeCardsProps {
@@ -52,6 +57,11 @@ export function TradeCards({ setup }: TradeCardsProps) {
           <span className={`text-xs px-2 py-0.5 rounded-full ${neonBg} ${neonColor} border border-current`}>
             {setup.status}
           </span>
+          {setup.trade_classification && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
+              {setup.trade_classification}
+            </span>
+          )}
         </CardTitle>
         <Icon className={`h-6 w-6 ${neonColor}`} />
       </CardHeader>
