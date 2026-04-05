@@ -9,6 +9,10 @@ import { fetcher } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SignalCard } from '@/components/SignalCard';
+import { TradeCards, SetupData } from '@/components/dashboard/TradeCards';
+import { TerminalFeed } from '@/components/dashboard/TerminalFeed';
+import { MTFChart } from '@/components/dashboard/MTFChart';
+import { TradeDetailsModal } from '@/components/dashboard/TradeDetailsModal';
 import {
   formatDisplayDate,
   formatDisplayTime,
@@ -27,6 +31,17 @@ const MARKET_ICONS: Record<string, string> = {
 export default function Home() {
   const { timeframe, setTimeframe, market, setMarket, marketSummary, setMarketSummary } = useStore();
   const [signals, setSignals] = useState<Signal[]>([]);
+  
+  // SMC Terminal State
+  const [smcSetups, setSmcSetups] = useState<SetupData[]>([]);
+  const [selectedSetup, setSelectedSetup] = useState<SetupData | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -51,8 +66,42 @@ export default function Home() {
     };
   }, [timeframe, market, setMarketSummary]);
 
+  const handleScanSMC = async () => {
+    setIsScanning(true);
+    try {
+      // For demo purposes, we scan a basket of Nifty 50 and popular symbols
+      const symbolsToScan = market === 'INDIA' 
+        ? ['RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS', 'LT.NS']
+        : market === 'CRYPTO'
+        ? ['BTC-USD', 'ETH-USD', 'SOL-USD', 'XRP-USD', 'ADA-USD', 'BNB-USD', 'DOGE-USD', 'MATIC-USD', 'LINK-USD', 'DOT-USD', 'AVAX-USD', 'UNI-USD']
+        : ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'META', 'GOOGL', 'NFLX', 'AMD', 'SPY'];
+        
+      const response = await fetch('http://localhost:8000/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(symbolsToScan),
+      });
+      
+      const data = await response.json();
+      if (data && data.opportunities) {
+        setSmcSetups(data.opportunities);
+        if (data.opportunities.length > 0) {
+          setSelectedSetup(data.opportunities[0]);
+        }
+      }
+    } catch (e) {
+      console.error('Scan failed', e);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
   const topSignals = signals.slice(0, 10);
   const marketClock = marketSummary?.market_clock;
+
+  if (!isMounted) {
+    return null; // Avoid hydration mismatch on the server
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(22,78,99,0.18),transparent_30%),linear-gradient(180deg,#020617_0%,#07111f_45%,#020617_100%)] text-slate-200">
@@ -104,82 +153,50 @@ export default function Home() {
         </div>
 
         <div className="mb-8 grid grid-cols-1 gap-6 xl:grid-cols-4">
-          <Card className="border-slate-800 bg-slate-950/70 xl:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white"><Clock3 className="h-5 w-5 text-cyan-300" /> Market Status Panel</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge className={getStatusBadgeClasses(marketClock?.status_color)}>{marketClock?.status_text || 'Unknown'}</Badge>
-                <div className="text-sm text-slate-400">
-                  Session sentiment: <span className="font-medium text-slate-200">{marketSummary?.status || 'Unknown'}</span>
-                </div>
-              </div>
-              <div className={`grid gap-4 ${market === 'USA' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-slate-500">India Time</div>
-                  <div className="mt-2 text-3xl font-semibold text-white">{marketClock?.india_time || '--:--'}</div>
-                  <div className="text-sm text-slate-400">IST</div>
-                </div>
-                {market === 'USA' && (
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-                    <div className="text-xs uppercase tracking-[0.2em] text-slate-500">US Time</div>
-                    <div className="mt-2 text-3xl font-semibold text-white">{marketClock?.local_time || '--:--'}</div>
-                    <div className="text-sm text-slate-400">{marketClock?.local_label || 'ET'}</div>
+          <div className="xl:col-span-1 border border-slate-800 rounded-xl bg-slate-950/80 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.4)] flex flex-col h-[600px]">
+            <div className="p-4 border-b border-slate-800/80 bg-slate-900 flex justify-between items-center">
+              <h3 className="font-bold tracking-widest text-[#22d3ee] uppercase text-sm">Control Panel</h3>
+              <button 
+                onClick={handleScanSMC}
+                disabled={isScanning}
+                className="px-4 py-1.5 bg-[#22d3ee]/20 hover:bg-[#22d3ee]/30 text-[#22d3ee] rounded shadow-[0_0_10px_rgba(34,211,238,0.4)] transition-all flex items-center gap-2 border border-[#22d3ee]/50 text-xs font-bold disabled:opacity-50"
+              >
+                {isScanning ? <Activity className="w-4 h-4 animate-spin"/> : <Radar className="w-4 h-4" />}
+                {isScanning ? 'SCANNING...' : 'SCAN SMC'}
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+             <TerminalFeed setups={smcSetups} onSelectSetup={setSelectedSetup} selectedSymbol={selectedSetup?.symbol} />
+            </div>
+          </div>
+          
+          <div className="xl:col-span-3 flex flex-col gap-6">
+            {selectedSetup ? (
+               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+                 <div className="hidden lg:block absolute inset-0 bg-[#22d3ee]/5 rounded-xl blur-2xl z-0 pointer-events-none" />
+                 <div className="lg:col-span-1 z-10 relative cursor-pointer hover:ring-2 ring-cyan-500/50 rounded-xl transition-all" onClick={() => setShowDetailsModal(true)}>
+                   <TradeCards setup={selectedSetup} />
+                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-700 text-[10px] uppercase text-cyan-400 px-3 py-1 rounded-full shadow-lg z-20">Click for Detailed Analysis</div>
+                 </div>
+                 <div className="lg:col-span-2 h-[380px] z-10 relative">
+                   <MTFChart setup={selectedSetup} />
+                 </div>
+               </div>
+            ) : (
+               <div className="h-[380px] border border-dashed border-slate-800 rounded-xl bg-slate-900/30 flex items-center justify-center">
+                  <div className="text-center">
+                    <Activity className="mx-auto h-12 w-12 text-slate-700 mb-3" />
+                    <p className="text-slate-500 font-mono">Terminal Standby. Initiate Scan.</p>
                   </div>
-                )}
-              </div>
-              <div className="text-sm text-slate-400">
-                Last engine update: {formatDisplayTime(marketSummary?.timestamp)} IST on {formatDisplayDate(marketSummary?.timestamp)}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-slate-800 bg-slate-950/70">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white"><TrendingUp className="h-5 w-5 text-emerald-300" /> Breadth</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-                <div className="text-sm text-slate-400">Bullish</div>
-                <div className="mt-1 text-3xl font-bold text-emerald-300">{marketSummary?.bullish_count ?? 0}</div>
-              </div>
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-                <div className="text-sm text-slate-400">Bearish</div>
-                <div className="mt-1 text-3xl font-bold text-red-300">{marketSummary?.bearish_count ?? 0}</div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-slate-800 bg-slate-950/70">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white"><Radar className="h-5 w-5 text-amber-300" /> Right Now</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {topSignals.slice(0, 3).map((signal) => (
-                <div key={`${signal.symbol}-${signal.strategy}`} className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="font-semibold text-white">{signal.symbol}</div>
-                    <Badge className={signal.signal === 'bullish' ? 'bg-emerald-500/20 text-emerald-300' : signal.signal === 'bearish' ? 'bg-red-500/20 text-red-300' : 'bg-amber-500/20 text-amber-200'}>
-                      {signal.analysis_summary?.rating || 'Watch'}
-                    </Badge>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">{signal.analysis_summary?.why_now || signal.reasons[0]}</p>
-                </div>
-              ))}
-              {topSignals.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
-                  No action-ready setups are ranked yet for this market.
-                </div>
-              )}
-            </CardContent>
-          </Card>
+               </div>
+            )}
+          </div>
         </div>
 
         <Card className="border-slate-800 bg-slate-950/50">
           <CardHeader>
             <CardTitle className="flex items-center justify-between gap-3 text-white">
-              <span>Top ranked setups</span>
+              <span>Standard Market Overview</span>
               <Badge variant="outline" className="border-slate-700 text-slate-300">{topSignals.length} visible</Badge>
             </CardTitle>
           </CardHeader>
@@ -187,7 +204,7 @@ export default function Home() {
             {topSignals.length === 0 ? (
               <div className="py-12 text-center text-slate-400">
                 <Activity className="mx-auto mb-4 h-12 w-12 text-slate-700" />
-                No high-conviction setups found right now for {market}.
+                No standard setups found right now for {market}.
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
@@ -199,6 +216,9 @@ export default function Home() {
           </CardContent>
         </Card>
       </main>
+      {showDetailsModal && selectedSetup && (
+        <TradeDetailsModal setup={selectedSetup} onClose={() => setShowDetailsModal(false)} />
+      )}
     </div>
   );
 }

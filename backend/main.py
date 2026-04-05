@@ -16,8 +16,16 @@ from market_utils import ensure_utc, get_market_clock, ist_now, normalize_symbol
 from models import MarketSummaryModel, SignalModel, WatchlistModel
 from scheduler import start_scheduler
 from signal_engine import analyze_stock
+from schemas import ScanResult, SetupResponse
+from engine import run_scan
+import time
+import logging
 
 logging.basicConfig(level=logging.INFO)
+
+# Simple in-memory cache for /scan endpoint to prevent redundant yfinance API calls
+scan_cache = {}
+SCAN_CACHE_TTL = 3600  # 1 hour expressed in seconds
 
 app = FastAPI(title="Trading Intelligence Platform API")
 
@@ -263,6 +271,23 @@ async def get_signals_by_strategy(strategy: str, market: Optional[str] = "USA", 
         _signal_sort_order()
     )
     return await cursor.to_list(length=100)
+
+@app.post("/scan", response_model=ScanResult)
+async def scan_market(symbols: List[str]):
+    # Cache key based on sorted tuple of symbols
+    cache_key = tuple(sorted(symbols))
+    current_time = time.time()
+    
+    if cache_key in scan_cache:
+        cached_result, timestamp = scan_cache[cache_key]
+        if current_time - timestamp < SCAN_CACHE_TTL:
+            return ScanResult(opportunities=cached_result)
+            
+    # If not in cache or expired, run the parallel scan
+    results = run_scan(list(symbols))
+    scan_cache[cache_key] = (results, current_time)
+    
+    return ScanResult(opportunities=results)
 
 
 @app.get("/stock/{symbol}", response_model=List[SignalModel])

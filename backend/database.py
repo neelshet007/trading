@@ -4,11 +4,12 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime
 from zoneinfo import ZoneInfo
+import certifi
 
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/trading_platform")
-client = AsyncIOMotorClient(MONGO_URI)
+client = AsyncIOMotorClient(MONGO_URI, tlsCAFile=certifi.where())
 db = client.get_database("trading_platform")
 
 signals_collection = db["signals"]
