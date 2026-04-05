@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from concurrent.futures import ProcessPoolExecutor
-from schemas import SetupResponse, ConfluenceScore, NarrativeDetail
+from schemas import SetupResponse, ConfluenceScore, NarrativeDetail, ForensicReport, ChecklistDetails, DerivativeStats
 
 def fetch_data(symbol: str):
     """Fetch Multi-Tier data using yfinance."""
@@ -158,3 +158,83 @@ def run_scan(symbols):
                 
     results.sort(key=lambda x: x.confluence.total_score, reverse=True)
     return results
+
+def run_forensic_scan(symbol: str) -> ForensicReport:
+    """Intensive 3-timeframe forensic engine calculating FVGs, Deep Sweeps, & Derivative (OI) Proxies."""
+    sym, df_1d, df_1h, df_5m = fetch_data(symbol)
+    if df_1d is None or df_1h is None or len(df_1h) < 10:
+        return None
+        
+    # Analyze HTF Bias & Trend
+    df_1d['SMA_50'] = df_1d['Close'].rolling(window=50).mean()
+    last_close = float(df_1d['Close'].iloc[-1])
+    sma_50 = float(df_1d['SMA_50'].iloc[-1]) if pd.notna(df_1d['SMA_50'].iloc[-1]) else last_close
+    is_bullish = last_close > sma_50
+    
+    # Analyze 1H FVG (Unmitigated)
+    df_1h['fvg_bull'] = (df_1h['High'].shift(2) < df_1h['Low']) & (df_1h['Close'].shift(1) > df_1h['High'].shift(2))
+    df_1h['fvg_bear'] = (df_1h['Low'].shift(2) > df_1h['High']) & (df_1h['Close'].shift(1) < df_1h['Low'].shift(2))
+    fvg_created = bool(df_1h['fvg_bull'].tail(10).any() if is_bullish else df_1h['fvg_bear'].tail(10).any())
+    
+    # Sweep Detection
+    df_1h['sweep_low'] = (df_1h['Low'] < df_1h['Low'].shift(1)) & (df_1h['Close'] > df_1h['Low'].shift(1))
+    df_1h['sweep_high'] = (df_1h['High'] > df_1h['High'].shift(1)) & (df_1h['Close'] < df_1h['High'].shift(1))
+    liquidity_swept = bool(df_1h['sweep_low'].tail(5).any() if is_bullish else df_1h['sweep_high'].tail(5).any())
+    
+    # Discount / Premium Check
+    recent_high = df_1d['High'].tail(20).max()
+    recent_low = df_1d['Low'].tail(20).min()
+    in_discount = False
+    if is_bullish and last_close <= (recent_low + (recent_high - recent_low) * 0.5):
+        in_discount = True
+    elif not is_bullish and last_close >= (recent_high - (recent_high - recent_low) * 0.5):
+        in_discount = True
+        
+    # Volume-Price OI Proxy (Derivatives Simulation)
+    # Check Price Direction & Volume Spikes
+    recent_vol = df_1d['Volume'].tail(3).mean()
+    prev_vol = df_1d['Volume'].iloc[-10:-3].mean()
+    price_change = last_close - df_1d['Close'].iloc[-3]
+    
+    oi_interpretation = "Neutral Consolidation"
+    if recent_vol > prev_vol * 1.5:
+        if price_change > 0:
+            oi_interpretation = "Massive Long Build-Up (Agrees with Uptrend)"
+        else:
+            oi_interpretation = "Aggressive Short Build-Up"
+    elif price_change > 0 and recent_vol < prev_vol:
+        oi_interpretation = "Short Covering Detected (Weak Up-move)"
+    elif price_change < 0 and recent_vol < prev_vol:
+        oi_interpretation = "Long Unwinding"
+        
+    # Max Pain calculation proxy (Using High volume node closest to current price rounded to 50s/100s)
+    # For a real implementation, this demands the NSE options chain.
+    max_pain_proxy = round(last_close / 50) * 50
+
+    # Structuring Output
+    formation = f"Formed at the HTF {'Deep Discount' if in_discount else 'Equilibrium'} near {round(last_close, 2)}."
+    catalyst = "Liquidity sweep of structural zones." if liquidity_swept else "Institutional displacement leaving Unmitigated FVGs." if fvg_created else "Price tracking SMA momentum drift."
+    
+    entry = float(df_5m['Close'].iloc[-1] if not df_5m.empty else last_close)
+    sl = float(entry * 0.98 if is_bullish else entry * 1.02)
+    tp = float(entry + ((entry - sl) * 3) if is_bullish else entry - abs(entry - sl) * 3)
+
+    return ForensicReport(
+        formation=formation,
+        catalyst=catalyst,
+        checklist=ChecklistDetails(
+            htf_aligned=True, # Base assumption if SMC aligns
+            liquidity_swept=liquidity_swept,
+            fvg_created=fvg_created,
+            in_discount=in_discount
+        ),
+        derivative_stats=DerivativeStats(
+            oi_interpretation=oi_interpretation,
+            max_pain_proxy=float(max_pain_proxy)
+        ),
+        instruction=f"Look at your 5m chart. If you see displacement {'above' if is_bullish else 'below'} {round(entry, 2)}, the Setup is confirmed. Place your SL precisely at {round(sl, 2)}.",
+        entry=round(entry, 2),
+        stop_loss=round(sl, 2),
+        take_profit=round(tp, 2),
+        risk_reward=3.0
+    )

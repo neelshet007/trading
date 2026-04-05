@@ -24,6 +24,7 @@ import {
 const MARKET_ICONS: Record<string, string> = {
   USA: 'US',
   INDIA: 'IN',
+  'F&O INDIA': 'FN',
   CRYPTO: 'CR',
   COMMODITIES: 'CM',
 };
@@ -72,6 +73,8 @@ export default function Home() {
       // For demo purposes, we scan a basket of Nifty 50 and popular symbols
       const symbolsToScan = market === 'INDIA' 
         ? ['RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS', 'LT.NS']
+        : market === 'F&O INDIA'
+        ? ['^NSEI', '^NSEBANK', 'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS', 'LT.NS', 'HINDUNILVR.NS', 'AXISBANK.NS', 'ASIANPAINT.NS', 'MARUTI.NS', 'SUNPHARMA.NS', 'TITAN.NS', 'ULTRACEMCO.NS', 'BAJFINANCE.NS', 'M&M.NS', 'TATASTEEL.NS', 'POWERGRID.NS', 'NTPC.NS', 'NESTLEIND.NS', 'BAJAJFINSV.NS', 'GRASIM.NS', 'DRREDDY.NS', 'ADANIPORTS.NS', 'WIPRO.NS', 'HCLTECH.NS', 'INDUSINDBK.NS', 'APOLLOHOSP.NS', 'BRITANNIA.NS', 'EICHERMOT.NS', 'CIPLA.NS', 'BPCL.NS', 'HEROMOTOCO.NS', 'DIVISLAB.NS', 'COALINDIA.NS', 'ONGC.NS', 'HINDALCO.NS', 'TECHM.NS', 'LTIM.NS', 'TATACONSUM.NS', 'BAJAJ-AUTO.NS', 'SHRIRAMFIN.NS', 'ADANIENT.NS', 'TATASTLLP.NS']
         : market === 'CRYPTO'
         ? ['BTC-USD', 'ETH-USD', 'SOL-USD', 'XRP-USD', 'ADA-USD', 'BNB-USD', 'DOGE-USD', 'MATIC-USD', 'LINK-USD', 'DOT-USD', 'AVAX-USD', 'UNI-USD']
         : ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'META', 'GOOGL', 'NFLX', 'AMD', 'SPY'];
@@ -125,7 +128,7 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-1 rounded-xl border border-slate-800 bg-slate-950/70 p-1">
-              {(['USA', 'INDIA', 'CRYPTO', 'COMMODITIES'] as const).map((item) => (
+              {(['USA', 'INDIA', 'F&O INDIA', 'CRYPTO', 'COMMODITIES'] as const).map((item) => (
                 <button
                   key={item}
                   onClick={() => setMarket(item)}

@@ -16,8 +16,11 @@ from market_utils import ensure_utc, get_market_clock, ist_now, normalize_symbol
 from models import MarketSummaryModel, SignalModel, WatchlistModel
 from scheduler import start_scheduler
 from signal_engine import analyze_stock
-from schemas import ScanResult, SetupResponse
-from engine import run_scan
+from schemas import ScanResult, SetupResponse, ForensicReport
+from engine import run_scan, run_forensic_scan
+from backtest import run_smc_backtest, generate_excel_report
+from fastapi.responses import StreamingResponse, JSONResponse
+import io
 import time
 import logging
 
@@ -289,6 +292,47 @@ async def scan_market(symbols: List[str]):
     
     return ScanResult(opportunities=results)
 
+@app.get("/scan/forensic/{symbol}", response_model=ForensicReport)
+async def get_forensic_scan(symbol: str, market: Optional[str] = None):
+    s_ticker = normalize_symbol(symbol, market if market else "INDIA")
+    report = run_forensic_scan(s_ticker)
+    if not report:
+        raise HTTPException(status_code=404, detail="Insufficient price data to generate forensic report.")
+    return report
+
+@app.get("/backtest/download")
+async def download_backtest(
+    symbol: str = "BTC-USD",
+    start: str = "2023-01-01",
+    end: str = "2025-12-31",
+):
+    """Run the SMC/ICT backtest and return a downloadable Excel report."""
+    try:
+        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end)
+        if not trades:
+            raise HTTPException(status_code=404, detail="No SMC trades found in the given period.")
+        excel_bytes = generate_excel_report(trades, stats, symbol)
+        filename = f"SMC_Backtest_{symbol.replace('-','_')}_{start[:4]}_{end[:4]}.xlsx"
+        return StreamingResponse(
+            io.BytesIO(excel_bytes),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/backtest/stats")
+async def get_backtest_stats(
+    symbol: str = "BTC-USD",
+    start: str = "2023-01-01",
+    end: str = "2025-12-31",
+):
+    """Run the SMC/ICT backtest and return JSON performance stats + trade log."""
+    try:
+        trades, stats = run_smc_backtest(symbol=symbol, start=start, end=end)
+        return JSONResponse(content={"stats": stats, "trades": trades})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/stock/{symbol}", response_model=List[SignalModel])
 async def get_stock_detail(symbol: str, market: Optional[str] = None):

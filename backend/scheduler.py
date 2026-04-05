@@ -94,7 +94,17 @@ def run_market_scan(market: str, is_intraday: bool):
     tf = "intraday" if is_intraday else "swing"
     interval = "1m" if is_intraday else "1d"
     period = "1d" if is_intraday else "1y"
-    asyncio.create_task(process_signals(market, tf, interval, period))
+
+    # APScheduler jobs run in a thread; safely schedule the coroutine
+    # onto FastAPI's already-running event loop.
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            loop.create_task(process_signals(market, tf, interval, period))
+        else:
+            loop.run_until_complete(process_signals(market, tf, interval, period))
+    except RuntimeError as e:
+        logger.error("Could not schedule market scan for %s: %s", market, e)
 
 def start_scheduler():
     with _scheduler_lock:

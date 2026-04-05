@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, BarChart2, Compass, Layers, List, Search } from 'lucide-react';
+import { Activity, BarChart2, Compass, FlaskConical, Layers, List, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -95,6 +95,10 @@ export function Sidebar() {
         <Link href="/market" className="flex items-center gap-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
           <BarChart2 className="w-5 h-5" />
           <span className="font-medium">Market Overview</span>
+        </Link>
+        <Link href="/backtest" className="flex items-center gap-3 px-3 py-2 text-violet-400 hover:text-white hover:bg-violet-500/10 rounded-md transition-colors border border-transparent hover:border-violet-500/20">
+          <FlaskConical className="w-5 h-5" />
+          <span className="font-medium">SMC Backtester</span>
         </Link>
       </nav>
       <div className="mt-auto px-2 py-4 text-xs text-slate-500">

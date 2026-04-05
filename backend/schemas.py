@@ -7,13 +7,34 @@ class ConfluenceScore(BaseModel):
     idm_sweep: int = 0
     discount_premium: int = 0
     total_score: int = 0
-
+    
 class NarrativeDetail(BaseModel):
     reason: str
     location: str
     context: str
     score_breakdown: List[str]
     timeline: List[str]
+
+class ChecklistDetails(BaseModel):
+    htf_aligned: bool
+    liquidity_swept: bool
+    fvg_created: bool
+    in_discount: bool
+
+class DerivativeStats(BaseModel):
+    oi_interpretation: str
+    max_pain_proxy: float
+
+class ForensicReport(BaseModel):
+    formation: str
+    catalyst: str
+    checklist: ChecklistDetails
+    derivative_stats: DerivativeStats
+    instruction: str
+    entry: float
+    stop_loss: float
+    take_profit: float
+    risk_reward: float
 
 class SetupResponse(BaseModel):
     symbol: str

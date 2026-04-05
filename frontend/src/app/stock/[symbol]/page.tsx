@@ -2,22 +2,15 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Clock3, Radar, ShieldAlert, Target, TrendingUp } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, Clock3, Radar, ShieldAlert, Target, Search, CheckSquare, Square, Layers, Option, Zap } from 'lucide-react';
 
 import { Sidebar } from '@/components/Sidebar';
 import { fetcher } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  formatDisplayDate,
-  formatDisplayTime,
-  get_tv_symbol,
-  getSignalClasses,
-  getStatusBadgeClasses,
-  type MarketClock,
-  type Signal,
-} from '@/lib/market';
+import { get_tv_symbol } from '@/lib/market';
+import { PositionCalculator } from '@/components/dashboard/PositionCalculator';
 
 type TradingViewWindow = Window & {
   TradingView?: {
@@ -28,29 +21,27 @@ type TradingViewWindow = Window & {
 export default function StockDetailPage() {
   const params = useParams();
   const symbol = params.symbol as string;
-  const [signals, setSignals] = useState<Signal[]>([]);
-  const [marketClock, setMarketClock] = useState<MarketClock | null>(null);
+  const [forensicData, setForensicData] = useState<any>(null);
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
-  const latestSignal = signals[0];
-  const market = latestSignal?.market || (symbol.toUpperCase().endsWith('.NS') ? 'INDIA' : 'USA');
+  const market = symbol.toUpperCase().endsWith('.NS') ? 'INDIA' : 'USA';
   const tvSymbol = get_tv_symbol(symbol);
 
+  // Fetch Intensive Forensic Data
   useEffect(() => {
-    const loadSignals = async () => {
-      const data = await fetcher(`/stock/${symbol}?market=${market}`);
-      if (data) setSignals(data as Signal[]);
+    const loadForensicData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/scan/forensic/${symbol}?market=${market}`);
+        if (response.ok) {
+           const data = await response.json();
+           setForensicData(data);
+        }
+      } catch (err) {
+        console.error("Forensic scan failed", err);
+      }
     };
-    loadSignals();
+    loadForensicData();
   }, [symbol, market]);
-
-  useEffect(() => {
-    const loadClock = async () => {
-      const data = await fetcher(`/market-clock?market=${market}`);
-      if (data) setMarketClock(data as MarketClock);
-    };
-    loadClock();
-  }, [market]);
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -65,7 +56,7 @@ export default function StockDetailPage() {
         new tradingViewWindow.TradingView.widget({
           autosize: true,
           symbol: tvSymbol,
-          interval: 'D',
+          interval: '15',
           timezone: market === 'INDIA' ? 'Asia/Kolkata' : market === 'USA' ? 'America/New_York' : 'Etc/UTC',
           theme: 'dark',
           style: '1',
@@ -83,172 +74,130 @@ export default function StockDetailPage() {
     chartContainerRef.current.appendChild(script);
   }, [tvSymbol, market]);
 
-  const patternDescriptions = useMemo(() => {
-    if (!latestSignal?.pattern_details) return [];
-    return latestSignal.pattern_details.map((pattern) => ({
-      title: `${pattern.name} ${pattern.strength >= 8 ? '(Strong)' : '(Developing)'}`,
-      description: pattern.description,
-    }));
-  }, [latestSignal]);
+  const CheckItem = ({ label, checked }: { label: string, checked: boolean }) => (
+      <div className={`flex items-center gap-3 p-3 rounded border ${checked ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-900/50 border-slate-800'}`}>
+          {checked ? <CheckSquare className="h-5 w-5 text-emerald-400" /> : <Square className="h-5 w-5 text-slate-600" />}
+          <span className={`text-sm font-medium ${checked ? 'text-emerald-100' : 'text-slate-400'}`}>{label}</span>
+      </div>
+  );
 
   return (
     <div className="flex h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(30,64,175,0.12),transparent_30%),linear-gradient(180deg,#020617_0%,#07111f_45%,#020617_100%)] text-slate-200">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto p-8">
-        <div className="mb-6">
-          <Link href="/" className="mb-4 inline-flex items-center text-sm text-slate-400 transition-colors hover:text-emerald-300">
-            <ArrowLeft className="mr-1 h-4 w-4" /> Back to Dashboard
-          </Link>
-          <div className="flex flex-wrap items-center gap-3">
-            <h2 className="text-4xl font-bold tracking-tight text-white">{symbol.toUpperCase()}</h2>
-            {latestSignal && <Badge className={getSignalClasses(latestSignal.signal)}>{latestSignal.signal}</Badge>}
-            {marketClock && <Badge className={getStatusBadgeClasses(marketClock.status_color)}>{marketClock.status_text}</Badge>}
-          </div>
-          <p className="mt-2 max-w-3xl text-slate-400">
-            Beginner-friendly analysis with live market context, pattern detection, and a direct answer to why this stock matters right now.
-          </p>
+      <main className="flex-1 overflow-y-auto p-8 border-l border-slate-800">
+        
+        <div className="mb-6 flex justify-between items-end">
+           <div>
+              <Link href="/" className="mb-4 inline-flex items-center text-sm text-slate-400 transition-colors hover:text-emerald-300">
+                <ArrowLeft className="mr-1 h-4 w-4" /> Back to Terminal
+              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="text-4xl font-bold tracking-tight text-white">{symbol.toUpperCase()}</h2>
+                <Badge className="bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold tracking-widest hover:bg-rose-500/20">FORENSIC ANALYSIS MODE</Badge>
+              </div>
+           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
-          <div className="flex flex-col gap-6 xl:col-span-2">
-            <Card className="h-[520px] overflow-hidden border-slate-800 bg-slate-950/70">
-              <div id="tv_chart_container" className="h-full w-full" ref={chartContainerRef} />
-            </Card>
-
-            <Card className="border-slate-800 bg-slate-950/70">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white"><Radar className="h-5 w-5 text-amber-300" /> Why Is This Important Right Now?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 text-slate-100">
-                  {latestSignal?.analysis_summary?.explanation || 'No fresh analysis summary is available for this symbol yet.'}
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
-                    <div className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">Detected patterns</div>
-                    <div className="space-y-3">
-                      {patternDescriptions.length > 0 ? patternDescriptions.map((pattern) => (
-                        <div key={pattern.title} className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                          <div className="font-medium text-white">{pattern.title}</div>
-                          <p className="mt-1 text-sm leading-6 text-slate-300">{pattern.description}</p>
-                        </div>
-                      )) : (
-                        <div className="text-sm text-slate-400">No advanced price pattern was confirmed on the latest scan.</div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
-                    <div className="mb-3 text-xs uppercase tracking-[0.2em] text-slate-500">Simple readout</div>
-                    <div className="space-y-3">
-                      <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                        <div className="text-sm text-slate-400">Breakout probability</div>
-                        <div className="mt-1 text-xl font-semibold text-white">{latestSignal?.probability?.breakout || 'Unknown'}</div>
-                      </div>
-                      <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                        <div className="text-sm text-slate-400">Trend continuation</div>
-                        <div className="mt-1 text-xl font-semibold text-white">{latestSignal?.probability?.trend_continuation || 'Unknown'}</div>
-                      </div>
-                      <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                        <div className="text-sm text-slate-400">Plain-language takeaway</div>
-                        <p className="mt-1 text-sm leading-6 text-slate-300">{latestSignal?.analysis_summary?.why_now || 'The setup is still forming, so patience is better than chasing.'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <Card className="border-slate-800 bg-slate-950/70">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white"><Clock3 className="h-5 w-5 text-cyan-300" /> Market Status</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {marketClock && (
-                  <>
-                    <Badge className={getStatusBadgeClasses(marketClock.status_color)}>{marketClock.status_text}</Badge>
-                    <div className={`grid gap-3 ${market === 'USA' ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                      <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                        <div className="text-xs uppercase tracking-[0.2em] text-slate-500">India Time</div>
-                        <div className="mt-2 text-2xl font-semibold text-white">{marketClock.india_time}</div>
-                        <div className="text-sm text-slate-400">IST</div>
-                      </div>
-                      {market === 'USA' && (
-                        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                          <div className="text-xs uppercase tracking-[0.2em] text-slate-500">US Time</div>
-                          <div className="mt-2 text-2xl font-semibold text-white">{marketClock.local_time}</div>
-                          <div className="text-sm text-slate-400">{marketClock.local_label}</div>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="border-slate-800 bg-slate-950/70">
-              <CardHeader>
-                <CardTitle className="text-white">Setup Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {latestSignal ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                      <span className="text-slate-400">Direction</span>
-                      <Badge className={getSignalClasses(latestSignal.signal)}>{latestSignal.signal}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                      <span className="text-slate-400">Rating</span>
-                      <span className="font-semibold text-white">{latestSignal.analysis_summary?.rating || 'Watch'}</span>
-                    </div>
-                    <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                      <span className="text-slate-400">Scanner categories</span>
-                      <span className="font-semibold text-white">{latestSignal.categories.join(', ') || 'None'}</span>
-                    </div>
-                    <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                      <span className="text-slate-400">Breakout level</span>
-                      <span className="font-semibold text-white">{latestSignal.breakout_level ?? '--'}</span>
-                    </div>
-                    <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                      <div className="mb-2 text-sm text-slate-400">Trading plan</div>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-sm text-slate-300"><span className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-slate-500" /> Entry</span><span className="font-semibold text-white">{latestSignal.entry_zone ?? '--'}</span></div>
-                        <div className="flex items-center justify-between text-sm text-slate-300"><span className="flex items-center gap-2"><ShieldAlert className="h-4 w-4 text-slate-500" /> Stop loss</span><span className="font-semibold text-white">{latestSignal.stop_loss ?? '--'}</span></div>
-                        <div className="flex items-center justify-between text-sm text-slate-300"><span className="flex items-center gap-2"><Target className="h-4 w-4 text-slate-500" /> Target</span><span className="font-semibold text-white">{latestSignal.target ?? '--'}</span></div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-slate-400">No active signals currently recorded for {symbol}.</div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="border-slate-800 bg-slate-950/70">
-              <CardHeader>
-                <CardTitle className="text-white">Recent Analysis</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {signals.map((signal) => (
-                  <div key={`${signal.strategy}-${signal.timestamp}`} className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium text-white">{signal.strategy}</div>
-                      <Badge className={getSignalClasses(signal.signal)}>{signal.signal}</Badge>
-                    </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">{signal.analysis_summary?.why_now || signal.reasons[0]}</p>
-                    <div className="mt-3 text-xs text-slate-500">
-                      {formatDisplayDate(signal.timestamp)} • {formatDisplayTime(signal.timestamp)} IST
-                    </div>
-                  </div>
-                ))}
-                {signals.length === 0 && <div className="text-sm text-slate-500">No historical analysis available.</div>}
-              </CardContent>
-            </Card>
-          </div>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3 mb-6">
+           <div className="xl:col-span-2 relative h-[450px]">
+             {/* TV Chart */}
+             <Card className="h-full w-full overflow-hidden border-slate-800 bg-slate-950/70 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+               <div id="tv_chart_container" className="h-full w-full" ref={chartContainerRef} />
+             </Card>
+           </div>
+           
+           <div className="xl:col-span-1 h-[450px]">
+               {forensicData ? (
+                   <PositionCalculator entryPrice={forensicData.entry} stopLoss={forensicData.stop_loss} />
+               ) : (
+                   <Card className="h-full border-slate-800 bg-slate-950/70 flex items-center justify-center animate-pulse">
+                      <span className="text-slate-500 font-semibold tracking-widest text-sm">CALCULATING RISK PARAMS...</span>
+                   </Card>
+               )}
+           </div>
         </div>
+
+        {forensicData && (
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+                
+                {/* Checklist */}
+                <div className="xl:col-span-1">
+                    <Card className="border-slate-800 bg-slate-950/70 h-full">
+                      <CardHeader className="border-b border-slate-800 pb-3">
+                          <CardTitle className="text-sm font-semibold tracking-widest text-white flex items-center gap-2">
+                             <Layers className="h-4 w-4 text-cyan-400" /> Actionable Checklist
+                          </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-4 space-y-3">
+                          <CheckItem label="HTF Trend Aligned?" checked={forensicData.checklist.htf_aligned} />
+                          <CheckItem label="Liquidity Pools Swept?" checked={forensicData.checklist.liquidity_swept} />
+                          <CheckItem label="Unmitigated FVG Created?" checked={forensicData.checklist.fvg_created} />
+                          <CheckItem label="Price in Deep Discount?" checked={forensicData.checklist.in_discount} />
+                      </CardContent>
+                    </Card>
+                </div>
+
+                {/* Narrative Summary */}
+                <div className="xl:col-span-1">
+                    <Card className="border-slate-800 bg-slate-950/70 h-full relative overflow-hidden">
+                      <div className="absolute opacity-5 -right-5 -bottom-5"><Search className="w-48 h-48" /></div>
+                      <CardHeader className="border-b border-slate-800 pb-3 relative z-10">
+                          <CardTitle className="text-sm font-semibold tracking-widest text-white flex items-center gap-2">
+                             <Radar className="h-4 w-4 text-rose-400" /> Forensic "Why & Where"
+                          </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-5 space-y-5 relative z-10">
+                          <div>
+                              <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">The Narrative Engine</div>
+                              <div className="text-sm text-slate-300 bg-slate-900/50 p-3 rounded border border-slate-800 leading-relaxed italic border-l-2 border-l-rose-500">
+                                  "{forensicData.catalyst}"
+                              </div>
+                          </div>
+                          <div>
+                              <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">Structural Location</div>
+                              <div className="text-sm text-slate-300 bg-slate-900/50 p-3 rounded border border-slate-800 leading-relaxed">
+                                  {forensicData.formation}
+                              </div>
+                          </div>
+                          <div>
+                              <div className="text-[10px] uppercase text-cyan-500 font-bold mb-1 tracking-widest flex items-center gap-1"><Zap className="h-3 w-3"/> Verification Step</div>
+                              <div className="text-sm text-cyan-200 bg-cyan-900/20 p-3 rounded border border-cyan-500/20 leading-relaxed">
+                                  {forensicData.instruction}
+                              </div>
+                          </div>
+                      </CardContent>
+                    </Card>
+                </div>
+
+                {/* Open Interest Overlay */}
+                <div className="xl:col-span-1">
+                    <Card className="border-amber-500/20 bg-[#f59e0b]/5 h-full relative overflow-hidden">
+                      <CardHeader className="border-b border-amber-500/20 pb-3">
+                          <CardTitle className="text-sm font-semibold tracking-widest text-amber-500 flex items-center gap-2">
+                             Activity Overlay
+                          </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-5 flex flex-col gap-5">
+                          <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl relative">
+                              <div className="text-[10px] uppercase text-amber-400 font-bold mb-2 tracking-widest">Derivative OI Analysis</div>
+                              <div className="text-lg text-amber-100 font-semibold">{forensicData.derivative_stats.oi_interpretation}</div>
+                              <div className="text-xs text-amber-500/80 mt-2">*Simulated via Vol/Price proxy algorithm.</div>
+                          </div>
+
+                          <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                              <div>
+                                  <div className="text-[10px] uppercase text-slate-500 font-bold mb-1 tracking-widest">Max Pain Proxy</div>
+                                  <div className="text-3xl font-bold text-slate-200">₹ {forensicData.derivative_stats.max_pain_proxy.toLocaleString()}</div>
+                              </div>
+                              <Target className="h-10 w-10 text-slate-700" />
+                          </div>
+                      </CardContent>
+                    </Card>
+                </div>
+
+            </div>
+        )}
+
       </main>
     </div>
   );
