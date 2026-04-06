@@ -19,6 +19,38 @@ MARKETS = {
 }
 
 
+def _build_market_scan_payload(market: str, timeframe: str, interval: str, period: str, symbols: list[str]) -> dict:
+    data_map = fetch_multiple(symbols, interval=interval, period=period, market=market)
+
+    all_signals = []
+    bullish_count = 0
+    bearish_count = 0
+
+    for symbol, df in data_map.items():
+        signals = analyze_stock(symbol, market, df, timeframe)
+        for signal in signals:
+            if signal["signal"] == "bullish":
+                bullish_count += 1
+            if signal["signal"] == "bearish":
+                bearish_count += 1
+            all_signals.append(signal)
+
+    total = bullish_count + bearish_count
+    status = "Neutral"
+    if total > 0:
+        if bullish_count / total > 0.6:
+            status = "Bullish"
+        elif bearish_count / total > 0.6:
+            status = "Bearish"
+
+    return {
+        "all_signals": all_signals,
+        "bullish_count": bullish_count,
+        "bearish_count": bearish_count,
+        "status": status,
+    }
+
+
 def can_run_intraday_scan(market: str) -> bool:
     clock = get_market_clock(market)
     return clock["is_open"] or market in {"CRYPTO", "COMMODITIES"}
@@ -29,19 +61,11 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
     existing_summary = await market_summary_collection.find_one({"market": market}, sort=[("timestamp", -1)])
     tracked_symbols = existing_summary.get("tracked_symbols", []) if existing_summary else []
     symbols = list(dict.fromkeys([*MARKETS[market], *tracked_symbols]))
-    data_map = fetch_multiple(symbols, interval=interval, period=period, market=market)
-    
-    all_signals = []
-    bullish_count = 0
-    bearish_count = 0
-    
-    for symbol, df in data_map.items():
-        signals = analyze_stock(symbol, market, df, timeframe)
-        for s in signals:
-            if s["signal"] == "bullish": bullish_count += 1
-            if s["signal"] == "bearish": bearish_count += 1
-            all_signals.append(s)
-            
+    scan_payload = await asyncio.to_thread(_build_market_scan_payload, market, timeframe, interval, period, symbols)
+    all_signals = scan_payload["all_signals"]
+    bullish_count = scan_payload["bullish_count"]
+    bearish_count = scan_payload["bearish_count"]
+
     if all_signals:
         # Clear old signals for this market and timeframe
         await signals_collection.delete_many({"market": market, "timeframe": timeframe})
@@ -49,12 +73,6 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
         logger.info(f"Inserted {len(all_signals)} {market} {timeframe} signals.")
 
     # Update Market Summary (Per Market)
-    total = bullish_count + bearish_count
-    status = "Neutral"
-    if total > 0:
-        if bullish_count / total > 0.6: status = "Bullish"
-        elif bearish_count / total > 0.6: status = "Bearish"
-
     updated_at = ist_now()
     top_opportunities = [
         {
@@ -71,7 +89,7 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
     ]
     summary = {
         "market": market,
-        "status": status,
+        "status": scan_payload["status"],
         "bullish_count": bullish_count,
         "bearish_count": bearish_count,
         "sector_strength": {},
@@ -84,7 +102,7 @@ async def process_signals(market: str, timeframe: str, interval: str, period: st
     }
     
     await market_summary_collection.replace_one({"market": market}, summary, upsert=True)
-    logger.info(f"{market} Summary updated. Status: {status}")
+    logger.info(f"{market} Summary updated. Status: {scan_payload['status']}")
 
 def run_market_scan(market: str, is_intraday: bool):
     if is_intraday and not can_run_intraday_scan(market):

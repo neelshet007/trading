@@ -46,8 +46,8 @@ export default function StrategiesPage() {
     }
     return (
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {filtered.map((signal) => (
-          <SignalCard key={`${signal.symbol}-${signal.strategy}-${signal.timestamp}`} signal={signal} />
+        {filtered.map((signal, index) => (
+          <SignalCard key={`${signal.symbol}-${signal.strategy}-${signal.timestamp}-${index}`} signal={signal} />
         ))}
       </div>
     );

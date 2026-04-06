@@ -35,13 +35,13 @@ export function SignalCard({ signal }: { signal: Signal }) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {signal.patterns?.map((pattern) => (
-              <Badge key={pattern} className="bg-amber-500/15 text-amber-200 border border-amber-500/20">
+            {signal.patterns?.map((pattern, index) => (
+              <Badge key={`${signal.symbol}-pattern-${pattern}-${index}`} className="bg-amber-500/15 text-amber-200 border border-amber-500/20">
                 {pattern}
               </Badge>
             ))}
-            {signal.categories?.map((category) => (
-              <Badge key={category} variant="outline" className="border-slate-700 text-slate-300">
+            {signal.categories?.map((category, index) => (
+              <Badge key={`${signal.symbol}-category-${category}-${index}`} variant="outline" className="border-slate-700 text-slate-300">
                 {category}
               </Badge>
             ))}

@@ -143,8 +143,8 @@ export default function MarketOverview() {
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {selectedSignals.map((signal) => (
-                <SignalCard key={`${signal.symbol}-${signal.strategy}-${signal.timestamp}`} signal={signal} />
+              {selectedSignals.map((signal, index) => (
+                <SignalCard key={`${signal.symbol}-${signal.strategy}-${signal.timestamp}-${index}`} signal={signal} />
               ))}
 
               {selectedSignals.length === 0 && (

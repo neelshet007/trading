@@ -211,8 +211,8 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                {topSignals.map((signal) => (
-                  <SignalCard key={`${signal.symbol}-${signal.strategy}-${signal.timeframe}`} signal={signal} />
+                {topSignals.map((signal, index) => (
+                  <SignalCard key={`${signal.symbol}-${signal.strategy}-${signal.timeframe}-${signal.timestamp}-${index}`} signal={signal} />
                 ))}
               </div>
             )}

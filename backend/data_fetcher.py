@@ -66,6 +66,22 @@ POLLING_MARKETS = {
 }
 
 
+def _collect_market_quotes(
+    market: str,
+    symbols: list[str],
+    previous_quotes: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    interval, period = _polling_params(market)
+    live_quotes: list[dict[str, Any]] = []
+
+    for symbol in symbols:
+        resolved_symbol, df = validate_symbol(symbol, market=market, interval=interval, period=period)
+        quote_symbol = resolved_symbol or normalize_symbol(symbol, market if market == "INDIA" else None)
+        live_quotes.append(_build_quote_snapshot(quote_symbol, market, df, previous_quotes.get(quote_symbol)))
+
+    return live_quotes
+
+
 def _clean_history(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df
@@ -290,7 +306,16 @@ def fetch_multiple(symbols: list, interval: str = "1m", period: str = "1d", mark
 def _extract_symbol_frame(batch_frame: pd.DataFrame, symbol: str, is_multi: bool) -> pd.DataFrame:
     if batch_frame.empty:
         return pd.DataFrame()
-    symbol_frame = batch_frame[symbol] if is_multi else batch_frame
+
+    if is_multi:
+        available_symbols = batch_frame.columns.get_level_values(0)
+        if symbol not in available_symbols:
+            logger.warning("Batch download omitted symbol: %s", symbol)
+            return pd.DataFrame()
+        symbol_frame = batch_frame[symbol]
+    else:
+        symbol_frame = batch_frame
+
     if isinstance(symbol_frame, pd.Series):
         symbol_frame = symbol_frame.to_frame().T
     return _clean_history(symbol_frame.dropna(how="all"))
@@ -470,13 +495,7 @@ async def update_market_data():
         tracked_symbols = summary.get("tracked_symbols", []) if summary else []
         symbols = list(dict.fromkeys([*base_symbols, *tracked_symbols]))
         previous_quotes = {quote.get("symbol"): quote for quote in (summary.get("live_quotes", []) if summary else [])}
-        interval, period = _polling_params(market)
-        live_quotes: list[dict[str, Any]] = []
-
-        for symbol in symbols:
-            resolved_symbol, df = validate_symbol(symbol, market=market, interval=interval, period=period)
-            quote_symbol = resolved_symbol or normalize_symbol(symbol, market if market == "INDIA" else None)
-            live_quotes.append(_build_quote_snapshot(quote_symbol, market, df, previous_quotes.get(quote_symbol)))
+        live_quotes = await asyncio.to_thread(_collect_market_quotes, market, symbols, previous_quotes)
 
         updated_at = db_updated_at()
         market_clock = get_market_clock(market, updated_at)
