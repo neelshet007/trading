@@ -28,6 +28,7 @@ class MarketFootprint(BaseModel):
     structure_signal: str
     cvd_divergence: str
     liquidation_sweep_confirmed: bool
+    magnetic_liquidity_zones: List[str] = []
 
 
 class TriggerPlan(BaseModel):
@@ -52,6 +53,8 @@ class RiskEnvelope(BaseModel):
     recommended_equity_allocation: float
     r_multiple: float
     expectancy: float
+    fee_bps: float
+    total_friction_bps: float
 
 
 class HumanLoopAssessment(BaseModel):
@@ -117,6 +120,13 @@ class SetupResponse(BaseModel):
     symbol: str
     bias: str
     status: str
+    probability_score: int
+    verdict: str
+    primary_failure: Optional[str] = None
+    market_beta_note: Optional[str] = None
+    why_buy: str
+    why_sell_wait: str
+    forensic_evidence: List[str]
     timestamp: Optional[datetime] = None
     entry: Optional[float] = None
     stop_loss: Optional[float] = None

@@ -1,12 +1,12 @@
 # Graph Report - C:\Web Devlopment\NextJs\finance\trading-platform  (2026-04-19)
 
 ## Corpus Check
-- 48 files · ~39,803 words
+- 48 files · ~40,808 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 231 nodes · 386 edges · 34 communities detected
-- Extraction: 75% EXTRACTED · 25% INFERRED · 0% AMBIGUOUS · INFERRED: 97 edges (avg confidence: 0.75)
+- 239 nodes · 404 edges · 34 communities detected
+- Extraction: 75% EXTRACTED · 25% INFERRED · 0% AMBIGUOUS · INFERRED: 100 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -46,11 +46,11 @@
 - [[_COMMUNITY_Community 33|Community 33]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `build_setup()` - 22 edges
+1. `build_setup()` - 27 edges
 2. `TimeframeBundle` - 13 edges
-3. `ensure_utc()` - 10 edges
-4. `get_market_clock()` - 10 edges
-5. `normalize_symbol()` - 10 edges
+3. `normalize_symbol()` - 11 edges
+4. `ensure_utc()` - 10 edges
+5. `get_market_clock()` - 10 edges
 6. `run_smc_backtest()` - 9 edges
 7. `LazyScannerManager` - 9 edges
 8. `run_forensic_scan()` - 8 edges
@@ -58,66 +58,66 @@
 10. `validate_symbol()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `get_market_clock_endpoint()` --calls--> `get_market_clock()`  [INFERRED]
-  C:\Web Devlopment\NextJs\finance\trading-platform\backend\main.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\market_utils.py
-- `run_smc_backtest()` --calls--> `get_backtest_stats()`  [INFERRED]
-  C:\Web Devlopment\NextJs\finance\trading-platform\backend\backtest.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\main.py
+- `db_updated_at()` --calls--> `_build_quote_snapshot()`  [INFERRED]
+  C:\Web Devlopment\NextJs\finance\trading-platform\backend\database.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\data_fetcher.py
+- `db_updated_at()` --calls--> `_build_india_metric()`  [INFERRED]
+  C:\Web Devlopment\NextJs\finance\trading-platform\backend\database.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\data_fetcher.py
 - `_collect_market_quotes()` --calls--> `normalize_symbol()`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\data_fetcher.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\market_utils.py
-- `validate_symbol()` --calls--> `candidate_symbols()`  [INFERRED]
+- `_build_quote_snapshot()` --calls--> `get_market_clock()`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\data_fetcher.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\market_utils.py
-- `validate_symbol()` --calls--> `normalize_symbol()`  [INFERRED]
+- `validate_symbol()` --calls--> `candidate_symbols()`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\data_fetcher.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\market_utils.py
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.12
-Nodes (21): run_scan(), LazyScannerManager, SegmentScanState, add_to_watchlist(), get_backtest_stats(), get_forensic_scan(), get_market_clock_endpoint(), get_market_summary() (+13 more)
+Cohesion: 0.14
+Nodes (18): _beta_headwind(), run_scan(), LazyScannerManager, SegmentScanState, add_to_watchlist(), get_forensic_scan(), get_market_summary(), get_segment_forensic_scan() (+10 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.12
-Nodes (30): _build_india_metric(), _build_quote_snapshot(), _clean_history(), _collect_market_quotes(), _download_batch_history(), _download_csv_with_session(), _download_history(), _extract_symbol_frame() (+22 more)
+Cohesion: 0.16
+Nodes (24): _atr(), _build_hitl(), build_setup(), _cvd_divergence(), _detect_choch_and_displacement(), _entry_model(), fetch_symbol_bundle(), _fib_ote() (+16 more)
 
 ### Community 2 - "Community 2"
+Cohesion: 0.18
+Nodes (24): BaseModel, run_forensic_scan(), TimeframeBundle, WatchlistAdd, AnalysisSummary, MarketSummaryModel, ProbabilityInsight, ScoreResponse (+16 more)
+
+### Community 3 - "Community 3"
 Cohesion: 0.09
 Nodes (10): buildApiUrl(), fetcher(), formatDisplayDate(), activate(), formatDisplayTime(), getStatusBadgeClasses(), handleScan(), loadData() (+2 more)
 
-### Community 3 - "Community 3"
-Cohesion: 0.19
-Nodes (23): BaseModel, TimeframeBundle, WatchlistAdd, AnalysisSummary, MarketSummaryModel, ProbabilityInsight, ScoreResponse, SignalModel (+15 more)
-
 ### Community 4 - "Community 4"
-Cohesion: 0.2
-Nodes (20): _atr(), _build_hitl(), build_setup(), _cvd_divergence(), _entry_model(), fetch_symbol_bundle(), _fib_ote(), _find_order_block() (+12 more)
+Cohesion: 0.16
+Nodes (22): _build_india_metric(), _build_quote_snapshot(), _clean_history(), _collect_market_quotes(), _download_batch_history(), _download_csv_with_session(), _download_history(), _extract_symbol_frame() (+14 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.27
-Nodes (12): add_indicators(), _compute_stats(), _download(), fib_pos(), generate_excel_report(), SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity, Return (score, reasons). Max score = 8., Return (score, reasons). Max score = 8. (+4 more)
+Cohesion: 0.18
+Nodes (14): update_india_market_scan(), update_market_data(), db_updated_at(), setup_db(), get_market_clock_endpoint(), startup_event(), ensure_utc(), format_time_in_zone() (+6 more)
 
 ### Community 6 - "Community 6"
+Cohesion: 0.24
+Nodes (13): add_indicators(), _compute_stats(), _download(), fib_pos(), generate_excel_report(), SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity, Return (score, reasons). Max score = 8., Return (score, reasons). Max score = 8. (+5 more)
+
+### Community 7 - "Community 7"
 Cohesion: 0.33
 Nodes (8): add_indicators(), _add_pattern_scanners(), analyze_stock(), _build_analysis_summary(), _build_signal(), detect_patterns(), _probability_label(), _safe_ratio()
 
-### Community 7 - "Community 7"
+### Community 8 - "Community 8"
 Cohesion: 0.29
 Nodes (0): 
 
-### Community 8 - "Community 8"
+### Community 9 - "Community 9"
 Cohesion: 0.33
 Nodes (2): MarketSegmentPage(), getSegmentDefinition()
-
-### Community 9 - "Community 9"
-Cohesion: 0.4
-Nodes (0): 
 
 ### Community 10 - "Community 10"
 Cohesion: 0.4
 Nodes (0): 
 
 ### Community 11 - "Community 11"
-Cohesion: 0.5
-Nodes (2): setup_db(), startup_event()
+Cohesion: 0.4
+Nodes (0): 
 
 ### Community 12 - "Community 12"
 Cohesion: 0.5
@@ -250,17 +250,17 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `start_segment_scanner()` connect `Community 0` to `Community 2`?**
-  _High betweenness centrality (0.143) - this node is a cross-community bridge._
-- **Why does `activate()` connect `Community 2` to `Community 0`?**
-  _High betweenness centrality (0.137) - this node is a cross-community bridge._
-- **Why does `ensure_utc()` connect `Community 0` to `Community 1`, `Community 4`, `Community 6`?**
-  _High betweenness centrality (0.123) - this node is a cross-community bridge._
+- **Why does `start_segment_scanner()` connect `Community 0` to `Community 3`?**
+  _High betweenness centrality (0.141) - this node is a cross-community bridge._
+- **Why does `activate()` connect `Community 3` to `Community 0`?**
+  _High betweenness centrality (0.135) - this node is a cross-community bridge._
+- **Why does `ensure_utc()` connect `Community 5` to `Community 0`, `Community 1`, `Community 7`?**
+  _High betweenness centrality (0.128) - this node is a cross-community bridge._
 - **Are the 7 inferred relationships involving `build_setup()` (e.g. with `MarketFootprint` and `ConfluenceScore`) actually correct?**
   _`build_setup()` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `TimeframeBundle` (e.g. with `ChecklistDetails` and `ConfluenceScore`) actually correct?**
   _`TimeframeBundle` has 11 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 10 inferred relationships involving `normalize_symbol()` (e.g. with `_collect_market_quotes()` and `validate_symbol()`) actually correct?**
+  _`normalize_symbol()` has 10 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 6 inferred relationships involving `ensure_utc()` (e.g. with `_silver_bullet_window()` and `build_setup()`) actually correct?**
   _`ensure_utc()` has 6 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 8 inferred relationships involving `get_market_clock()` (e.g. with `_build_quote_snapshot()` and `update_market_data()`) actually correct?**
-  _`get_market_clock()` has 8 INFERRED edges - model-reasoned connections that need verification._

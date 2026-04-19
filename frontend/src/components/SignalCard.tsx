@@ -18,14 +18,14 @@ export function SignalCard({ signal }: { signal: SetupSignal }) {
                   {signal.bias === 'bullish' ? 'Long Bias' : 'Short Bias'}
                 </Badge>
                 <Badge variant="outline" className="border-cyan-500/30 text-cyan-300">
-                  HMM {signal.context.hmm_state}
+                  Score {signal.probability_score}
                 </Badge>
               </div>
               <p className="text-sm text-slate-400">{signal.trigger.entry_model} • {signal.trigger.execution_timeframe}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-white">{signal.confluence.total_score.toFixed(1)}</div>
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Confluence</div>
+              <div className="text-2xl font-bold text-white">{signal.verdict}</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Verdict</div>
             </div>
           </div>
 
@@ -48,7 +48,7 @@ export function SignalCard({ signal }: { signal: SetupSignal }) {
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
               <div className="flex items-center gap-1 text-slate-500"><Waves className="h-4 w-4" /> Slippage</div>
-              <div className="mt-1 font-semibold text-white">{signal.risk.expected_slippage_bps.toFixed(2)} bps</div>
+              <div className="mt-1 font-semibold text-white">{signal.risk.total_friction_bps.toFixed(2)} bps</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
               <div className="text-slate-500">Updated</div>
@@ -69,7 +69,7 @@ export function SignalCard({ signal }: { signal: SetupSignal }) {
           </div>
 
           <div className="flex items-center justify-between border-t border-slate-800 pt-4 text-sm text-slate-400">
-            <span>{signal.hitl.inducement_traps[0]}</span>
+            <span>{signal.primary_failure || signal.hitl.inducement_traps[0]}</span>
             <ArrowRight className="h-4 w-4 transition-colors group-hover:text-cyan-300" />
           </div>
         </CardContent>

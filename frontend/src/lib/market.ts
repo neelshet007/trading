@@ -46,6 +46,8 @@ export interface RiskEnvelope {
   recommended_equity_allocation: number;
   r_multiple: number;
   expectancy: number;
+  fee_bps: number;
+  total_friction_bps: number;
 }
 
 export interface HumanLoopAssessment {
@@ -76,6 +78,13 @@ export interface SetupSignal {
   symbol: string;
   bias: 'bullish' | 'bearish' | 'neutral' | string;
   status: string;
+  probability_score: number;
+  verdict: string;
+  primary_failure?: string | null;
+  market_beta_note?: string | null;
+  why_buy: string;
+  why_sell_wait: string;
+  forensic_evidence: string[];
   timestamp?: string;
   entry?: number;
   stop_loss?: number;

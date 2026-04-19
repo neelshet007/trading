@@ -34,6 +34,7 @@ if hasattr(yf, "set_tz_cache_location"):
     yf.set_tz_cache_location(str(YF_CACHE_DIR))
 
 CORE_SYMBOLS = {"BTC-USD", "ETH-USD", "SOL-USD"}
+BIG_THREE_ORDER = {"BTC-USD": 0, "ETH-USD": 1, "SOL-USD": 2}
 ETF_CORRELATION_FACTORS = ["DXY proxy softens risk appetite", "Spot ETF flow tone matters for BTC and ETH"]
 
 
@@ -179,6 +180,22 @@ def _find_order_block(df: pd.DataFrame, bias: str) -> tuple[Optional[float], Opt
     return float(candle["Low"]), float(candle["High"])
 
 
+def _detect_choch_and_displacement(df: pd.DataFrame, bias: str) -> tuple[str, float]:
+    sample = df.tail(30).copy()
+    if len(sample) < 10:
+        return "No clear CHoCH", 0.0
+    recent_high = float(sample["High"].iloc[-10:-1].max())
+    recent_low = float(sample["Low"].iloc[-10:-1].min())
+    close = float(sample["Close"].iloc[-1])
+    atr_proxy = float((sample["High"] - sample["Low"]).tail(10).mean())
+    displacement = abs(close - float(sample["Open"].iloc[-1])) / max(atr_proxy, 1e-9)
+    if bias == "bullish" and close > recent_high:
+        return "Bullish CHoCH with displacement", round(displacement, 2)
+    if bias == "bearish" and close < recent_low:
+        return "Bearish CHoCH with displacement", round(displacement, 2)
+    return "CHoCH pending", round(displacement, 2)
+
+
 def _fib_ote(h1: pd.DataFrame, bias: str) -> tuple[float, str]:
     window = h1.tail(72)
     high = float(window["High"].max())
@@ -221,6 +238,23 @@ def _liquidity_sweep(m5: pd.DataFrame, bias: str) -> bool:
     return bool(last["High"] > prior["High"].tail(8).max() and last["Close"] < prior["High"].tail(8).max())
 
 
+def _magnetic_liquidity_zones(m5: pd.DataFrame, bias: str) -> list[str]:
+    sample = m5.tail(40)
+    if sample.empty:
+        return []
+    zones: list[str] = []
+    equal_highs = sample["High"].round(4).value_counts()
+    equal_lows = sample["Low"].round(4).value_counts()
+    if not equal_highs[equal_highs >= 2].empty:
+        zones.append(f"Stops clustered near highs {equal_highs[equal_highs >= 2].index[0]}")
+    if not equal_lows[equal_lows >= 2].empty:
+        zones.append(f"Stops clustered near lows {equal_lows[equal_lows >= 2].index[0]}")
+    if not zones:
+        latest = float(sample["High"].tail(5).max() if bias == "bearish" else sample["Low"].tail(5).min())
+        zones.append(f"Nearest liquidity pool around {latest:.4f}")
+    return zones[:2]
+
+
 def _silver_bullet_window(timestamp: pd.Timestamp) -> bool:
     hour = ensure_utc(timestamp.to_pydatetime()).hour
     return hour in {8, 9, 14, 15}
@@ -261,12 +295,14 @@ def _risk_envelope(symbol: str, entry: float, stop_loss: float, h1: pd.DataFrame
     r_multiple = round((stop_distance * 2.5) / max(stop_distance, 1e-9), 2)
     win_rate = min(0.72, max(0.38, 0.42 + (confluence_total / 20)))
     expectancy = round((win_rate * r_multiple) - (1 - win_rate), 2)
-    base_slippage = 4.8 if symbol == "BTC-USD" else 6.4 if symbol == "SOL-USD" else 7.2
+    base_slippage = 4.8 if symbol == "BTC-USD" else 6.8 if symbol == "ETH-USD" else 8.8
     size_cap = 0.15 if symbol == "ETH-USD" else 0.12 if symbol in CORE_SYMBOLS else 0.08
     recommended = max(0.02, min(size_cap, 0.02 + (confluence_total / 100)))
-    slippage = round(min(14.5, base_slippage + (gjr_vol * 1000 * 0.35) + (recommended / size_cap) * 1.2), 2)
+    slippage = round(min(18.5, base_slippage + (gjr_vol * 1000 * 0.35) + (recommended / size_cap) * 1.2), 2)
     funding_clamp = round(min(18.0, 4.0 + gjr_vol * 220), 2)
     convexity_risk = round((gjr_vol * math.sqrt(24)) * (1 + slippage / 10), 4)
+    fee_bps = 10.0
+    total_friction = round(fee_bps + slippage, 2)
     return RiskEnvelope(
         var_95=var_95,
         gjr_garch_vol=round(gjr_vol, 4),
@@ -277,6 +313,8 @@ def _risk_envelope(symbol: str, entry: float, stop_loss: float, h1: pd.DataFrame
         recommended_equity_allocation=round(recommended, 4),
         r_multiple=r_multiple,
         expectancy=expectancy,
+        fee_bps=fee_bps,
+        total_friction_bps=total_friction,
     )
 
 
@@ -302,19 +340,101 @@ def _build_hitl(symbol: str, regime_label: str, footprint: MarketFootprint, trig
     )
 
 
+def _probability_score(
+    *,
+    symbol: str,
+    bias: str,
+    regime_state: int,
+    confluence_total: int,
+    premium_discount: str,
+    sweep_confirmed: bool,
+    cvd: str,
+    displacement: float,
+    btc_headwind: bool,
+) -> int:
+    score = 18 + (confluence_total * 7)
+    if bias == "bullish":
+        score += 8
+    if regime_state == 2:
+        score += 12
+    elif regime_state == 3:
+        score += 4
+    else:
+        score -= 18
+    if premium_discount == "discount" and bias == "bullish":
+        score += 10
+    if premium_discount == "premium" and bias == "bearish":
+        score += 10
+    if sweep_confirmed:
+        score += 8
+    if "divergence" in cvd.lower():
+        score += 6
+    score += min(8, int(displacement * 2))
+    if btc_headwind and symbol not in CORE_SYMBOLS:
+        score -= 12
+    return max(5, min(95, int(score)))
+
+
+def _verdict(probability_score: int, bias: str) -> str:
+    if bias == "bullish" and probability_score >= 75:
+        return "STRONG BUY"
+    if probability_score >= 55:
+        return "NEUTRAL"
+    return "AVOID"
+
+
+def _primary_failure(
+    *,
+    bias: str,
+    regime_state: int,
+    premium_discount: str,
+    sweep_confirmed: bool,
+    cvd: str,
+    fvg_low: Optional[float],
+    btc_headwind: bool,
+) -> str:
+    if regime_state == 1:
+        return "Regime 1 consolidation is suppressing directional follow-through."
+    if bias == "bullish" and premium_discount != "discount":
+        return "Price is not in discount and has not reached the 0.705 OTE long entry zone."
+    if bias == "bullish" and not sweep_confirmed:
+        return "No confirmed liquidation sweep of retail stops, so the long trigger is incomplete."
+    if "divergence" not in cvd.lower():
+        return "CVD is not confirming the move, which raises exhaustion risk."
+    if fvg_low is None:
+        return "No actionable imbalance is open on the medium timeframe."
+    if btc_headwind and bias == "bullish":
+        return "BTC beta is bearish-to-stalled, which is suppressing altcoin probability."
+    return "Structure is informative, but the execution stack is not fully aligned."
+
+
+def _beta_headwind(reference_setup: Optional[SetupResponse]) -> bool:
+    if reference_setup is None:
+        return False
+    return reference_setup.context.hmm_state == 1 or reference_setup.bias == "bearish" or reference_setup.verdict == "AVOID"
+
+
+def _sort_key(item: SetupResponse) -> tuple[int, int, int, float]:
+    if item.symbol in BIG_THREE_ORDER:
+        return (0, BIG_THREE_ORDER[item.symbol], -item.probability_score, -item.risk.expectancy)
+    return (1, 99, -item.probability_score, -item.risk.expectancy)
+
+
 def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
     symbol = bundle.symbol
     regime_state, regime_label, confidence = infer_three_state_hmm(bundle.h1)
     ipda_cycle, range_low, range_high = _ipda_cycle(bundle.daily)
     bias = _institutional_bias(bundle.daily, bundle.h4)
     if bias == "neutral":
-        return None
+        bias = "bearish" if float(bundle.h4["Close"].iloc[-1]) < float(bundle.h4["Close"].iloc[-8]) else "bullish"
 
     ote, premium_discount = _fib_ote(bundle.h1, bias)
     fvg_low, fvg_high, structure_signal = _find_recent_fvg(bundle.m15, bias)
     ob_low, ob_high = _find_order_block(bundle.h4, bias)
     sweep_confirmed = _liquidity_sweep(bundle.m5, bias)
     cvd = _cvd_divergence(bundle.m5, bias)
+    choch_label, displacement = _detect_choch_and_displacement(bundle.m5, bias)
+    liquidity_zones = _magnetic_liquidity_zones(bundle.m5, bias)
     atr = _atr(bundle.m15)
     current_price = float(bundle.m5["Close"].iloc[-1])
     if bias == "bullish":
@@ -326,14 +446,17 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         stop_loss = (ob_high if ob_high is not None else entry_price + (atr * 1.2))
         take_profit = entry_price - max(stop_loss - entry_price, atr) * 2.5
 
-    if fvg_low is None or fvg_high is None:
-        return None
-
     status = "qualified"
     if regime_state == 1:
         status = "regime-blocked"
     elif bias == "bullish" and not sweep_confirmed:
         status = "await-sweep"
+    elif bias == "bullish" and premium_discount != "discount":
+        status = "premium-not-buy-zone"
+    elif bias == "bearish" and premium_discount != "premium":
+        status = "discount-not-short-zone"
+    elif fvg_low is None or fvg_high is None:
+        status = "imbalance-missing"
 
     entry_model, confirmation = _entry_model(bundle.m1, bundle.m5, bias, ote)
     footprint = MarketFootprint(
@@ -346,15 +469,16 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         fvg_atr_multiple=round(abs(fvg_high - fvg_low) / max(atr, 1e-9), 2),
         premium_discount_state=premium_discount,
         ote_level=round(ote, 4),
-        structure_signal=structure_signal,
+        structure_signal=f"{structure_signal} | {choch_label}",
         cvd_divergence=cvd,
         liquidation_sweep_confirmed=sweep_confirmed,
+        magnetic_liquidity_zones=liquidity_zones,
     )
     confluence = ConfluenceScore(
         trend_alignment=2,
-        fvg_mitigation=2 if footprint.fvg_atr_multiple and footprint.fvg_atr_multiple < 1.1 else 3,
+        fvg_mitigation=0 if fvg_low is None else 2 if footprint.fvg_atr_multiple and footprint.fvg_atr_multiple < 1.1 else 3,
         idm_sweep=3 if sweep_confirmed else 0,
-        discount_premium=3 if premium_discount == "discount" and bias == "bullish" or premium_discount == "premium" and bias == "bearish" else 1,
+        discount_premium=3 if premium_discount == "discount" and bias == "bullish" or premium_discount == "premium" and bias == "bearish" else 0,
         order_flow_alignment=2 if "divergence" in cvd.lower() else 1,
     )
     confluence.total_score = min(
@@ -386,6 +510,40 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         correlated_factors=ETF_CORRELATION_FACTORS,
     )
     hitl = _build_hitl(symbol, regime_label, footprint, trigger)
+    probability_score = _probability_score(
+        symbol=symbol,
+        bias=bias,
+        regime_state=regime_state,
+        confluence_total=confluence.total_score,
+        premium_discount=premium_discount,
+        sweep_confirmed=sweep_confirmed,
+        cvd=cvd,
+        displacement=displacement,
+        btc_headwind=False,
+    )
+    verdict = _verdict(probability_score, bias)
+    primary_failure = _primary_failure(
+        bias=bias,
+        regime_state=regime_state,
+        premium_discount=premium_discount,
+        sweep_confirmed=sweep_confirmed,
+        cvd=cvd,
+        fvg_low=fvg_low,
+        btc_headwind=False,
+    )
+    why_buy = (
+        f"Buy only if price trades back into discount and taps the 0.705 OTE near {ote:.4f}, "
+        f"then confirms with {entry_model} and respects the nearest OB."
+    )
+    why_sell_wait = (
+        primary_failure if verdict != "STRONG BUY"
+        else f"Wait if price reclaims premium or fails to hold the OB/FVG stack despite the current long thesis."
+    )
+    forensic_evidence = [
+        f"HTF OB sits between {ob_low:.4f} and {ob_high:.4f}." if ob_low is not None and ob_high is not None else "HTF order block is weak or already mitigated.",
+        f"Open FVG spans {fvg_low:.4f} to {fvg_high:.4f} and measures {footprint.fvg_atr_multiple} ATR." if fvg_low is not None and fvg_high is not None else "No open medium-timeframe FVG is acting as a price magnet.",
+        f"{choch_label}; displacement registered at {displacement} ATR on the lower timeframe.",
+    ]
     narrative = NarrativeDetail(
         reason=f"{entry_model} aligned with {structure_signal} and {'a fresh liquidity sweep' if sweep_confirmed else 'an unconfirmed sweep path'}.",
         location=f"{ipda_cycle}; working inside the nearest {'discount' if bias == 'bullish' else 'premium'} dealing range.",
@@ -409,6 +567,13 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         symbol=symbol,
         bias=bias,
         status=status,
+        probability_score=probability_score,
+        verdict=verdict,
+        primary_failure=primary_failure,
+        market_beta_note=None,
+        why_buy=why_buy,
+        why_sell_wait=why_sell_wait,
+        forensic_evidence=forensic_evidence,
         timestamp=ensure_utc(bundle.m5.index[-1].to_pydatetime()),
         entry=round(entry_price, 4),
         stop_loss=round(stop_loss, 4),
@@ -447,7 +612,20 @@ def run_scan(symbols: Iterable[str]) -> list[SetupResponse]:
         return []
     with ThreadPoolExecutor(max_workers=min(8, len(items))) as executor:
         results = [result for result in executor.map(_scan_symbol, items) if result is not None]
-    return sorted(results, key=lambda item: (item.confluence.total_score, item.risk.expectancy), reverse=True)
+    btc_setup = next((item for item in results if item.symbol == "BTC-USD"), None)
+    btc_headwind = _beta_headwind(btc_setup)
+    for item in results:
+        if btc_headwind and item.symbol not in CORE_SYMBOLS:
+            item.market_beta_note = "BTC is not in a clean bullish expansion regime, which is suppressing altcoin probability."
+            item.probability_score = max(5, item.probability_score - 12)
+            item.primary_failure = item.primary_failure or "BTC beta headwind is suppressing alt follow-through."
+            item.why_sell_wait = item.primary_failure
+            item.verdict = _verdict(item.probability_score, item.bias)
+        elif item.symbol == "BTC-USD":
+            item.market_beta_note = "BTC sets market beta for the rest of the crypto watch-list."
+        else:
+            item.market_beta_note = "BTC beta is supportive enough that this asset can trade on its own structure."
+    return sorted(results, key=_sort_key)
 
 
 def run_forensic_scan(symbol: str) -> Optional[ForensicReport]:

@@ -174,6 +174,17 @@ async def get_watchlist():
     return await cursor.to_list(length=100)
 
 
+@app.get("/watchlist/audit", response_model=ScanResult)
+async def get_watchlist_audit():
+    watchlist_symbols: list[str] = []
+    if watchlist_collection is not None:
+        watchlist_items = await watchlist_collection.find().sort("added_at", -1).to_list(length=100)
+        watchlist_symbols = [item["symbol"] for item in watchlist_items if item.get("symbol")]
+    symbols = ["BTC-USD", "ETH-USD", "SOL-USD", *watchlist_symbols]
+    normalized = list(dict.fromkeys(normalize_symbol(symbol, "CRYPTO") for symbol in symbols))
+    return ScanResult(opportunities=run_scan(normalized))
+
+
 @app.post("/watchlist")
 async def add_to_watchlist(item: WatchlistAdd):
     if watchlist_collection is None:

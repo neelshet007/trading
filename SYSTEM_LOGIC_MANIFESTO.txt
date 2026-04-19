@@ -1,102 +1,94 @@
 ================================================================================
-                    SYSTEM LOGIC MANIFESTO: QUANTITATIVE CORE
+                    SYSTEM LOGIC MANIFESTO: QUANTITATIVE MICROSTRUCTURE
 ================================================================================
-Generated: 2026-04-05
+Generated: 2026-04-19
+Version: 2.1.0-PREMIUM
 Role: Lead Quant Architect & Chief Risk Officer
-Objective: Definitive "Source of Truth" for SMC/ICT Heuristic Trading Engine
+Objective: Definitive "Source of Truth" for SMC/ICT Market Microstructure Engine
 
 --------------------------------------------------------------------------------
-1. ENTRY & CONFLUENCE LOGIC
+1. REGIME & TEMPORAL INTELLIGENCE
 --------------------------------------------------------------------------------
 
-[ Heuristic Hierarchy: The "Zoom" Protocol ]
-The engine operates on a multi-timeframe (MTF) resolution hierarchy to balance
-computational efficiency with precision.
-- Primary Anchor (HTF): 1D and 4H (or 1H for NSE/BSE) are used to establish 
-  Institutional Bias.
-- The "Zoom" Trigger: If the HTF hits a Point of Interest (POI) or extreme 
-  Discount/Premium levels, the engine triggers an on-demand LTF fetch.
-- Sniper Resolution: 1m resolution is used for "Sniper" entries (CHoCH detection) 
-  when hitting Deep Discount (<0.786 Fib). 10m/15m is used for trend confirmation 
-  in standard FVG displacement scenarios.
+[ HMM Regime Detection: The "State" Filter ]
+The engine classifies market conditions into three distinct Hidden Markov Model (HMM) 
+regimes to determine execution viability:
+- REGIME 1: Low Volatility Consolidation (Directional Block - DO NOT TRADE)
+- REGIME 2: Directional Expansion (High-Probability Trend Following)
+- REGIME 3: High Volatility Repricing (Mean Reversion / Sharp Liquidity Grabs)
 
-[ The SMC Signature ]
-The engine identifies institutional footprints via vectorized price action:
-- Fair Value Gap (FVG): A 3-candle sequence where Candle 1 High < Candle 3 Low 
-  (Bullish) or Candle 1 Low > Candle 3 High (Bearish). Validated by "Displacement" 
-  (large body size).
-- Order Block (OB): The last opposing candle before an impulsive BOS (Break of 
-  Structure). The engine targets the "Mean Threshold" (50%) of the OB body.
-- Liquidity Sweep: Price violating a structural High/Low followed by a swift 
-  rejection and candle close back inside the range (Stop Hunt detection).
-
-[ Indicator Weighting (The 8-Point Score) ]
-Confluence is weighted to favor structural SMC over lagging indicators:
-- Structural Shift (BOS/IDM Sweep): +3 Points (Critical)
-- FVG / Displacement: +2 Points
-- HTF Trend (50 SMA) Alignment: +1 Point
-- Technical (RSI/MACD/EMA) Alignment: +1 to +2 Points
-Logic Override: In "Chop" markets (Range < 3x ATR), technical filters are ignored, 
-and the engine defaults to "Neutral/No-Trade" to preserve capital.
+[ IPDA Cycle: The Interbank Framework ]
+The engine tracks the Interbank Price Delivery Algorithm (IPDA) across 20, 40, and 60 
+day lookbacks to establish Macro DNA:
+- Discount Delivery: Price trading below 20-40-60 day low (Accumulation Phase)
+- Premium Delivery: Price trading above 20-40-60 day high (Distribution Phase)
+- Rebalancing: Price internalizing within the range (Seeking Fair Value)
 
 --------------------------------------------------------------------------------
-2. RISK MANAGEMENT PROTOCOL
+2. SMC ARCHITECTURE & CONFLUENCE
 --------------------------------------------------------------------------------
 
-[ Capital & Risk Initialization ]
-- The engine consumes a dynamic "Initial Capital" (initial_capital_usd).
-- Risk is calculated on a "Fixed Dollar" basis per trade.
-- Standard Risk: 1% of current account equity per trade (Compound growth model).
+[ Structural Forensic Lookback ]
+- Lookback Window: Increased to 25 bars (Standardized for SMC formation)
+- Sensitivity: Minimum Confluence Score threshold recalibrated to 6.0/10.0 to
+  increase scanner capture without compromising structural validity.
 
-[ Position Sizing Formula ]
-Every trade is sized mathematically to ensure a hard stop-loss is never breached:
-   Units = (Account_Equity * Risk_Percentage) / abs(Entry_Price - Stop_Loss)
-- This ensures that if the SL is hit, the loss is EXACTLY 1% of the total 
-  capital (excluding slippage/commission).
+[ Technical Signature Detection ]
+- FVG (Fair Value Gap): vectorized 3-candle imbalance. Score weighted by ATR size.
+- Order Block (OB): The "Sponsorship" zone. Targets the last opposing candle 
+  prior to impulsive displacement.
+- Liquidity Sweeps: Mandatory identification of "Retail Stop Hunts" before any
+  high-conviction entry trigger.
+- CHoCH (Change of Character): Structural shift with "Displacement" filter to
+  separate noise from institutional flow.
 
-[ Margin & Leverage ]
-- Intraday (India/F&O): 5x Margin multiplier applied to equity capacity.
-- Crypto/FX: Dynamic leverage up to 20x, capped by the engine to ensure 
-  Liquidation Price is always outside the HTF swing structural range.
-- Protective Cap: No single trade can exceed 25% of account buying power to 
-  prevent concentration risk.
-
---------------------------------------------------------------------------------
-3. STOP LOSS & EXIT STRATEGY
---------------------------------------------------------------------------------
-
-[ Structural Stop Loss (The "Hard" Floor) ]
-The engine rejects fixed percentage stop losses.
-- Longs: SL placed 0.2% below the "Liquidity Sweep Wick" or the lowest point of 
-  the mitigate Order Block.
-- Shorts: SL placed 0.2% above the High of the swept range.
-
-[ Tiered Take-Profit (TP) ]
-- Standard Target: 1:3 Risk/Reward (RR) ratio based on opposing liquidity pools.
-- TP1 (Risk-Off): 50% position closed at 1:2 RR.
-- TP2 (Runner): Remaining 50% targets the "Weekly Liquidity Pool" (1:5+ RR).
-
-[ Trailing Logic: The "Safety" Switch ]
-- Break-Even (BE): SL is moved to Entry Price once price reaches 1:1.5 RR or 
-  after a secondary BOS (Trend Confirmation) occurs on the 15m timeframe.
-- Structural Trail: In a strong trend, the engine trails behind the "Prevailing 
-  1H Swing Pivot" to capture maximum "Moon-bag" extensions.
+[ Confluence Scoring Logic (The 10-Point Stack) ]
+1. HTF Trend Alignment: +2 Points
+2. FVG Mitigation / Imbalance: +2 to +3 Points
+3. IDM (Inducement) / Liquidity Sweep: +3 Points (Critical)
+4. Discount/Premium Alpha Alignment: +3 Points
+5. Order Flow / CVD Divergence: +1 to +2 Points
+Logic Override: If Score < 6.0, the asset is flagged as "Regime Neutral" and 
+removed from active watchlists.
 
 --------------------------------------------------------------------------------
-4. INTRADAY VS. SWING DIFFERENTIATION
+3. ENTRY MODELS & EXECUTION Snipers
 --------------------------------------------------------------------------------
 
-[ Intraday (Margin) ]
-- Classification: Triggered by 1m/5m "Zoom" confluence.
-- Time Constraint: US/Global (EOD), India (NSE Auto-Square off at 15:15 IST).
-- Logic: High-frequency scanning for rapid liquidity grabs.
+[ The Unicorn Model ]
+The apex entry mechanism. Occurs when a Bearish/Bullish Breaker reclaims 
+liquidity in alignment with a fresh LTF FVG.
 
-[ Swing (Delivery) ]
-- Classification: Triggered by 1H/4H anchor alignment without requiring LTF 
-  confirmation.
-- Time Constraint: No square-off; held for multi-day delivery until structural 
-  invalidation.
-- Logic: Macro-trend following using 1D/Weekly Order Blocks as primary fuel.
+[ Silver Bullet (Session Liquidity) ]
+Triggered during defined high-liquidity windows (AM/PM Session Sweeps). 
+Focuses on the "Run to Liquidity" on 5m/1m sniper resolutions.
+
+[ OTE (Optimal Trade Entry) ]
+Mathematical entry at the 0.705 Fibonacci retracement level within a 
+defined Discount range. High-conviction mean-reversion model.
+
+--------------------------------------------------------------------------------
+4. RISK MANAGEMENT & FRICTION MODELLING
+--------------------------------------------------------------------------------
+
+[ Mathematical Risk Envelope ]
+- GJR-GARCH Modelling: Dynamic volatility forecasting to adjust stop-loss width.
+- VaR95 (Value at Risk): Fixed position sizing based on 95% confidence intervals 
+  of historical return distributions.
+- No-Trade Filter: Engine rejects trades where "Expected Friction" (Slippage + 
+  Funding + Fees) exceeds 25% of the projected R-Multiple.
+
+[ Capital Protections ]
+- Fixed Risk: 1-2% Account Equity per trade.
+- Funding Clamp: Automatic position reduction if funding rates reach extreme 
+  thresholds (>0.01% per hour) to prevent carry-cost bleed.
+
+--------------------------------------------------------------------------------
+5. ASSET SPECIFIC BIAS (CRYPTO BETA)
+--------------------------------------------------------------------------------
+- Market Beta: BTC-USD serves as the primary "Beta Magnet." If BTC HMM Regime 
+  indicates "Low Volatility Consolidation," Altcoin scores are penalized by -12 
+  points to prevent liquidity-trap exposure.
 
 ================================================================================
                                 END OF MANIFESTO

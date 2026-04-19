@@ -18,7 +18,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_backtest_py",
-      "community": 5,
+      "community": 6,
       "norm_label": "backtest.py"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L26",
       "id": "backtest_download",
-      "community": 5,
+      "community": 6,
       "norm_label": "_download()"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L43",
       "id": "backtest_add_indicators",
-      "community": 5,
+      "community": 6,
       "norm_label": "add_indicators()"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L91",
       "id": "backtest_fib_pos",
-      "community": 5,
+      "community": 6,
       "norm_label": "fib_pos()"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L99",
       "id": "backtest_score_long",
-      "community": 5,
+      "community": 6,
       "norm_label": "score_long()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L145",
       "id": "backtest_score_short",
-      "community": 5,
+      "community": 6,
       "norm_label": "score_short()"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L194",
       "id": "backtest_run_smc_backtest",
-      "community": 5,
+      "community": 6,
       "norm_label": "run_smc_backtest()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L382",
       "id": "backtest_compute_stats",
-      "community": 5,
+      "community": 6,
       "norm_label": "_compute_stats()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L437",
       "id": "backtest_generate_excel_report",
-      "community": 5,
+      "community": 6,
       "norm_label": "generate_excel_report()"
     },
     {
@@ -98,7 +98,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L1",
-      "community": 5,
+      "community": 6,
       "norm_label": "smc + technical confluence blind backtester strategy:   smc core   : liquidity",
       "id": "backtest_rationale_1"
     },
@@ -107,7 +107,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L101",
-      "community": 5,
+      "community": 6,
       "norm_label": "return (score, reasons). max score = 8.",
       "id": "backtest_rationale_101"
     },
@@ -116,7 +116,7 @@
       "file_type": "rationale",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\backtest.py",
       "source_location": "L147",
-      "community": 5,
+      "community": 6,
       "norm_label": "return (score, reasons). max score = 8.",
       "id": "backtest_rationale_147"
     },
@@ -126,7 +126,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\database.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_database_py",
-      "community": 11,
+      "community": 5,
       "norm_label": "database.py"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\database.py",
       "source_location": "L18",
       "id": "database_create_client",
-      "community": 11,
+      "community": 5,
       "norm_label": "_create_client()"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\database.py",
       "source_location": "L36",
       "id": "database_db_updated_at",
-      "community": 1,
+      "community": 5,
       "norm_label": "db_updated_at()"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\database.py",
       "source_location": "L39",
       "id": "database_setup_db",
-      "community": 11,
+      "community": 5,
       "norm_label": "setup_db()"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_data_fetcher_py",
-      "community": 1,
+      "community": 4,
       "norm_label": "data_fetcher.py"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L69",
       "id": "data_fetcher_collect_market_quotes",
-      "community": 1,
+      "community": 4,
       "norm_label": "_collect_market_quotes()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L85",
       "id": "data_fetcher_clean_history",
-      "community": 1,
+      "community": 4,
       "norm_label": "_clean_history()"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L96",
       "id": "data_fetcher_download_history",
-      "community": 1,
+      "community": 4,
       "norm_label": "_download_history()"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L108",
       "id": "data_fetcher_download_csv_with_session",
-      "community": 1,
+      "community": 4,
       "norm_label": "_download_csv_with_session()"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L124",
       "id": "data_fetcher_normalize_company_name",
-      "community": 1,
+      "community": 4,
       "norm_label": "_normalize_company_name()"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L131",
       "id": "data_fetcher_is_supported_indian_symbol",
-      "community": 1,
+      "community": 4,
       "norm_label": "_is_supported_indian_symbol()"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L147",
       "id": "data_fetcher_normalize_symbol_records",
-      "community": 1,
+      "community": 4,
       "norm_label": "_normalize_symbol_records()"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L175",
       "id": "data_fetcher_get_nse_universe",
-      "community": 1,
+      "community": 4,
       "norm_label": "get_nse_universe()"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L199",
       "id": "data_fetcher_get_full_indian_universe",
-      "community": 1,
+      "community": 4,
       "norm_label": "get_full_indian_universe()"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L235",
       "id": "data_fetcher_polling_params",
-      "community": 1,
+      "community": 4,
       "norm_label": "_polling_params()"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L241",
       "id": "data_fetcher_latest_price",
-      "community": 1,
+      "community": 4,
       "norm_label": "_latest_price()"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L250",
       "id": "data_fetcher_build_quote_snapshot",
-      "community": 1,
+      "community": 4,
       "norm_label": "_build_quote_snapshot()"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L267",
       "id": "data_fetcher_validate_symbol",
-      "community": 1,
+      "community": 4,
       "norm_label": "validate_symbol()"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L290",
       "id": "data_fetcher_fetch_data",
-      "community": 1,
+      "community": 4,
       "norm_label": "fetch_data()"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L295",
       "id": "data_fetcher_fetch_multiple",
-      "community": 1,
+      "community": 4,
       "norm_label": "fetch_multiple()"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L306",
       "id": "data_fetcher_extract_symbol_frame",
-      "community": 1,
+      "community": 4,
       "norm_label": "_extract_symbol_frame()"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L324",
       "id": "data_fetcher_download_batch_history",
-      "community": 1,
+      "community": 4,
       "norm_label": "_download_batch_history()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L356",
       "id": "data_fetcher_ma_crossed",
-      "community": 1,
+      "community": 4,
       "norm_label": "_ma_crossed()"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L364",
       "id": "data_fetcher_build_india_metric",
-      "community": 1,
+      "community": 4,
       "norm_label": "_build_india_metric()"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L427",
       "id": "data_fetcher_scan_india_universe",
-      "community": 1,
+      "community": 4,
       "norm_label": "scan_india_universe()"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L466",
       "id": "data_fetcher_refresh_indian_ticker_universe",
-      "community": 1,
+      "community": 4,
       "norm_label": "refresh_indian_ticker_universe()"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L492",
       "id": "data_fetcher_update_market_data",
-      "community": 1,
+      "community": 5,
       "norm_label": "update_market_data()"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\data_fetcher.py",
       "source_location": "L524",
       "id": "data_fetcher_update_india_market_scan",
-      "community": 1,
+      "community": 5,
       "norm_label": "update_india_market_scan()"
     },
     {
@@ -378,194 +378,257 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
-      "community": 4,
+      "community": 1,
       "norm_label": "engine.py"
     },
     {
       "label": "TimeframeBundle",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L41",
+      "source_location": "L42",
       "id": "engine_timeframebundle",
-      "community": 3,
+      "community": 2,
       "norm_label": "timeframebundle"
     },
     {
       "label": "_history()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L51",
+      "source_location": "L52",
       "id": "engine_history",
-      "community": 4,
+      "community": 1,
       "norm_label": "_history()"
     },
     {
       "label": "fetch_symbol_bundle()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L62",
+      "source_location": "L63",
       "id": "engine_fetch_symbol_bundle",
-      "community": 4,
+      "community": 1,
       "norm_label": "fetch_symbol_bundle()"
     },
     {
       "label": "_atr()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L84",
+      "source_location": "L85",
       "id": "engine_atr",
-      "community": 4,
+      "community": 1,
       "norm_label": "_atr()"
     },
     {
       "label": "_returns()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L94",
+      "source_location": "L95",
       "id": "engine_returns",
-      "community": 4,
+      "community": 1,
       "norm_label": "_returns()"
     },
     {
       "label": "infer_three_state_hmm()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L98",
+      "source_location": "L99",
       "id": "engine_infer_three_state_hmm",
-      "community": 4,
+      "community": 1,
       "norm_label": "infer_three_state_hmm()"
     },
     {
       "label": "_ipda_cycle()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L123",
+      "source_location": "L124",
       "id": "engine_ipda_cycle",
-      "community": 4,
+      "community": 1,
       "norm_label": "_ipda_cycle()"
     },
     {
       "label": "_institutional_bias()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L140",
+      "source_location": "L141",
       "id": "engine_institutional_bias",
-      "community": 4,
+      "community": 1,
       "norm_label": "_institutional_bias()"
     },
     {
       "label": "_find_recent_fvg()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L152",
+      "source_location": "L153",
       "id": "engine_find_recent_fvg",
-      "community": 4,
+      "community": 1,
       "norm_label": "_find_recent_fvg()"
     },
     {
       "label": "_find_order_block()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L170",
+      "source_location": "L171",
       "id": "engine_find_order_block",
-      "community": 4,
+      "community": 1,
       "norm_label": "_find_order_block()"
+    },
+    {
+      "label": "_detect_choch_and_displacement()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L183",
+      "id": "engine_detect_choch_and_displacement",
+      "community": 1,
+      "norm_label": "_detect_choch_and_displacement()"
     },
     {
       "label": "_fib_ote()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L182",
+      "source_location": "L199",
       "id": "engine_fib_ote",
-      "community": 4,
+      "community": 1,
       "norm_label": "_fib_ote()"
     },
     {
       "label": "_cvd_divergence()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L196",
+      "source_location": "L213",
       "id": "engine_cvd_divergence",
-      "community": 4,
+      "community": 1,
       "norm_label": "_cvd_divergence()"
     },
     {
       "label": "_liquidity_sweep()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L213",
+      "source_location": "L230",
       "id": "engine_liquidity_sweep",
-      "community": 4,
+      "community": 1,
       "norm_label": "_liquidity_sweep()"
+    },
+    {
+      "label": "_magnetic_liquidity_zones()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L241",
+      "id": "engine_magnetic_liquidity_zones",
+      "community": 1,
+      "norm_label": "_magnetic_liquidity_zones()"
     },
     {
       "label": "_silver_bullet_window()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L224",
+      "source_location": "L258",
       "id": "engine_silver_bullet_window",
-      "community": 4,
+      "community": 1,
       "norm_label": "_silver_bullet_window()"
     },
     {
       "label": "_entry_model()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L229",
+      "source_location": "L263",
       "id": "engine_entry_model",
-      "community": 4,
+      "community": 1,
       "norm_label": "_entry_model()"
     },
     {
       "label": "_gjr_garch_volatility()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L242",
+      "source_location": "L276",
       "id": "engine_gjr_garch_volatility",
-      "community": 4,
+      "community": 1,
       "norm_label": "_gjr_garch_volatility()"
     },
     {
       "label": "_risk_envelope()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L257",
+      "source_location": "L291",
       "id": "engine_risk_envelope",
-      "community": 4,
+      "community": 1,
       "norm_label": "_risk_envelope()"
     },
     {
       "label": "_build_hitl()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L283",
+      "source_location": "L321",
       "id": "engine_build_hitl",
-      "community": 4,
+      "community": 1,
       "norm_label": "_build_hitl()"
+    },
+    {
+      "label": "_probability_score()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L343",
+      "id": "engine_probability_score",
+      "community": 1,
+      "norm_label": "_probability_score()"
+    },
+    {
+      "label": "_verdict()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L378",
+      "id": "engine_verdict",
+      "community": 1,
+      "norm_label": "_verdict()"
+    },
+    {
+      "label": "_primary_failure()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L386",
+      "id": "engine_primary_failure",
+      "community": 1,
+      "norm_label": "_primary_failure()"
+    },
+    {
+      "label": "_beta_headwind()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L411",
+      "id": "engine_beta_headwind",
+      "community": 0,
+      "norm_label": "_beta_headwind()"
+    },
+    {
+      "label": "_sort_key()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L417",
+      "id": "engine_sort_key",
+      "community": 1,
+      "norm_label": "_sort_key()"
     },
     {
       "label": "build_setup()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L305",
+      "source_location": "L423",
       "id": "engine_build_setup",
-      "community": 4,
+      "community": 1,
       "norm_label": "build_setup()"
     },
     {
       "label": "_scan_symbol()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L433",
+      "source_location": "L598",
       "id": "engine_scan_symbol",
-      "community": 4,
+      "community": 1,
       "norm_label": "_scan_symbol()"
     },
     {
       "label": "run_scan()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L444",
+      "source_location": "L609",
       "id": "engine_run_scan",
       "community": 0,
       "norm_label": "run_scan()"
@@ -574,9 +637,9 @@
       "label": "run_forensic_scan()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L453",
+      "source_location": "L631",
       "id": "engine_run_forensic_scan",
-      "community": 4,
+      "community": 2,
       "norm_label": "run_forensic_scan()"
     },
     {
@@ -585,7 +648,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\indicators.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_indicators_py",
-      "community": 6,
+      "community": 7,
       "norm_label": "indicators.py"
     },
     {
@@ -594,7 +657,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\indicators.py",
       "source_location": "L5",
       "id": "indicators_add_indicators",
-      "community": 6,
+      "community": 7,
       "norm_label": "add_indicators()"
     },
     {
@@ -711,7 +774,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
       "source_location": "L40",
       "id": "main_watchlistadd",
-      "community": 3,
+      "community": 2,
       "norm_label": "watchlistadd"
     },
     {
@@ -720,7 +783,7 @@
       "source_file": "",
       "source_location": "",
       "id": "basemodel",
-      "community": 3,
+      "community": 2,
       "norm_label": "basemodel"
     },
     {
@@ -747,7 +810,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
       "source_location": "L59",
       "id": "main_startup_event",
-      "community": 11,
+      "community": 5,
       "norm_label": "startup_event()"
     },
     {
@@ -819,7 +882,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
       "source_location": "L165",
       "id": "main_get_market_clock_endpoint",
-      "community": 0,
+      "community": 5,
       "norm_label": "get_market_clock_endpoint()"
     },
     {
@@ -832,10 +895,19 @@
       "norm_label": "get_watchlist()"
     },
     {
-      "label": "add_to_watchlist()",
+      "label": "get_watchlist_audit()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
       "source_location": "L178",
+      "id": "main_get_watchlist_audit",
+      "community": 0,
+      "norm_label": "get_watchlist_audit()"
+    },
+    {
+      "label": "add_to_watchlist()",
+      "file_type": "code",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
+      "source_location": "L189",
       "id": "main_add_to_watchlist",
       "community": 0,
       "norm_label": "add_to_watchlist()"
@@ -844,7 +916,7 @@
       "label": "remove_from_watchlist()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
-      "source_location": "L190",
+      "source_location": "L201",
       "id": "main_remove_from_watchlist",
       "community": 0,
       "norm_label": "remove_from_watchlist()"
@@ -853,18 +925,18 @@
       "label": "download_backtest()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
-      "source_location": "L198",
+      "source_location": "L209",
       "id": "main_download_backtest",
-      "community": 5,
+      "community": 6,
       "norm_label": "download_backtest()"
     },
     {
       "label": "get_backtest_stats()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
-      "source_location": "L220",
+      "source_location": "L231",
       "id": "main_get_backtest_stats",
-      "community": 0,
+      "community": 6,
       "norm_label": "get_backtest_stats()"
     },
     {
@@ -891,7 +963,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\market_utils.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_market_utils_py",
-      "community": 0,
+      "community": 5,
       "norm_label": "market_utils.py"
     },
     {
@@ -909,7 +981,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\market_utils.py",
       "source_location": "L26",
       "id": "market_utils_ist_now",
-      "community": 0,
+      "community": 5,
       "norm_label": "ist_now()"
     },
     {
@@ -918,7 +990,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\market_utils.py",
       "source_location": "L30",
       "id": "market_utils_ensure_utc",
-      "community": 0,
+      "community": 5,
       "norm_label": "ensure_utc()"
     },
     {
@@ -927,7 +999,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\market_utils.py",
       "source_location": "L38",
       "id": "market_utils_format_time_in_zone",
-      "community": 0,
+      "community": 5,
       "norm_label": "format_time_in_zone()"
     },
     {
@@ -936,7 +1008,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\market_utils.py",
       "source_location": "L43",
       "id": "market_utils_get_market_clock",
-      "community": 1,
+      "community": 5,
       "norm_label": "get_market_clock()"
     },
     {
@@ -954,7 +1026,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\market_utils.py",
       "source_location": "L66",
       "id": "market_utils_candidate_symbols",
-      "community": 1,
+      "community": 4,
       "norm_label": "candidate_symbols()"
     },
     {
@@ -963,7 +1035,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_models_py",
-      "community": 3,
+      "community": 2,
       "norm_label": "models.py"
     },
     {
@@ -972,7 +1044,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L5",
       "id": "models_probabilityinsight",
-      "community": 3,
+      "community": 2,
       "norm_label": "probabilityinsight"
     },
     {
@@ -981,7 +1053,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L10",
       "id": "models_analysissummary",
-      "community": 3,
+      "community": 2,
       "norm_label": "analysissummary"
     },
     {
@@ -990,7 +1062,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L20",
       "id": "models_signalmodel",
-      "community": 3,
+      "community": 2,
       "norm_label": "signalmodel"
     },
     {
@@ -999,7 +1071,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L45",
       "id": "models_marketsummarymodel",
-      "community": 3,
+      "community": 2,
       "norm_label": "marketsummarymodel"
     },
     {
@@ -1008,7 +1080,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L55",
       "id": "models_watchlistmodel",
-      "community": 3,
+      "community": 2,
       "norm_label": "watchlistmodel"
     },
     {
@@ -1017,7 +1089,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\models.py",
       "source_location": "L59",
       "id": "models_scoreresponse",
-      "community": 3,
+      "community": 2,
       "norm_label": "scoreresponse"
     },
     {
@@ -1026,7 +1098,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\scheduler.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_scheduler_py",
-      "community": 1,
+      "community": 5,
       "norm_label": "scheduler.py"
     },
     {
@@ -1035,7 +1107,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\scheduler.py",
       "source_location": "L22",
       "id": "scheduler_build_market_scan_payload",
-      "community": 1,
+      "community": 4,
       "norm_label": "_build_market_scan_payload()"
     },
     {
@@ -1044,7 +1116,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\scheduler.py",
       "source_location": "L54",
       "id": "scheduler_can_run_intraday_scan",
-      "community": 1,
+      "community": 5,
       "norm_label": "can_run_intraday_scan()"
     },
     {
@@ -1053,7 +1125,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\scheduler.py",
       "source_location": "L59",
       "id": "scheduler_process_signals",
-      "community": 1,
+      "community": 5,
       "norm_label": "process_signals()"
     },
     {
@@ -1062,7 +1134,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\scheduler.py",
       "source_location": "L107",
       "id": "scheduler_run_market_scan",
-      "community": 1,
+      "community": 5,
       "norm_label": "run_market_scan()"
     },
     {
@@ -1071,7 +1143,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\scheduler.py",
       "source_location": "L127",
       "id": "scheduler_start_scheduler",
-      "community": 1,
+      "community": 5,
       "norm_label": "start_scheduler()"
     },
     {
@@ -1080,7 +1152,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
-      "community": 3,
+      "community": 2,
       "norm_label": "schemas.py"
     },
     {
@@ -1089,7 +1161,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
       "source_location": "L9",
       "id": "schemas_regimecontext",
-      "community": 3,
+      "community": 2,
       "norm_label": "regimecontext"
     },
     {
@@ -1098,115 +1170,115 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
       "source_location": "L18",
       "id": "schemas_marketfootprint",
-      "community": 3,
+      "community": 2,
       "norm_label": "marketfootprint"
     },
     {
       "label": "TriggerPlan",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "id": "schemas_triggerplan",
-      "community": 3,
+      "community": 2,
       "norm_label": "triggerplan"
     },
     {
       "label": "RiskEnvelope",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "id": "schemas_riskenvelope",
-      "community": 3,
+      "community": 2,
       "norm_label": "riskenvelope"
     },
     {
       "label": "HumanLoopAssessment",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L57",
+      "source_location": "L60",
       "id": "schemas_humanloopassessment",
-      "community": 3,
+      "community": 2,
       "norm_label": "humanloopassessment"
     },
     {
       "label": "ConfluenceScore",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L63",
+      "source_location": "L66",
       "id": "schemas_confluencescore",
-      "community": 3,
+      "community": 2,
       "norm_label": "confluencescore"
     },
     {
       "label": "NarrativeDetail",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L72",
+      "source_location": "L75",
       "id": "schemas_narrativedetail",
-      "community": 3,
+      "community": 2,
       "norm_label": "narrativedetail"
     },
     {
       "label": "ChecklistDetails",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L81",
+      "source_location": "L84",
       "id": "schemas_checklistdetails",
-      "community": 3,
+      "community": 2,
       "norm_label": "checklistdetails"
     },
     {
       "label": "DerivativeStats",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L89",
+      "source_location": "L92",
       "id": "schemas_derivativestats",
-      "community": 3,
+      "community": 2,
       "norm_label": "derivativestats"
     },
     {
       "label": "ForensicReport",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L95",
+      "source_location": "L98",
       "id": "schemas_forensicreport",
-      "community": 3,
+      "community": 2,
       "norm_label": "forensicreport"
     },
     {
       "label": "SetupResponse",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L116",
+      "source_location": "L119",
       "id": "schemas_setupresponse",
-      "community": 3,
+      "community": 2,
       "norm_label": "setupresponse"
     },
     {
       "label": "ScanResult",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L141",
+      "source_location": "L151",
       "id": "schemas_scanresult",
-      "community": 3,
+      "community": 2,
       "norm_label": "scanresult"
     },
     {
       "label": "SegmentActivationResponse",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L145",
+      "source_location": "L155",
       "id": "schemas_segmentactivationresponse",
-      "community": 3,
+      "community": 2,
       "norm_label": "segmentactivationresponse"
     },
     {
       "label": "SegmentScanResponse",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L161",
+      "source_location": "L171",
       "id": "schemas_segmentscanresponse",
-      "community": 3,
+      "community": 2,
       "norm_label": "segmentscanresponse"
     },
     {
@@ -1215,7 +1287,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_signal_engine_py",
-      "community": 6,
+      "community": 7,
       "norm_label": "signal_engine.py"
     },
     {
@@ -1224,7 +1296,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L30",
       "id": "signal_engine_safe_ratio",
-      "community": 6,
+      "community": 7,
       "norm_label": "_safe_ratio()"
     },
     {
@@ -1233,7 +1305,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L34",
       "id": "signal_engine_latest_range",
-      "community": 6,
+      "community": 7,
       "norm_label": "_latest_range()"
     },
     {
@@ -1242,7 +1314,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L38",
       "id": "signal_engine_detect_patterns",
-      "community": 6,
+      "community": 7,
       "norm_label": "detect_patterns()"
     },
     {
@@ -1251,7 +1323,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L87",
       "id": "signal_engine_probability_label",
-      "community": 6,
+      "community": 7,
       "norm_label": "_probability_label()"
     },
     {
@@ -1260,7 +1332,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L95",
       "id": "signal_engine_build_analysis_summary",
-      "community": 6,
+      "community": 7,
       "norm_label": "_build_analysis_summary()"
     },
     {
@@ -1269,7 +1341,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L118",
       "id": "signal_engine_build_signal",
-      "community": 6,
+      "community": 7,
       "norm_label": "_build_signal()"
     },
     {
@@ -1278,7 +1350,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L172",
       "id": "signal_engine_add_pattern_scanners",
-      "community": 6,
+      "community": 7,
       "norm_label": "_add_pattern_scanners()"
     },
     {
@@ -1287,7 +1359,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\signal_engine.py",
       "source_location": "L199",
       "id": "signal_engine_analyze_stock",
-      "community": 6,
+      "community": 7,
       "norm_label": "analyze_stock()"
     },
     {
@@ -1305,7 +1377,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\strategies.py",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_backend_strategies_py",
-      "community": 9,
+      "community": 10,
       "norm_label": "strategies.py"
     },
     {
@@ -1314,7 +1386,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\strategies.py",
       "source_location": "L4",
       "id": "strategies_evaluate_trend_continuation",
-      "community": 9,
+      "community": 10,
       "norm_label": "evaluate_trend_continuation()"
     },
     {
@@ -1323,7 +1395,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\strategies.py",
       "source_location": "L30",
       "id": "strategies_evaluate_pullback",
-      "community": 9,
+      "community": 10,
       "norm_label": "evaluate_pullback()"
     },
     {
@@ -1332,7 +1404,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\strategies.py",
       "source_location": "L58",
       "id": "strategies_evaluate_breakout",
-      "community": 9,
+      "community": 10,
       "norm_label": "evaluate_breakout()"
     },
     {
@@ -1341,7 +1413,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\strategies.py",
       "source_location": "L86",
       "id": "strategies_evaluate_reversal",
-      "community": 9,
+      "community": 10,
       "norm_label": "evaluate_reversal()"
     },
     {
@@ -1404,7 +1476,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\page.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_page_tsx",
-      "community": 2,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -1413,7 +1485,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\market\\page.tsx",
       "source_location": "L19",
       "id": "page_loaddata",
-      "community": 2,
+      "community": 3,
       "norm_label": "loaddata()"
     },
     {
@@ -1422,7 +1494,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\page.tsx",
       "source_location": "L45",
       "id": "page_handlescan",
-      "community": 2,
+      "community": 3,
       "norm_label": "handlescan()"
     },
     {
@@ -1431,7 +1503,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\market\\page.tsx",
       "source_location": "L51",
       "id": "page_getstatusbadgeclasses",
-      "community": 2,
+      "community": 3,
       "norm_label": "getstatusbadgeclasses()"
     },
     {
@@ -1440,7 +1512,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\page.tsx",
       "source_location": "L93",
       "id": "page_formatdisplaytime",
-      "community": 2,
+      "community": 3,
       "norm_label": "formatdisplaytime()"
     },
     {
@@ -1449,7 +1521,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_backtest_page_tsx",
-      "community": 7,
+      "community": 8,
       "norm_label": "page.tsx"
     },
     {
@@ -1458,7 +1530,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
       "source_location": "L21",
       "id": "page_fmtnum",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtnum()"
     },
     {
@@ -1467,7 +1539,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
       "source_location": "L28",
       "id": "page_fmtint",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtint()"
     },
     {
@@ -1476,7 +1548,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
       "source_location": "L32",
       "id": "page_fmtpct",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtpct()"
     },
     {
@@ -1485,25 +1557,25 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
       "source_location": "L36",
       "id": "page_fmtusd",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtusd()"
     },
     {
       "label": "runBacktest()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
-      "source_location": "L100",
+      "source_location": "L151",
       "id": "page_runbacktest",
-      "community": 7,
+      "community": 8,
       "norm_label": "runbacktest()"
     },
     {
       "label": "downloadExcel()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
-      "source_location": "L122",
+      "source_location": "L173",
       "id": "page_downloadexcel",
-      "community": 7,
+      "community": 8,
       "norm_label": "downloadexcel()"
     },
     {
@@ -1512,7 +1584,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\market\\page.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_market_page_tsx",
-      "community": 2,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -1521,7 +1593,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\markets\\[segment]\\page.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_markets_segment_page_tsx",
-      "community": 8,
+      "community": 9,
       "norm_label": "page.tsx"
     },
     {
@@ -1530,7 +1602,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\markets\\[segment]\\page.tsx",
       "source_location": "L4",
       "id": "page_marketsegmentpage",
-      "community": 8,
+      "community": 9,
       "norm_label": "marketsegmentpage()"
     },
     {
@@ -1539,7 +1611,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\stock\\[symbol]\\page.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_stock_symbol_page_tsx",
-      "community": 2,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -1548,7 +1620,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\stock\\[symbol]\\page.tsx",
       "source_location": "L29",
       "id": "page_loadforensicdata",
-      "community": 2,
+      "community": 3,
       "norm_label": "loadforensicdata()"
     },
     {
@@ -1557,7 +1629,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\strategies\\page.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_strategies_page_tsx",
-      "community": 2,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -1566,7 +1638,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\strategies\\page.tsx",
       "source_location": "L23",
       "id": "page_loadsignals",
-      "community": 2,
+      "community": 3,
       "norm_label": "loadsignals()"
     },
     {
@@ -1575,7 +1647,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\strategies\\page.tsx",
       "source_location": "L33",
       "id": "page_rendersignalsforcategory",
-      "community": 2,
+      "community": 3,
       "norm_label": "rendersignalsforcategory()"
     },
     {
@@ -1591,7 +1663,7 @@
       "label": "WatchlistPage()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\watchlist\\page.tsx",
-      "source_location": "L14",
+      "source_location": "L21",
       "id": "page_watchlistpage",
       "community": 17,
       "norm_label": "watchlistpage()"
@@ -1719,7 +1791,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\markets\\MarketSegmentTerminal.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_components_markets_marketsegmentterminal_tsx",
-      "community": 2,
+      "community": 3,
       "norm_label": "marketsegmentterminal.tsx"
     },
     {
@@ -1728,7 +1800,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\markets\\MarketSegmentTerminal.tsx",
       "source_location": "L29",
       "id": "marketsegmentterminal_activate",
-      "community": 2,
+      "community": 3,
       "norm_label": "activate()"
     },
     {
@@ -1737,7 +1809,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\markets\\MarketSegmentTerminal.tsx",
       "source_location": "L73",
       "id": "marketsegmentterminal_load",
-      "community": 2,
+      "community": 3,
       "norm_label": "load()"
     },
     {
@@ -1746,7 +1818,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\markets\\MarketSegmentTerminal.tsx",
       "source_location": "L102",
       "id": "marketsegmentterminal_getstatusbadgeclasses",
-      "community": 2,
+      "community": 3,
       "norm_label": "getstatusbadgeclasses()"
     },
     {
@@ -1845,7 +1917,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\ui\\table.tsx",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_components_ui_table_tsx",
-      "community": 10,
+      "community": 11,
       "norm_label": "table.tsx"
     },
     {
@@ -1854,7 +1926,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\ui\\table.tsx",
       "source_location": "L7",
       "id": "table_table",
-      "community": 10,
+      "community": 11,
       "norm_label": "table()"
     },
     {
@@ -1863,7 +1935,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\ui\\table.tsx",
       "source_location": "L22",
       "id": "table_tableheader",
-      "community": 10,
+      "community": 11,
       "norm_label": "tableheader()"
     },
     {
@@ -1872,7 +1944,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\ui\\table.tsx",
       "source_location": "L32",
       "id": "table_tablebody",
-      "community": 10,
+      "community": 11,
       "norm_label": "tablebody()"
     },
     {
@@ -1881,7 +1953,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\components\\ui\\table.tsx",
       "source_location": "L46",
       "id": "table_cn",
-      "community": 10,
+      "community": 11,
       "norm_label": "cn()"
     },
     {
@@ -1926,7 +1998,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\api.ts",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_api_ts",
-      "community": 2,
+      "community": 3,
       "norm_label": "api.ts"
     },
     {
@@ -1935,7 +2007,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\api.ts",
       "source_location": "L3",
       "id": "api_getapiurl",
-      "community": 2,
+      "community": 3,
       "norm_label": "getapiurl()"
     },
     {
@@ -1944,7 +2016,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\api.ts",
       "source_location": "L7",
       "id": "api_buildapiurl",
-      "community": 2,
+      "community": 3,
       "norm_label": "buildapiurl()"
     },
     {
@@ -1953,7 +2025,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\api.ts",
       "source_location": "L11",
       "id": "api_fetcher",
-      "community": 2,
+      "community": 3,
       "norm_label": "fetcher()"
     },
     {
@@ -1962,61 +2034,61 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
-      "community": 2,
+      "community": 3,
       "norm_label": "market.ts"
     },
     {
       "label": "getStatusBadgeClasses()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L183",
+      "source_location": "L192",
       "id": "market_getstatusbadgeclasses",
-      "community": 2,
+      "community": 3,
       "norm_label": "getstatusbadgeclasses()"
     },
     {
       "label": "getSignalClasses()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L189",
+      "source_location": "L198",
       "id": "market_getsignalclasses",
-      "community": 2,
+      "community": 3,
       "norm_label": "getsignalclasses()"
     },
     {
       "label": "formatDisplayTime()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L195",
+      "source_location": "L204",
       "id": "market_formatdisplaytime",
-      "community": 2,
+      "community": 3,
       "norm_label": "formatdisplaytime()"
     },
     {
       "label": "formatDisplayDate()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L205",
+      "source_location": "L214",
       "id": "market_formatdisplaydate",
-      "community": 2,
+      "community": 3,
       "norm_label": "formatdisplaydate()"
     },
     {
       "label": "getWhyNow()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L215",
+      "source_location": "L224",
       "id": "market_getwhynow",
-      "community": 2,
+      "community": 3,
       "norm_label": "getwhynow()"
     },
     {
       "label": "get_tv_symbol()",
       "file_type": "code",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L220",
+      "source_location": "L229",
       "id": "market_get_tv_symbol",
-      "community": 2,
+      "community": 3,
       "norm_label": "get_tv_symbol()"
     },
     {
@@ -2025,7 +2097,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\segments.ts",
       "source_location": "L1",
       "id": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_segments_ts",
-      "community": 8,
+      "community": 9,
       "norm_label": "segments.ts"
     },
     {
@@ -2034,7 +2106,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\segments.ts",
       "source_location": "L25",
       "id": "segments_getsegmentdefinition",
-      "community": 8,
+      "community": 9,
       "norm_label": "getsegmentdefinition()"
     },
     {
@@ -2043,7 +2115,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\segments.ts",
       "source_location": "L29",
       "id": "segments_infersegmentfrommarket",
-      "community": 8,
+      "community": 9,
       "norm_label": "infersegmentfrommarket()"
     },
     {
@@ -2052,7 +2124,7 @@
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\segments.ts",
       "source_location": "L33",
       "id": "segments_infersegmentfromsymbol",
-      "community": 8,
+      "community": 9,
       "norm_label": "infersegmentfromsymbol()"
     },
     {
@@ -3108,7 +3180,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_timeframebundle",
@@ -3120,7 +3192,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L51",
+      "source_location": "L52",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_history",
@@ -3132,7 +3204,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L62",
+      "source_location": "L63",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_fetch_symbol_bundle",
@@ -3144,7 +3216,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L84",
+      "source_location": "L85",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_atr",
@@ -3156,7 +3228,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L94",
+      "source_location": "L95",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_returns",
@@ -3168,7 +3240,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L98",
+      "source_location": "L99",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_infer_three_state_hmm",
@@ -3180,7 +3252,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L123",
+      "source_location": "L124",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_ipda_cycle",
@@ -3192,7 +3264,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L140",
+      "source_location": "L141",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_institutional_bias",
@@ -3204,7 +3276,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L152",
+      "source_location": "L153",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_find_recent_fvg",
@@ -3216,7 +3288,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L170",
+      "source_location": "L171",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_find_order_block",
@@ -3228,7 +3300,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L182",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_detect_choch_and_displacement",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_detect_choch_and_displacement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L199",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_fib_ote",
@@ -3240,7 +3324,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L196",
+      "source_location": "L213",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_cvd_divergence",
@@ -3252,7 +3336,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L213",
+      "source_location": "L230",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_liquidity_sweep",
@@ -3264,7 +3348,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L224",
+      "source_location": "L241",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_magnetic_liquidity_zones",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_magnetic_liquidity_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L258",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_silver_bullet_window",
@@ -3276,7 +3372,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L229",
+      "source_location": "L263",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_entry_model",
@@ -3288,7 +3384,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L242",
+      "source_location": "L276",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_gjr_garch_volatility",
@@ -3300,7 +3396,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L257",
+      "source_location": "L291",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_risk_envelope",
@@ -3312,7 +3408,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L283",
+      "source_location": "L321",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_build_hitl",
@@ -3324,7 +3420,67 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L305",
+      "source_location": "L343",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_probability_score",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_probability_score",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L378",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_verdict",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_verdict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L386",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_primary_failure",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_primary_failure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L411",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_beta_headwind",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_beta_headwind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L417",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "_tgt": "engine_sort_key",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
+      "target": "engine_sort_key",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L423",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_build_setup",
@@ -3336,7 +3492,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L433",
+      "source_location": "L598",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_scan_symbol",
@@ -3348,7 +3504,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L444",
+      "source_location": "L609",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_run_scan",
@@ -3360,7 +3516,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L453",
+      "source_location": "L631",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_engine_py",
       "_tgt": "engine_run_forensic_scan",
@@ -3372,7 +3528,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0,
       "_src": "engine_fetch_symbol_bundle",
       "_tgt": "engine_timeframebundle",
@@ -3516,7 +3672,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0,
       "_src": "engine_fetch_symbol_bundle",
       "_tgt": "engine_history",
@@ -3528,7 +3684,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L434",
+      "source_location": "L599",
       "weight": 1.0,
       "_src": "engine_scan_symbol",
       "_tgt": "engine_fetch_symbol_bundle",
@@ -3540,7 +3696,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L454",
+      "source_location": "L632",
       "weight": 1.0,
       "_src": "engine_run_forensic_scan",
       "_tgt": "engine_fetch_symbol_bundle",
@@ -3552,7 +3708,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L318",
+      "source_location": "L438",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_atr",
@@ -3576,7 +3732,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L99",
+      "source_location": "L100",
       "weight": 1.0,
       "_src": "engine_infer_three_state_hmm",
       "_tgt": "engine_returns",
@@ -3588,7 +3744,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L243",
+      "source_location": "L277",
       "weight": 1.0,
       "_src": "engine_gjr_garch_volatility",
       "_tgt": "engine_returns",
@@ -3600,7 +3756,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L307",
+      "source_location": "L425",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_infer_three_state_hmm",
@@ -3612,7 +3768,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L308",
+      "source_location": "L426",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_ipda_cycle",
@@ -3624,7 +3780,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L309",
+      "source_location": "L427",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_institutional_bias",
@@ -3636,7 +3792,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L231",
+      "source_location": "L265",
       "weight": 1.0,
       "_src": "engine_entry_model",
       "_tgt": "engine_find_recent_fvg",
@@ -3648,7 +3804,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L314",
+      "source_location": "L432",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_find_recent_fvg",
@@ -3660,7 +3816,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L315",
+      "source_location": "L433",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_find_order_block",
@@ -3672,7 +3828,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L313",
+      "source_location": "L436",
+      "weight": 1.0,
+      "_src": "engine_build_setup",
+      "_tgt": "engine_detect_choch_and_displacement",
+      "source": "engine_detect_choch_and_displacement",
+      "target": "engine_build_setup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L431",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_fib_ote",
@@ -3684,7 +3852,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L317",
+      "source_location": "L435",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_cvd_divergence",
@@ -3696,7 +3864,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L230",
+      "source_location": "L264",
       "weight": 1.0,
       "_src": "engine_entry_model",
       "_tgt": "engine_liquidity_sweep",
@@ -3708,7 +3876,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L316",
+      "source_location": "L434",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_liquidity_sweep",
@@ -3720,7 +3888,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L232",
+      "source_location": "L437",
+      "weight": 1.0,
+      "_src": "engine_build_setup",
+      "_tgt": "engine_magnetic_liquidity_zones",
+      "source": "engine_magnetic_liquidity_zones",
+      "target": "engine_build_setup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L266",
       "weight": 1.0,
       "_src": "engine_entry_model",
       "_tgt": "engine_silver_bullet_window",
@@ -3744,7 +3924,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L338",
+      "source_location": "L461",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_entry_model",
@@ -3756,7 +3936,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L258",
+      "source_location": "L292",
       "weight": 1.0,
       "_src": "engine_risk_envelope",
       "_tgt": "engine_gjr_garch_volatility",
@@ -3768,7 +3948,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L368",
+      "source_location": "L492",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_risk_envelope",
@@ -3792,7 +3972,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L388",
+      "source_location": "L512",
       "weight": 1.0,
       "_src": "engine_build_setup",
       "_tgt": "engine_build_hitl",
@@ -3816,7 +3996,67 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L438",
+      "source_location": "L513",
+      "weight": 1.0,
+      "_src": "engine_build_setup",
+      "_tgt": "engine_probability_score",
+      "source": "engine_probability_score",
+      "target": "engine_build_setup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L524",
+      "weight": 1.0,
+      "_src": "engine_build_setup",
+      "_tgt": "engine_verdict",
+      "source": "engine_verdict",
+      "target": "engine_build_setup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L623",
+      "weight": 1.0,
+      "_src": "engine_run_scan",
+      "_tgt": "engine_verdict",
+      "source": "engine_verdict",
+      "target": "engine_run_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L525",
+      "weight": 1.0,
+      "_src": "engine_build_setup",
+      "_tgt": "engine_primary_failure",
+      "source": "engine_primary_failure",
+      "target": "engine_build_setup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L616",
+      "weight": 1.0,
+      "_src": "engine_run_scan",
+      "_tgt": "engine_beta_headwind",
+      "source": "engine_beta_headwind",
+      "target": "engine_run_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
+      "source_location": "L603",
       "weight": 1.0,
       "_src": "engine_scan_symbol",
       "_tgt": "engine_build_setup",
@@ -3828,7 +4068,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\engine.py",
-      "source_location": "L457",
+      "source_location": "L635",
       "weight": 1.0,
       "_src": "engine_run_forensic_scan",
       "_tgt": "engine_build_setup",
@@ -3943,6 +4183,18 @@
       "_tgt": "main_scan_market",
       "source": "engine_run_scan",
       "target": "main_scan_market"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
+      "source_location": "L185",
+      "weight": 1.0,
+      "_src": "main_get_watchlist_audit",
+      "_tgt": "engine_run_scan",
+      "source": "engine_run_scan",
+      "target": "main_get_watchlist_audit"
     },
     {
       "relation": "calls",
@@ -4575,6 +4827,18 @@
       "source_location": "L178",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
+      "_tgt": "main_get_watchlist_audit",
+      "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
+      "target": "main_get_watchlist_audit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
       "_tgt": "main_add_to_watchlist",
       "source": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
       "target": "main_add_to_watchlist",
@@ -4584,7 +4848,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
-      "source_location": "L190",
+      "source_location": "L201",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
       "_tgt": "main_remove_from_watchlist",
@@ -4596,7 +4860,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
-      "source_location": "L198",
+      "source_location": "L209",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
       "_tgt": "main_download_backtest",
@@ -4608,7 +4872,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
-      "source_location": "L220",
+      "source_location": "L231",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_main_py",
       "_tgt": "main_get_backtest_stats",
@@ -4788,7 +5052,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0,
       "_src": "schemas_triggerplan",
       "_tgt": "basemodel",
@@ -4800,7 +5064,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "_src": "schemas_riskenvelope",
       "_tgt": "basemodel",
@@ -4812,7 +5076,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L57",
+      "source_location": "L60",
       "weight": 1.0,
       "_src": "schemas_humanloopassessment",
       "_tgt": "basemodel",
@@ -4824,7 +5088,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L63",
+      "source_location": "L66",
       "weight": 1.0,
       "_src": "schemas_confluencescore",
       "_tgt": "basemodel",
@@ -4836,7 +5100,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L72",
+      "source_location": "L75",
       "weight": 1.0,
       "_src": "schemas_narrativedetail",
       "_tgt": "basemodel",
@@ -4848,7 +5112,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L81",
+      "source_location": "L84",
       "weight": 1.0,
       "_src": "schemas_checklistdetails",
       "_tgt": "basemodel",
@@ -4860,7 +5124,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L89",
+      "source_location": "L92",
       "weight": 1.0,
       "_src": "schemas_derivativestats",
       "_tgt": "basemodel",
@@ -4872,7 +5136,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L95",
+      "source_location": "L98",
       "weight": 1.0,
       "_src": "schemas_forensicreport",
       "_tgt": "basemodel",
@@ -4884,7 +5148,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L116",
+      "source_location": "L119",
       "weight": 1.0,
       "_src": "schemas_setupresponse",
       "_tgt": "basemodel",
@@ -4896,7 +5160,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L141",
+      "source_location": "L151",
       "weight": 1.0,
       "_src": "schemas_scanresult",
       "_tgt": "basemodel",
@@ -4908,7 +5172,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L145",
+      "source_location": "L155",
       "weight": 1.0,
       "_src": "schemas_segmentactivationresponse",
       "_tgt": "basemodel",
@@ -5131,6 +5395,30 @@
       "_tgt": "market_utils_get_market_clock",
       "source": "main_get_market_clock_endpoint",
       "target": "market_utils_get_market_clock"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
+      "source_location": "L184",
+      "weight": 1.0,
+      "_src": "main_get_watchlist_audit",
+      "_tgt": "market_utils_normalize_symbol",
+      "source": "main_get_watchlist_audit",
+      "target": "market_utils_normalize_symbol"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\main.py",
+      "source_location": "L185",
+      "weight": 1.0,
+      "_src": "main_get_watchlist_audit",
+      "_tgt": "schemas_scanresult",
+      "source": "main_get_watchlist_audit",
+      "target": "schemas_scanresult"
     },
     {
       "relation": "calls",
@@ -5592,7 +5880,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_triggerplan",
@@ -5604,7 +5892,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_riskenvelope",
@@ -5616,7 +5904,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L57",
+      "source_location": "L60",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_humanloopassessment",
@@ -5628,7 +5916,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L63",
+      "source_location": "L66",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_confluencescore",
@@ -5640,7 +5928,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L72",
+      "source_location": "L75",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_narrativedetail",
@@ -5652,7 +5940,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L81",
+      "source_location": "L84",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_checklistdetails",
@@ -5664,7 +5952,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L89",
+      "source_location": "L92",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_derivativestats",
@@ -5676,7 +5964,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L95",
+      "source_location": "L98",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_forensicreport",
@@ -5688,7 +5976,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L116",
+      "source_location": "L119",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_setupresponse",
@@ -5700,7 +5988,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L141",
+      "source_location": "L151",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_scanresult",
@@ -5712,7 +6000,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L145",
+      "source_location": "L155",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_segmentactivationresponse",
@@ -5724,7 +6012,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L161",
+      "source_location": "L171",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_backend_schemas_py",
       "_tgt": "schemas_segmentscanresponse",
@@ -5736,7 +6024,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\backend\\schemas.py",
-      "source_location": "L161",
+      "source_location": "L171",
       "weight": 1.0,
       "_src": "schemas_segmentscanresponse",
       "_tgt": "schemas_segmentactivationresponse",
@@ -6156,7 +6444,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
-      "source_location": "L100",
+      "source_location": "L151",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_backtest_page_tsx",
       "_tgt": "page_runbacktest",
@@ -6168,7 +6456,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\backtest\\page.tsx",
-      "source_location": "L122",
+      "source_location": "L173",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_backtest_page_tsx",
       "_tgt": "page_downloadexcel",
@@ -6264,7 +6552,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\app\\watchlist\\page.tsx",
-      "source_location": "L14",
+      "source_location": "L21",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_app_watchlist_page_tsx",
       "_tgt": "page_watchlistpage",
@@ -6600,7 +6888,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L183",
+      "source_location": "L192",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
       "_tgt": "market_getstatusbadgeclasses",
@@ -6612,7 +6900,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L189",
+      "source_location": "L198",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
       "_tgt": "market_getsignalclasses",
@@ -6624,7 +6912,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L195",
+      "source_location": "L204",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
       "_tgt": "market_formatdisplaytime",
@@ -6636,7 +6924,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L205",
+      "source_location": "L214",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
       "_tgt": "market_formatdisplaydate",
@@ -6648,7 +6936,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L215",
+      "source_location": "L224",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
       "_tgt": "market_getwhynow",
@@ -6660,7 +6948,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Web Devlopment\\NextJs\\finance\\trading-platform\\frontend\\src\\lib\\market.ts",
-      "source_location": "L220",
+      "source_location": "L229",
       "weight": 1.0,
       "_src": "c_web_devlopment_nextjs_finance_trading_platform_frontend_src_lib_market_ts",
       "_tgt": "market_get_tv_symbol",
