@@ -31,6 +31,41 @@ class MarketFootprint(BaseModel):
     magnetic_liquidity_zones: List[str] = []
 
 
+class ForensicSidePlan(BaseModel):
+    entry_range_low: float
+    entry_range_high: float
+    stop_loss: float
+    take_profit: float
+    model: str
+    rationale: str
+
+
+class ForensicLevels(BaseModel):
+    live_price: float
+    status: str
+    stale_after_seconds: int
+    data_age_seconds: float
+    last_updated_utc: datetime
+    short: ForensicSidePlan
+    long: ForensicSidePlan
+
+
+class AssetPulse(BaseModel):
+    symbol: str
+    status: str
+    last_updated_utc: Optional[datetime] = None
+    data_age_seconds: Optional[float] = None
+    live_price: Optional[float] = None
+
+
+class DataPulse(BaseModel):
+    status: str
+    warning: Optional[str] = None
+    stale_after_seconds: int
+    checked_at_utc: datetime
+    assets: List[AssetPulse] = []
+
+
 class TriggerPlan(BaseModel):
     entry_model: str
     entry_price: float
@@ -128,6 +163,10 @@ class SetupResponse(BaseModel):
     why_sell_wait: str
     forensic_evidence: List[str]
     timestamp: Optional[datetime] = None
+    live_price: Optional[float] = None
+    data_status: Optional[str] = None
+    data_age_seconds: Optional[float] = None
+    stale_after_seconds: Optional[int] = None
     entry: Optional[float] = None
     stop_loss: Optional[float] = None
     take_profit: Optional[float] = None
@@ -138,6 +177,7 @@ class SetupResponse(BaseModel):
     trigger: TriggerPlan
     risk: RiskEnvelope
     hitl: HumanLoopAssessment
+    forensic_levels: ForensicLevels
     narrative: Optional[NarrativeDetail] = None
     ob_top: Optional[float] = None
     ob_bottom: Optional[float] = None
@@ -171,4 +211,5 @@ class SegmentActivationResponse(BaseModel):
 class SegmentScanResponse(SegmentActivationResponse):
     backend_market: str
     market_clock: dict
+    data_pulse: DataPulse
     opportunities: List[SetupResponse]

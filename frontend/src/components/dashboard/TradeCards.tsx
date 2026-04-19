@@ -16,6 +16,7 @@ export function TradeCards({ setup }: TradeCardsProps) {
   const neonColor = isBullish ? 'text-emerald-400' : 'text-rose-400';
   const neonBg = isBullish ? 'bg-emerald-400/10' : 'bg-rose-400/10';
   const Icon = isBullish ? ArrowUpRight : ArrowDownRight;
+  const { live_price: livePrice, short, long } = setup.forensic_levels;
 
   return (
     <Card className="border-slate-800 bg-slate-950/80 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
@@ -31,8 +32,8 @@ export function TradeCards({ setup }: TradeCardsProps) {
       <CardContent>
         <div className="mt-2 grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <span className="text-xs uppercase tracking-wider text-slate-500">Trigger Entry</span>
-            <div className={`text-2xl font-mono font-bold ${neonColor}`}>{setup.trigger.entry_price.toFixed(2)}</div>
+            <span className="text-xs uppercase tracking-wider text-slate-500">Live Price</span>
+            <div className={`text-2xl font-mono font-bold ${neonColor}`}>{livePrice.toFixed(2)}</div>
           </div>
           <div className="space-y-1">
             <span className="text-xs uppercase tracking-wider text-slate-500">Expectancy</span>
@@ -45,16 +46,29 @@ export function TradeCards({ setup }: TradeCardsProps) {
 
         <div className="mt-6 grid grid-cols-3 divide-x divide-slate-800 rounded-lg border border-slate-800 bg-slate-900/50">
           <div className="p-3 text-center">
-            <div className="text-xs uppercase text-slate-500">Stop</div>
-            <div className="mt-1 font-mono text-sm font-semibold text-rose-400">{setup.trigger.stop_loss.toFixed(2)}</div>
+            <div className="text-xs uppercase text-slate-500">Short Range</div>
+            <div className="mt-1 font-mono text-sm font-semibold text-rose-400">{short.entry_range_low.toFixed(2)} - {short.entry_range_high.toFixed(2)}</div>
           </div>
           <div className="p-3 text-center">
-            <div className="text-xs uppercase text-slate-500">Target</div>
-            <div className="mt-1 font-mono text-sm font-semibold text-emerald-400">{setup.trigger.take_profit.toFixed(2)}</div>
+            <div className="text-xs uppercase text-slate-500">Long Range</div>
+            <div className="mt-1 font-mono text-sm font-semibold text-emerald-400">{long.entry_range_low.toFixed(2)} - {long.entry_range_high.toFixed(2)}</div>
           </div>
           <div className="p-3 text-center">
             <div className="text-xs uppercase text-slate-500">OTE</div>
             <div className="mt-1 font-mono text-sm font-semibold text-cyan-400">{setup.footprint.ote_level?.toFixed(2) || '--'}</div>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+            <div className="text-xs uppercase text-slate-500">Short SL / TP</div>
+            <div className="mt-1 font-mono text-sm text-rose-300">SL {short.stop_loss.toFixed(2)}</div>
+            <div className="mt-1 font-mono text-sm text-emerald-300">TP {short.take_profit.toFixed(2)}</div>
+          </div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+            <div className="text-xs uppercase text-slate-500">Long SL / TP</div>
+            <div className="mt-1 font-mono text-sm text-rose-300">SL {long.stop_loss.toFixed(2)}</div>
+            <div className="mt-1 font-mono text-sm text-emerald-300">TP {long.take_profit.toFixed(2)}</div>
           </div>
         </div>
 

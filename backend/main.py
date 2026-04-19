@@ -13,7 +13,7 @@ from pydantic import BaseModel
 
 from backtest import generate_excel_report, run_smc_backtest
 from database import setup_db, watchlist_collection
-from engine import run_forensic_scan, run_scan
+from engine import build_data_pulse, run_forensic_scan, run_scan
 from lazy_scanner import lazy_scanner
 from market_segments import MARKET_SEGMENTS, get_market_segment
 from market_utils import ensure_utc, get_market_clock, normalize_symbol, utc_now
@@ -89,12 +89,12 @@ async def start_segment_scanner(market: str):
 
 
 @app.get("/scan/{market_type}", response_model=SegmentScanResponse)
-async def scan_market_segment(market_type: str):
+async def scan_market_segment(market_type: str, force: bool = False):
     segment = get_market_segment(market_type)
     if not segment:
         raise HTTPException(status_code=404, detail="Unknown market segment")
     payload = _segment_payload(segment["slug"])
-    if _segment_needs_refresh(payload):
+    if force or _segment_needs_refresh(payload):
         payload = await lazy_scanner.refresh(segment["slug"])
     return payload
 
@@ -122,6 +122,7 @@ async def get_segment_forensic_scan(market_type: str, symbol: str):
 async def get_market_summary(market: Optional[str] = "CRYPTO"):
     payload = _segment_payload("crypto")
     opportunities = payload.get("opportunities", [])
+    data_pulse = payload.get("data_pulse") or build_data_pulse(opportunities)
     bullish_count = sum(1 for item in opportunities if item.get("bias") == "bullish")
     bearish_count = sum(1 for item in opportunities if item.get("bias") == "bearish")
     return {
@@ -134,6 +135,7 @@ async def get_market_summary(market: Optional[str] = "CRYPTO"):
             "ETH": "leader" if any(item.get("symbol") == "ETH-USD" for item in opportunities) else "neutral",
             "ALTS": "risk-on" if len(opportunities) >= 4 else "selective",
         },
+        "data_pulse": data_pulse,
         "timestamp": utc_now(),
         "timestamp_display_ist": get_market_clock("CRYPTO")["india_time"],
         "market_clock": get_market_clock("CRYPTO"),

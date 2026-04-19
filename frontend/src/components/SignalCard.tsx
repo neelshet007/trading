@@ -39,16 +39,18 @@ export function SignalCard({ signal }: { signal: SetupSignal }) {
 
           <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
-              <div className="flex items-center gap-1 text-slate-500"><Target className="h-4 w-4" /> Entry</div>
-              <div className="mt-1 font-semibold text-white">{signal.trigger.entry_price.toFixed(2)}</div>
+              <div className="flex items-center gap-1 text-slate-500"><Target className="h-4 w-4" /> Entry Range</div>
+              <div className="mt-1 font-semibold text-white">
+                {signal.forensic_levels.short.entry_range_low.toFixed(2)} - {signal.forensic_levels.short.entry_range_high.toFixed(2)}
+              </div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
               <div className="flex items-center gap-1 text-slate-500"><ShieldAlert className="h-4 w-4" /> VaR</div>
               <div className="mt-1 font-semibold text-white">{signal.risk.var_95.toFixed(2)}</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
-              <div className="flex items-center gap-1 text-slate-500"><Waves className="h-4 w-4" /> Slippage</div>
-              <div className="mt-1 font-semibold text-white">{signal.risk.total_friction_bps.toFixed(2)} bps</div>
+              <div className="flex items-center gap-1 text-slate-500"><Waves className="h-4 w-4" /> Live Price</div>
+              <div className="mt-1 font-semibold text-white">{signal.forensic_levels.live_price.toFixed(2)}</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
               <div className="text-slate-500">Updated</div>

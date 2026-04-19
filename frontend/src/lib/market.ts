@@ -36,6 +36,25 @@ export interface TriggerPlan {
   confirmation: string;
 }
 
+export interface ForensicSidePlan {
+  entry_range_low: number;
+  entry_range_high: number;
+  stop_loss: number;
+  take_profit: number;
+  model: string;
+  rationale: string;
+}
+
+export interface ForensicLevels {
+  live_price: number;
+  status: string;
+  stale_after_seconds: number;
+  data_age_seconds: number;
+  last_updated_utc: string;
+  short: ForensicSidePlan;
+  long: ForensicSidePlan;
+}
+
 export interface RiskEnvelope {
   var_95: number;
   gjr_garch_vol: number;
@@ -86,6 +105,10 @@ export interface SetupSignal {
   why_sell_wait: string;
   forensic_evidence: string[];
   timestamp?: string;
+  live_price?: number | null;
+  data_status?: string | null;
+  data_age_seconds?: number | null;
+  stale_after_seconds?: number | null;
   entry?: number;
   stop_loss?: number;
   take_profit?: number;
@@ -96,6 +119,7 @@ export interface SetupSignal {
   trigger: TriggerPlan;
   risk: RiskEnvelope;
   hitl: HumanLoopAssessment;
+  forensic_levels: ForensicLevels;
   narrative?: NarrativeDetail | null;
   ob_top?: number | null;
   ob_bottom?: number | null;
@@ -103,6 +127,22 @@ export interface SetupSignal {
   trade_classification?: string | null;
   margin_multiple?: string | null;
   auto_square_off?: string | null;
+}
+
+export interface AssetPulse {
+  symbol: string;
+  status: string;
+  last_updated_utc?: string | null;
+  data_age_seconds?: number | null;
+  live_price?: number | null;
+}
+
+export interface DataPulse {
+  status: string;
+  warning?: string | null;
+  stale_after_seconds: number;
+  checked_at_utc: string;
+  assets: AssetPulse[];
 }
 
 export interface SearchResult {
@@ -134,6 +174,7 @@ export interface MarketSummary {
   bullish_count: number;
   bearish_count: number;
   sector_strength: Record<string, string>;
+  data_pulse: DataPulse;
   timestamp: string;
   timestamp_display_ist?: string;
   market_clock: MarketClock;
@@ -155,6 +196,7 @@ export interface SegmentScanResponse {
   last_completed?: string;
   last_error?: string | null;
   market_clock: MarketClock;
+  data_pulse: DataPulse;
   opportunities: SetupSignal[];
 }
 
@@ -224,6 +266,10 @@ export function formatDisplayDate(timestamp?: string, timeZone = 'Asia/Kolkata')
 export function getWhyNow(signal?: SetupSignal | null) {
   if (!signal) return 'No qualified crypto catalyst is active right now.';
   return signal.narrative?.reason || signal.trigger.confirmation || signal.context.ipda_cycle;
+}
+
+export function isDataPulseStale(dataPulse?: DataPulse | null) {
+  return dataPulse?.status === 'STALE';
 }
 
 export function get_tv_symbol(ticker: string) {

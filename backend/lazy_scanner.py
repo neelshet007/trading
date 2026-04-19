@@ -106,6 +106,8 @@ class LazyScannerManager:
         config = get_market_segment(segment)
         if not config:
             raise ValueError(f"Unknown market segment: {segment}")
+        from engine import build_data_pulse
+
         self.reap_expired()
         with self._lock:
             state = self._state_for(config["slug"])
@@ -127,6 +129,7 @@ class LazyScannerManager:
                 "last_completed": state.last_completed,
                 "last_error": state.last_error,
                 "market_clock": get_market_clock(config["backend_market"], last_seen),
+                "data_pulse": build_data_pulse(state.opportunities),
                 "opportunities": state.opportunities,
             }
 

@@ -14,10 +14,14 @@ import yfinance as yf
 from indicators import add_indicators
 from market_utils import ensure_utc, utc_now
 from schemas import (
+    AssetPulse,
     ChecklistDetails,
     ConfluenceScore,
+    DataPulse,
     DerivativeStats,
     ForensicReport,
+    ForensicLevels,
+    ForensicSidePlan,
     HumanLoopAssessment,
     MarketFootprint,
     NarrativeDetail,
@@ -36,6 +40,7 @@ if hasattr(yf, "set_tz_cache_location"):
 CORE_SYMBOLS = {"BTC-USD", "ETH-USD", "SOL-USD"}
 BIG_THREE_ORDER = {"BTC-USD": 0, "ETH-USD": 1, "SOL-USD": 2}
 ETF_CORRELATION_FACTORS = ["DXY proxy softens risk appetite", "Spot ETF flow tone matters for BTC and ETH"]
+STALE_AFTER_SECONDS = 300
 
 
 @dataclass
@@ -260,6 +265,81 @@ def _silver_bullet_window(timestamp: pd.Timestamp) -> bool:
     return hour in {8, 9, 14, 15}
 
 
+def _build_forensic_side(bundle: TimeframeBundle, bias: str) -> ForensicSidePlan:
+    ote, _ = _fib_ote(bundle.h1, bias)
+    fvg_low, fvg_high, _ = _find_recent_fvg(bundle.m15, bias)
+    ob_low, ob_high = _find_order_block(bundle.h4, bias)
+    atr = _atr(bundle.m15)
+    model, rationale = _entry_model(bundle.m1, bundle.m5, bias, ote)
+
+    entry_candidates = [value for value in (ote, fvg_low, fvg_high) if value is not None]
+    if not entry_candidates:
+        latest_close = float(bundle.m5["Close"].iloc[-1])
+        entry_candidates = [latest_close]
+
+    entry_range_low = min(entry_candidates)
+    entry_range_high = max(entry_candidates)
+    if bias == "bullish":
+        stop_loss = ob_low if ob_low is not None else entry_range_low - (atr * 1.2)
+        take_profit = entry_range_high + max(entry_range_low - stop_loss, atr) * 2.5
+    else:
+        stop_loss = ob_high if ob_high is not None else entry_range_high + (atr * 1.2)
+        take_profit = entry_range_low - max(stop_loss - entry_range_high, atr) * 2.5
+
+    return ForensicSidePlan(
+        entry_range_low=round(entry_range_low, 4),
+        entry_range_high=round(entry_range_high, 4),
+        stop_loss=round(stop_loss, 4),
+        take_profit=round(take_profit, 4),
+        model=model,
+        rationale=rationale,
+    )
+
+
+def _asset_pulse(symbol: str, timestamp: datetime | None, live_price: float | None) -> AssetPulse:
+    if timestamp is None:
+        return AssetPulse(symbol=symbol, status="STALE", last_updated_utc=None, data_age_seconds=None, live_price=live_price)
+    age_seconds = max(0.0, (utc_now() - ensure_utc(timestamp)).total_seconds())
+    status = "ACTIVE" if age_seconds <= STALE_AFTER_SECONDS else "STALE"
+    return AssetPulse(
+        symbol=symbol,
+        status=status,
+        last_updated_utc=ensure_utc(timestamp),
+        data_age_seconds=round(age_seconds, 2),
+        live_price=live_price,
+    )
+
+
+def _item_value(item: Any, key: str) -> Any:
+    if isinstance(item, dict):
+        return item.get(key)
+    return getattr(item, key, None)
+
+
+def build_data_pulse(items: Iterable[Any]) -> DataPulse:
+    assets = []
+    for item in items:
+        symbol = _item_value(item, "symbol")
+        if symbol not in CORE_SYMBOLS:
+            continue
+        assets.append(_asset_pulse(symbol, _item_value(item, "timestamp"), _item_value(item, "live_price")))
+    if len(assets) < len(CORE_SYMBOLS):
+        seen = {asset.symbol for asset in assets}
+        for symbol in sorted(CORE_SYMBOLS):
+            if symbol not in seen:
+                assets.append(AssetPulse(symbol=symbol, status="STALE"))
+    assets = sorted(assets, key=lambda asset: BIG_THREE_ORDER.get(asset.symbol, 99))
+    is_stale = any(asset.status != "ACTIVE" for asset in assets)
+    warning = "STALE DATA: RECONNECTING" if is_stale else None
+    return DataPulse(
+        status="STALE" if is_stale else "ACTIVE",
+        warning=warning,
+        stale_after_seconds=STALE_AFTER_SECONDS,
+        checked_at_utc=utc_now(),
+        assets=assets,
+    )
+
+
 def _entry_model(m1: pd.DataFrame, m5: pd.DataFrame, bias: str, ote: float) -> tuple[str, str]:
     sweep = _liquidity_sweep(m5, bias)
     fvg_low, fvg_high, _ = _find_recent_fvg(m1 if len(m1) > 10 else m5, bias)
@@ -422,6 +502,10 @@ def _sort_key(item: SetupResponse) -> tuple[int, int, int, float]:
 
 def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
     symbol = bundle.symbol
+    last_timestamp = ensure_utc(bundle.m5.index[-1].to_pydatetime())
+    current_price = float(bundle.m5["Close"].iloc[-1])
+    data_age_seconds = max(0.0, (utc_now() - last_timestamp).total_seconds())
+    data_status = "ACTIVE" if data_age_seconds <= STALE_AFTER_SECONDS else "STALE"
     regime_state, regime_label, confidence = infer_three_state_hmm(bundle.h1)
     ipda_cycle, range_low, range_high = _ipda_cycle(bundle.daily)
     bias = _institutional_bias(bundle.daily, bundle.h4)
@@ -436,7 +520,6 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
     choch_label, displacement = _detect_choch_and_displacement(bundle.m5, bias)
     liquidity_zones = _magnetic_liquidity_zones(bundle.m5, bias)
     atr = _atr(bundle.m15)
-    current_price = float(bundle.m5["Close"].iloc[-1])
     if bias == "bullish":
         entry_price = min(current_price, ote)
         stop_loss = (ob_low if ob_low is not None else entry_price - (atr * 1.2))
@@ -459,6 +542,15 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         status = "imbalance-missing"
 
     entry_model, confirmation = _entry_model(bundle.m1, bundle.m5, bias, ote)
+    forensic_levels = ForensicLevels(
+        live_price=round(current_price, 4),
+        status=data_status,
+        stale_after_seconds=STALE_AFTER_SECONDS,
+        data_age_seconds=round(data_age_seconds, 2),
+        last_updated_utc=last_timestamp,
+        short=_build_forensic_side(bundle, "bearish"),
+        long=_build_forensic_side(bundle, "bullish"),
+    )
     footprint = MarketFootprint(
         htf_range_low=round(range_low, 4),
         htf_range_high=round(range_high, 4),
@@ -574,7 +666,11 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         why_buy=why_buy,
         why_sell_wait=why_sell_wait,
         forensic_evidence=forensic_evidence,
-        timestamp=ensure_utc(bundle.m5.index[-1].to_pydatetime()),
+        timestamp=last_timestamp,
+        live_price=round(current_price, 4),
+        data_status=data_status,
+        data_age_seconds=round(data_age_seconds, 2),
+        stale_after_seconds=STALE_AFTER_SECONDS,
         entry=round(entry_price, 4),
         stop_loss=round(stop_loss, 4),
         take_profit=round(take_profit, 4),
@@ -585,6 +681,7 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         trigger=trigger,
         risk=risk,
         hitl=hitl,
+        forensic_levels=forensic_levels,
         narrative=narrative,
         ob_top=round(ob_high, 4) if ob_high is not None else None,
         ob_bottom=round(ob_low, 4) if ob_low is not None else None,

@@ -8,7 +8,7 @@ import { fetcher } from '@/lib/api';
 import { SignalCard } from '@/components/SignalCard';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatDisplayDate, formatDisplayTime, getStatusBadgeClasses, type MarketSummary, type SegmentScanResponse } from '@/lib/market';
+import { formatDisplayDate, formatDisplayTime, getStatusBadgeClasses, isDataPulseStale, type MarketSummary, type SegmentScanResponse } from '@/lib/market';
 
 export default function MarketOverview() {
   const [summary, setSummary] = useState<MarketSummary | null>(null);
@@ -29,7 +29,8 @@ export default function MarketOverview() {
     void loadData();
   }, []);
 
-  const opportunities = segment?.opportunities || [];
+  const dataPulse = segment?.data_pulse || summary?.data_pulse;
+  const opportunities = isDataPulseStale(dataPulse) ? [] : segment?.opportunities || [];
   const leaders = opportunities.filter((item) => ['BTC-USD', 'ETH-USD', 'SOL-USD'].includes(item.symbol));
 
   return (
@@ -98,6 +99,15 @@ export default function MarketOverview() {
             </CardContent>
           </Card>
         </div>
+
+        {isDataPulseStale(dataPulse) ? (
+          <div className="mb-8 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-5 text-rose-100">
+            <div className="text-sm font-semibold tracking-[0.18em] text-rose-300">STALE DATA: RECONNECTING</div>
+            <div className="mt-2 text-sm text-rose-100/90">
+              The overview is intentionally blank until BTC, ETH, and SOL all return a fresh packet inside the 300-second tolerance.
+            </div>
+          </div>
+        ) : null}
 
         {loading ? (
           <div className="py-8 text-slate-400">Fetching crypto overview...</div>

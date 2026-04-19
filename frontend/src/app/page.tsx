@@ -12,7 +12,7 @@ import { TradeCards, type SetupData } from '@/components/dashboard/TradeCards';
 import { TerminalFeed } from '@/components/dashboard/TerminalFeed';
 import { MTFChart } from '@/components/dashboard/MTFChart';
 import { TradeDetailsModal } from '@/components/dashboard/TradeDetailsModal';
-import { formatDisplayDate, formatDisplayTime, getStatusBadgeClasses, type MarketSummary, type SegmentScanResponse } from '@/lib/market';
+import { formatDisplayDate, formatDisplayTime, getStatusBadgeClasses, isDataPulseStale, type MarketSummary, type SegmentScanResponse } from '@/lib/market';
 
 export default function Home() {
   const [segmentData, setSegmentData] = useState<SegmentScanResponse | null>(null);
@@ -30,7 +30,11 @@ export default function Home() {
     if (segment) {
       const payload = segment as SegmentScanResponse;
       setSegmentData(payload);
-      setSelectedSetup((current) => current || payload.opportunities[0] || null);
+      setSelectedSetup((current) => {
+        if (isDataPulseStale(payload.data_pulse)) return null;
+        const matching = current ? payload.opportunities.find((item) => item.symbol === current.symbol) : null;
+        return matching || payload.opportunities[0] || null;
+      });
     }
   };
 
@@ -45,18 +49,20 @@ export default function Home() {
   const handleScan = async () => {
     setIsScanning(true);
     try {
-      const response = await fetcher('/scan/crypto');
+      const response = await fetcher('/scan/crypto?force=true');
       if (response) {
         const payload = response as SegmentScanResponse;
         setSegmentData(payload);
-        setSelectedSetup(payload.opportunities[0] || null);
+        setSelectedSetup(isDataPulseStale(payload.data_pulse) ? null : payload.opportunities[0] || null);
       }
     } finally {
       setIsScanning(false);
     }
   };
 
-  const topSignals = segmentData?.opportunities || [];
+  const dataPulse = segmentData?.data_pulse || marketSummary?.data_pulse;
+  const isStale = isDataPulseStale(dataPulse);
+  const topSignals = isStale ? [] : segmentData?.opportunities || [];
   const marketClock = marketSummary?.market_clock;
 
   return (
@@ -95,6 +101,15 @@ export default function Home() {
           </div>
         </div>
 
+        {isStale ? (
+          <div className="mb-8 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-5 text-rose-100 shadow-[0_0_30px_rgba(244,63,94,0.12)]">
+            <div className="text-sm font-semibold tracking-[0.18em] text-rose-300">STALE DATA: RECONNECTING</div>
+            <div className="mt-2 text-sm text-rose-100/90">
+              The Yahoo pulse is older than {dataPulse?.stale_after_seconds || 300} seconds, so the dashboard has cleared all entries until a fresh BTC, ETH, and SOL packet arrives.
+            </div>
+          </div>
+        ) : null}
+
         <div className="mb-8 grid grid-cols-1 gap-6 xl:grid-cols-4">
           <div className="flex h-[600px] flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80 shadow-[0_0_15px_rgba(0,0,0,0.4)] xl:col-span-1">
             <div className="flex items-center justify-between border-b border-slate-800/80 bg-slate-900 p-4">
@@ -109,7 +124,7 @@ export default function Home() {
               </button>
             </div>
             <div className="flex-1 overflow-hidden">
-              <TerminalFeed setups={topSignals} onSelectSetup={setSelectedSetup} selectedSymbol={selectedSetup?.symbol} />
+              <TerminalFeed setups={topSignals} onSelectSetup={setSelectedSetup} selectedSymbol={selectedSetup?.symbol} dataPulse={dataPulse} />
             </div>
           </div>
 
