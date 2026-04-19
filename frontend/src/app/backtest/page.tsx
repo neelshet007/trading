@@ -81,7 +81,58 @@ interface BacktestResult {
   trades: TradeLog[];
 }
 
-const SYMBOLS = ['BTC-USD', 'ETH-USD', 'SOL-USD', 'RELIANCE.NS', 'NIFTY50'];
+const SYMBOLS = [
+  'BTC-USD',
+  'ETH-USD',
+  'SOL-USD',
+  'XRP-USD',
+  'BNB-USD',
+  'DOGE-USD',
+  'ADA-USD',
+  'TRX-USD',
+  'LINK-USD',
+  'AVAX-USD',
+  'DOT-USD',
+  'TON11419-USD',
+  'SHIB-USD',
+  'SUI20947-USD',
+  'HBAR-USD',
+  'BCH-USD',
+  'LTC-USD',
+  'XLM-USD',
+  'UNI7083-USD',
+  'APT21794-USD',
+  'NEAR-USD',
+  'PEPE24478-USD',
+  'ICP-USD',
+  'ETC-USD',
+  'AAVE-USD',
+  'MKR-USD',
+  'ARB11841-USD',
+  'OP-USD',
+  'INJ-USD',
+  'FIL-USD',
+  'ATOM-USD',
+  'RENDER-USD',
+  'TAO22974-USD',
+  'SEI23149-USD',
+  'FET-USD',
+  'VET-USD',
+  'RUNE-USD',
+  'TIA22861-USD',
+  'JUP29210-USD',
+  'WIF-USD',
+  'BONK-USD',
+  'ALGO-USD',
+  'IMX10603-USD',
+  'STX4847-USD',
+  'FLOW-USD',
+  'GRT6719-USD',
+  'EOS-USD',
+  'THETA-USD',
+  'SAND-USD',
+  'MANA-USD',
+];
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function BacktestPage() {
@@ -167,7 +218,7 @@ export default function BacktestPage() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <FlaskConical className="h-7 w-7 text-violet-400" />
-            <h1 className="text-3xl font-bold tracking-tight text-white">SMC / ICT Blind Backtester</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-white">Crypto SMC / ICT Backtester</h1>
             <Badge className="bg-violet-500/20 text-violet-300 border border-violet-500/30 text-xs tracking-widest hover:bg-violet-500/20">
               QUANTITATIVE ENGINE
             </Badge>

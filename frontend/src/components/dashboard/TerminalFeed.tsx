@@ -3,7 +3,7 @@
 import React from 'react';
 import { SetupData } from './TradeCards';
 import { Badge } from '@/components/ui/badge';
-import { Activity, Target } from 'lucide-react';
+import { Activity } from 'lucide-react';
 
 interface TerminalFeedProps {
   setups: SetupData[];
@@ -18,7 +18,7 @@ export function TerminalFeed({ setups, onSelectSetup, selectedSymbol }: Terminal
         <Activity className="h-4 w-4 text-cyan-400" />
         <h3 className="font-semibold text-white tracking-widest uppercase text-sm">Live Scanner Feed</h3>
         <Badge variant="outline" className="ml-auto bg-slate-900 text-cyan-400 border-cyan-500/30">
-          {setups.length} Matches
+          {setups.length} Qualified
         </Badge>
       </div>
 
@@ -43,7 +43,7 @@ export function TerminalFeed({ setups, onSelectSetup, selectedSymbol }: Terminal
                 >
                   <div className="flex flex-col">
                     <span className="font-bold text-slate-200">{setup.symbol}</span>
-                    <span className="text-xs text-slate-500 mt-0.5">Score: {setup.confluence.total_score}/10</span>
+                    <span className="text-xs text-slate-500 mt-0.5">{setup.context.hmm_regime}</span>
                   </div>
                   
                   <div className="flex flex-col items-end">
@@ -51,7 +51,7 @@ export function TerminalFeed({ setups, onSelectSetup, selectedSymbol }: Terminal
                       {isBullish ? 'LONG' : 'SHORT'}
                     </span>
                     <span className="text-xs text-slate-400 font-mono mt-0.5">
-                      @ {setup.entry.toFixed(2)}
+                      @ {setup.trigger.entry_price.toFixed(2)}
                     </span>
                   </div>
                 </button>

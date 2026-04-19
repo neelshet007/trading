@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { createChart, IChartApi, ISeriesApi, CandlestickSeries } from 'lightweight-charts';
+import { CandlestickSeries, type CandlestickData, createChart, type IChartApi, type UTCTimestamp } from 'lightweight-charts';
 import { SetupData } from './TradeCards';
 import { Card, CardContent } from '@/components/ui/card';
 import { Maximize2 } from 'lucide-react';
@@ -47,8 +47,8 @@ export function MTFChart({ setup }: MTFChartProps) {
     // Populate fake data just to visualize the SMC setup entry since we don't fetch historical candles yet
     if (setup) {
       const today = new Date();
-      const dummyData = [];
-      let currentPrice = setup.entry * 0.95; // start 5% lower
+      const dummyData: CandlestickData<UTCTimestamp>[] = [];
+      let currentPrice = setup.trigger.entry_price * 0.95;
       
       for (let i = 20; i > 0; i--) {
         const time = new Date(today);
@@ -56,12 +56,12 @@ export function MTFChart({ setup }: MTFChartProps) {
         
         // Random walk
         const open = currentPrice;
-        const close = currentPrice + (Math.random() - 0.5) * (setup.entry * 0.02);
-        const high = Math.max(open, close) + Math.random() * (setup.entry * 0.01);
-        const low = Math.min(open, close) - Math.random() * (setup.entry * 0.01);
+        const close = currentPrice + (Math.random() - 0.5) * (setup.trigger.entry_price * 0.02);
+        const high = Math.max(open, close) + Math.random() * (setup.trigger.entry_price * 0.01);
+        const low = Math.min(open, close) - Math.random() * (setup.trigger.entry_price * 0.01);
         
         dummyData.push({
-          time: time.getTime() / 1000 as any, // lightweight-charts expects UNIX timestamp or string
+          time: Math.floor(time.getTime() / 1000) as UTCTimestamp,
           open, high, low, close
         });
         
@@ -71,20 +71,18 @@ export function MTFChart({ setup }: MTFChartProps) {
       // Make sure the last candle is at entry!
       const lastTime = new Date(today);
       dummyData.push({
-        time: lastTime.getTime() / 1000 as any,
+        time: Math.floor(lastTime.getTime() / 1000) as UTCTimestamp,
         open: currentPrice,
-        high: Math.max(currentPrice, setup.entry) * 1.001,
-        low: Math.min(currentPrice, setup.entry) * 0.999,
-        close: setup.entry,
+        high: Math.max(currentPrice, setup.trigger.entry_price) * 1.001,
+        low: Math.min(currentPrice, setup.trigger.entry_price) * 0.999,
+        close: setup.trigger.entry_price,
       });
 
       series.setData(dummyData);
 
       // Plot the SMC levels using PriceLines
-      const isBullish = setup.bias === 'bullish';
-      
       series.createPriceLine({
-        price: setup.entry,
+        price: setup.trigger.entry_price,
         color: '#22d3ee', // Cyan
         lineWidth: 2,
         lineStyle: 2,
@@ -93,7 +91,7 @@ export function MTFChart({ setup }: MTFChartProps) {
       });
       
       series.createPriceLine({
-        price: setup.stop_loss,
+        price: setup.trigger.stop_loss,
         color: '#f43f5e', // Rose
         lineWidth: 1,
         lineStyle: 1,
@@ -102,7 +100,7 @@ export function MTFChart({ setup }: MTFChartProps) {
       });
       
       series.createPriceLine({
-        price: setup.take_profit,
+        price: setup.trigger.take_profit,
         color: '#10b981', // Emerald
         lineWidth: 1,
         lineStyle: 1,
@@ -160,7 +158,7 @@ export function MTFChart({ setup }: MTFChartProps) {
       <div className="flex items-center justify-between p-4 border-b border-slate-800/80">
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-bold text-white tracking-widest">{setup.symbol}</h2>
-          <span className="text-xs uppercase tracking-widest text-slate-500 bg-slate-900 px-2 py-1 rounded">1H / 5M SMC</span>
+          <span className="text-xs uppercase tracking-widest text-slate-500 bg-slate-900 px-2 py-1 rounded">{setup.trigger.execution_timeframe}</span>
         </div>
         <Maximize2 className="h-4 w-4 text-slate-500 cursor-pointer hover:text-white transition-colors" />
       </div>

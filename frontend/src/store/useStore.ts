@@ -13,9 +13,9 @@ interface AppState {
 }
 
 export const useStore = create<AppState>((set) => ({
-  market: 'USA',
+  market: 'CRYPTO',
   setMarket: (m) => set({ market: m }),
-  timeframe: 'intraday',
+  timeframe: 'swing',
   setTimeframe: (tf) => set({ timeframe: tf }),
   marketSummary: null,
   setMarketSummary: (summary) => set({ marketSummary: summary }),

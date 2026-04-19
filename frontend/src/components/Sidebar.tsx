@@ -1,9 +1,10 @@
 'use client';
 
-import { Activity, BarChart2, Compass, FlaskConical, Layers, List, Search } from 'lucide-react';
+import { Activity, Compass, FlaskConical, Radar, Search } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+
 import { fetcher } from '@/lib/api';
 import { Badge } from './ui/badge';
 import { type SearchResult } from '@/lib/market';
@@ -12,97 +13,89 @@ export function Sidebar() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (query.length < 2) {
-      const clearResults = window.setTimeout(() => setResults([]), 0);
-      return () => clearTimeout(clearResults);
-    }
-
-    const delay = window.setTimeout(async () => {
-      const res = await fetcher(`/api/search/suggestions?q=${encodeURIComponent(query)}`);
-      if (res) setResults(res as SearchResult[]);
-      else setResults([]);
-    }, 200);
-
-    return () => clearTimeout(delay);
-  }, [query]);
-
-  useEffect(() => {
-    if (query.length !== 0) {
+    if (query.length < 1) {
+      setResults([]);
       return;
     }
-    const clearResults = window.setTimeout(() => setResults([]), 0);
-    return () => clearTimeout(clearResults);
-  }, [query.length]);
+    const timer = window.setTimeout(async () => {
+      const res = await fetcher(`/api/search/suggestions?q=${encodeURIComponent(query)}`);
+      setResults((res as SearchResult[]) || []);
+    }, 180);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const handleSelect = (symbol: string) => {
     setQuery('');
     setResults([]);
-    router.push(`/stock/${symbol}`);
+    router.push(`/stock/${symbol}?market=CRYPTO`);
   };
+
+  const navClass = (href: string) =>
+    `flex items-center gap-3 rounded-md px-3 py-2 transition-colors ${
+      pathname === href ? 'bg-slate-800 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+    }`;
+
   return (
-    <div className="w-64 h-full bg-slate-900 border-r border-slate-800 flex flex-col p-4">
-      <div className="flex items-center gap-2 px-2 py-4 mb-4">
-        <Activity className="text-emerald-500 w-8 h-8" />
-        <h1 className="text-xl font-bold tracking-tight text-slate-100">Trade<span className="text-emerald-500">Intel</span></h1>
+    <div className="flex h-full w-64 flex-col border-r border-slate-800 bg-slate-900 p-4">
+      <div className="mb-4 flex items-center gap-2 px-2 py-4">
+        <Activity className="h-8 w-8 text-cyan-400" />
+        <h1 className="text-xl font-bold tracking-tight text-slate-100">
+          Crypto<span className="text-cyan-400">Intel</span>
+        </h1>
       </div>
-      
-      <div className="px-3 mb-6 relative">
+
+      <div className="relative mb-6 px-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-          <input 
-            type="text" 
-            placeholder="Search company (e.g. Infosys)" 
-            className="w-full bg-slate-800 border border-slate-700 text-sm text-white rounded-md pl-9 pr-3 py-2 outline-none focus:border-emerald-500 transition-colors"
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <input
+            type="text"
+            placeholder="Search BTC, ETH, SOL..."
+            className="w-full rounded-md border border-slate-700 bg-slate-800 py-2 pl-9 pr-3 text-sm text-white outline-none transition-colors focus:border-cyan-500"
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
           />
         </div>
         {results.length > 0 && (
-          <div className="absolute top-full left-3 right-3 mt-1 bg-slate-800 border border-slate-700 rounded-md shadow-xl z-50 overflow-hidden">
-            {results.map((r) => (
-              <div 
-                key={`${r.exchange}-${r.symbol}`} 
-                className="px-3 py-2 hover:bg-slate-700 cursor-pointer border-b border-slate-700/50 last:border-0"
-                onClick={() => handleSelect(r.fetch_symbol || r.symbol)}
+          <div className="absolute left-3 right-3 top-full z-50 mt-1 overflow-hidden rounded-md border border-slate-700 bg-slate-800 shadow-xl">
+            {results.map((result) => (
+              <button
+                key={result.symbol}
+                className="block w-full border-b border-slate-700/50 px-3 py-2 text-left last:border-0 hover:bg-slate-700"
+                onClick={() => handleSelect(result.fetch_symbol || result.symbol)}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <div className="text-white font-medium">{r.symbol}</div>
-                  <Badge variant="outline" className="border-slate-600 text-slate-300">{r.exchange || 'NSE'}</Badge>
+                  <div className="font-medium text-white">{result.symbol}</div>
+                  <Badge variant="outline" className="border-slate-600 text-slate-300">
+                    {result.exchange || 'CRYPTO'}
+                  </Badge>
                 </div>
-                <div className="text-xs text-slate-400 truncate">{r.name}</div>
-                <div className="mt-1 text-[11px] text-slate-500">{r.fetch_symbol || r.symbol}</div>
-              </div>
+                <div className="text-xs text-slate-400">{result.name}</div>
+              </button>
             ))}
           </div>
         )}
       </div>
-      
+
       <nav className="flex flex-col gap-2">
-        <Link href="/" className="flex items-center gap-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
-          <Compass className="w-5 h-5" />
+        <Link href="/" className={navClass('/')}>
+          <Compass className="h-5 w-5" />
           <span className="font-medium">Dashboard</span>
         </Link>
-        <Link href="/strategies" className="flex items-center gap-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
-          <Layers className="w-5 h-5" />
-          <span className="font-medium">Strategies</span>
+        <Link href="/markets/crypto" className={navClass('/markets/crypto')}>
+          <Radar className="h-5 w-5" />
+          <span className="font-medium">Crypto Terminal</span>
         </Link>
-        <Link href="/watchlist" className="flex items-center gap-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
-          <List className="w-5 h-5" />
-          <span className="font-medium">Watchlist</span>
-        </Link>
-        <Link href="/market" className="flex items-center gap-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
-          <BarChart2 className="w-5 h-5" />
-          <span className="font-medium">Market Overview</span>
-        </Link>
-        <Link href="/backtest" className="flex items-center gap-3 px-3 py-2 text-violet-400 hover:text-white hover:bg-violet-500/10 rounded-md transition-colors border border-transparent hover:border-violet-500/20">
-          <FlaskConical className="w-5 h-5" />
-          <span className="font-medium">SMC Backtester</span>
+        <Link href="/backtest" className={navClass('/backtest')}>
+          <FlaskConical className="h-5 w-5" />
+          <span className="font-medium">Backtest</span>
         </Link>
       </nav>
+
       <div className="mt-auto px-2 py-4 text-xs text-slate-500">
-        AI-driven market scanning. Not financial advice.
+        Crypto-only decision support. Human confirmation required before execution.
       </div>
     </div>
   );

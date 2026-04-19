@@ -1,7 +1,15 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+export function getApiUrl() {
+  return API_URL;
+}
+
+export function buildApiUrl(endpoint: string) {
+  return `${API_URL}${endpoint}`;
+}
+
 export async function fetcher(endpoint: string, options: RequestInit = {}) {
-  const url = `${API_URL}${endpoint}`;
+  const url = buildApiUrl(endpoint);
   try {
     const res = await fetch(url, {
       ...options,
