@@ -1,12 +1,12 @@
 # Graph Report - C:\Web Devlopment\NextJs\finance\trading-platform  (2026-04-22)
 
 ## Corpus Check
-- 49 files · ~44,412 words
+- 49 files · ~44,526 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 261 nodes · 458 edges · 38 communities detected
-- Extraction: 74% EXTRACTED · 26% INFERRED · 0% AMBIGUOUS · INFERRED: 120 edges (avg confidence: 0.75)
+- 261 nodes · 457 edges · 37 communities detected
+- Extraction: 73% EXTRACTED · 27% INFERRED · 0% AMBIGUOUS · INFERRED: 125 edges (avg confidence: 0.74)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -47,85 +47,84 @@
 - [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 35|Community 35]]
 - [[_COMMUNITY_Community 36|Community 36]]
-- [[_COMMUNITY_Community 37|Community 37]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `build_setup()` - 31 edges
-2. `TimeframeBundle` - 17 edges
+1. `build_setup()` - 32 edges
+2. `TimeframeBundle` - 24 edges
 3. `utc_now()` - 11 edges
 4. `ensure_utc()` - 11 edges
 5. `normalize_symbol()` - 11 edges
 6. `get_market_clock()` - 10 edges
-7. `_build_candidate()` - 9 edges
+7. `run_smc_backtest()` - 9 edges
 8. `LazyScannerManager` - 9 edges
 9. `_build_forensic_side()` - 8 edges
 10. `build_data_pulse()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `get_market_clock_endpoint()` --calls--> `get_market_clock()`  [INFERRED]
-  C:\Web Devlopment\NextJs\finance\trading-platform\backend\main.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\market_utils.py
-- `_entry_model()` --calls--> `_silver_bullet_window()`  [INFERRED]
+- `SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity` --uses--> `TimeframeBundle`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\backtest.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\engine.py
-- `_build_candidate()` --calls--> `infer_three_state_hmm()`  [INFERRED]
+- `Download OHLCV from yfinance and normalise column names + UTC index.` --uses--> `TimeframeBundle`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\backtest.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\engine.py
-- `_build_candidate()` --calls--> `_risk_envelope()`  [INFERRED]
+- `Slices pre-calculated dataframes using timestamps. O(1) complexity compared` --uses--> `TimeframeBundle`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\backtest.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\engine.py
-- `_build_candidate()` --calls--> `_verdict()`  [INFERRED]
+- `Optimized Backtest Loop:     - Pre-calculates resampled timeframes.     - Monkey` --uses--> `TimeframeBundle`  [INFERRED]
   C:\Web Devlopment\NextJs\finance\trading-platform\backend\backtest.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\engine.py
+- `validate_symbol()` --calls--> `candidate_symbols()`  [INFERRED]
+  C:\Web Devlopment\NextJs\finance\trading-platform\backend\data_fetcher.py → C:\Web Devlopment\NextJs\finance\trading-platform\backend\market_utils.py
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.12
-Nodes (30): _build_india_metric(), _build_quote_snapshot(), _clean_history(), _collect_market_quotes(), _download_batch_history(), _download_csv_with_session(), _download_history(), _extract_symbol_frame() (+22 more)
+Cohesion: 0.1
+Nodes (27): _asset_pulse(), _beta_headwind(), build_data_pulse(), _item_value(), run_forensic_scan(), run_scan(), LazyScannerManager, SegmentScanState (+19 more)
 
 ### Community 1 - "Community 1"
+Cohesion: 0.14
+Nodes (28): _build_india_metric(), _build_quote_snapshot(), _clean_history(), _collect_market_quotes(), _download_batch_history(), _download_csv_with_session(), _download_history(), _extract_symbol_frame() (+20 more)
+
+### Community 2 - "Community 2"
+Cohesion: 0.15
+Nodes (29): Optimized Backtest Loop:     - Pre-calculates resampled timeframes.     - Monkey, Slices pre-calculated dataframes using timestamps. O(1) complexity compared, BaseModel, TimeframeBundle, WatchlistAdd, AnalysisSummary, MarketSummaryModel, ProbabilityInsight (+21 more)
+
+### Community 3 - "Community 3"
 Cohesion: 0.08
 Nodes (13): buildApiUrl(), fetcher(), formatDisplayDate(), isDataPulseStale(), activate(), ensureTradingViewScript(), formatDisplayTime(), getStatusBadgeClasses() (+5 more)
 
-### Community 2 - "Community 2"
-Cohesion: 0.17
-Nodes (27): BaseModel, TimeframeBundle, WatchlistAdd, AnalysisSummary, MarketSummaryModel, ProbabilityInsight, ScoreResponse, SignalModel (+19 more)
-
-### Community 3 - "Community 3"
+### Community 4 - "Community 4"
 Cohesion: 0.16
 Nodes (26): _atr(), _build_forensic_side(), _build_hitl(), build_setup(), _cvd_divergence(), _detect_choch_and_displacement(), _direction_lock(), _entry_model() (+18 more)
 
-### Community 4 - "Community 4"
-Cohesion: 0.17
-Nodes (15): _asset_pulse(), build_data_pulse(), _item_value(), LazyScannerManager, SegmentScanState, get_market_summary(), scan_market_segment(), _segment_needs_refresh() (+7 more)
-
 ### Community 5 - "Community 5"
-Cohesion: 0.16
-Nodes (13): setup_db(), _beta_headwind(), run_forensic_scan(), run_scan(), add_to_watchlist(), get_forensic_scan(), get_market_clock_endpoint(), get_segment_forensic_scan() (+5 more)
+Cohesion: 0.23
+Nodes (11): _build_bar_bundle_optimized(), _compute_stats(), _download(), generate_excel_report(), SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity, Optimized Backtest Loop:     - Pre-calculates resampled timeframes.     - Monkey, Download OHLCV from yfinance and normalise column names + UTC index., Slices pre-calculated dataframes using timestamps. O(1) complexity compared (+3 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.27
-Nodes (12): add_indicators(), _build_candidate(), _compute_stats(), _cvd_divergence(), _download(), _entry_model(), generate_excel_report(), _nearest_fvg() (+4 more)
+Cohesion: 0.29
+Nodes (9): add_indicators(), _build_market_scan_payload(), _add_pattern_scanners(), analyze_stock(), _build_analysis_summary(), _build_signal(), detect_patterns(), _probability_label() (+1 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.33
-Nodes (8): add_indicators(), _add_pattern_scanners(), analyze_stock(), _build_analysis_summary(), _build_signal(), detect_patterns(), _probability_label(), _safe_ratio()
-
-### Community 8 - "Community 8"
 Cohesion: 0.29
 Nodes (0): 
 
-### Community 9 - "Community 9"
+### Community 8 - "Community 8"
 Cohesion: 0.33
 Nodes (2): MarketSegmentPage(), getSegmentDefinition()
 
-### Community 10 - "Community 10"
+### Community 9 - "Community 9"
 Cohesion: 0.6
 Nodes (3): _extract(), load_manifesto_config(), ManifestoConfig
+
+### Community 10 - "Community 10"
+Cohesion: 0.4
+Nodes (0): 
 
 ### Community 11 - "Community 11"
 Cohesion: 0.4
 Nodes (0): 
 
 ### Community 12 - "Community 12"
-Cohesion: 0.4
-Nodes (0): 
+Cohesion: 0.5
+Nodes (2): setup_db(), startup_event()
 
 ### Community 13 - "Community 13"
 Cohesion: 0.5
@@ -217,18 +216,14 @@ Nodes (0):
 
 ### Community 35 - "Community 35"
 Cohesion: 1.0
-Nodes (1): SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity
+Nodes (1): Return (score, reasons). Max score = 8.
 
 ### Community 36 - "Community 36"
 Cohesion: 1.0
 Nodes (1): Return (score, reasons). Max score = 8.
 
-### Community 37 - "Community 37"
-Cohesion: 1.0
-Nodes (1): Return (score, reasons). Max score = 8.
-
 ## Knowledge Gaps
-- **3 isolated node(s):** `SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity`, `Return (score, reasons). Max score = 8.`, `Return (score, reasons). Max score = 8.`
+- **4 isolated node(s):** `Slices pre-calculated dataframes using timestamps. O(1) complexity compared`, `Optimized Backtest Loop:     - Pre-calculates resampled timeframes.     - Monkey`, `Return (score, reasons). Max score = 8.`, `Return (score, reasons). Max score = 8.`
   These have ≤1 connection - possible missing edges or undocumented components.
 - **Thin community `Community 17`** (2 nodes): `layout.tsx`, `RootLayout()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -266,27 +261,25 @@ Nodes (1): Return (score, reasons). Max score = 8.
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 34`** (1 nodes): `useStore.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (1 nodes): `SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity`
+- **Thin community `Community 35`** (1 nodes): `Return (score, reasons). Max score = 8.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 36`** (1 nodes): `Return (score, reasons). Max score = 8.`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (1 nodes): `Return (score, reasons). Max score = 8.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `start_segment_scanner()` connect `Community 4` to `Community 1`, `Community 5`?**
-  _High betweenness centrality (0.147) - this node is a cross-community bridge._
-- **Why does `activate()` connect `Community 1` to `Community 4`?**
-  _High betweenness centrality (0.143) - this node is a cross-community bridge._
-- **Are the 9 inferred relationships involving `build_setup()` (e.g. with `ensure_utc()` and `utc_now()`) actually correct?**
-  _`build_setup()` has 9 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 15 inferred relationships involving `TimeframeBundle` (e.g. with `AssetPulse` and `ChecklistDetails`) actually correct?**
-  _`TimeframeBundle` has 15 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `start_segment_scanner()` connect `Community 0` to `Community 3`?**
+  _High betweenness centrality (0.148) - this node is a cross-community bridge._
+- **Why does `activate()` connect `Community 3` to `Community 0`?**
+  _High betweenness centrality (0.144) - this node is a cross-community bridge._
+- **Are the 10 inferred relationships involving `build_setup()` (e.g. with `run_smc_backtest()` and `ensure_utc()`) actually correct?**
+  _`build_setup()` has 10 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 22 inferred relationships involving `TimeframeBundle` (e.g. with `SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity` and `Download OHLCV from yfinance and normalise column names + UTC index.`) actually correct?**
+  _`TimeframeBundle` has 22 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 9 inferred relationships involving `utc_now()` (e.g. with `_asset_pulse()` and `build_data_pulse()`) actually correct?**
   _`utc_now()` has 9 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 7 inferred relationships involving `ensure_utc()` (e.g. with `_silver_bullet_window()` and `_asset_pulse()`) actually correct?**
   _`ensure_utc()` has 7 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `SMC + Technical Confluence Blind Backtester Strategy:   SMC Core   : Liquidity`, `Return (score, reasons). Max score = 8.`, `Return (score, reasons). Max score = 8.` to the rest of the system?**
-  _3 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `Slices pre-calculated dataframes using timestamps. O(1) complexity compared`, `Optimized Backtest Loop:     - Pre-calculates resampled timeframes.     - Monkey`, `Return (score, reasons). Max score = 8.` to the rest of the system?**
+  _4 weakly-connected nodes found - possible documentation gaps or missing edges._

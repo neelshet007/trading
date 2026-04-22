@@ -38,11 +38,24 @@ def _download(symbol: str, interval: str, start: str, end: str) -> Optional[pd.D
     """Download OHLCV from yfinance and normalise column names + UTC index."""
     try:
         # Check for 1h data limit (Yahoo limit is roughly last 730 days)
+        # Check for 1h data limit (Yahoo limit is roughly last 730 days)
         if interval == "1h":
             start_dt = pd.to_datetime(start)
+            if start_dt.tzinfo is None:
+                start_dt = start_dt.tz_localize("UTC")
+            
+            end_dt = pd.to_datetime(end)
+            if end_dt.tzinfo is None:
+                end_dt = end_dt.tz_localize("UTC")
+
             limit_dt = pd.Timestamp.now(tz="UTC") - pd.Timedelta(days=729)
+            
+            if end_dt < limit_dt:
+                logger.error("Requested range %s to %s is entirely outside the Yahoo 730-day 1h limit.", start, end)
+                return None
+
             if start_dt < limit_dt:
-                logger.warning("1h Yahoo data is only available for the last 730 days. Truncating start date.")
+                logger.warning("1h Yahoo data is only available for the last 730 days. Truncating start date %s to %s", start, limit_dt.date())
                 start = limit_dt.strftime("%Y-%m-%d")
 
         df = yf.download(
@@ -123,14 +136,29 @@ def run_smc_backtest(
     logger.info("Initializing high-speed manifesto backtest for %s", symbol)
     perf_start = time.time()
 
-    # 1. Download and Validaton
-    df_h1 = _download(symbol, "1h", start, end)
-    if df_h1 is None or len(df_h1) < _MIN_H1_BARS:
-        raise ValueError(f"Not enough 1H data for {symbol}. Yahoo H1 limit is last 730 days.")
+    # 1. Calculate Warmup Range
+    # We need extra history for indicators (HMM 50, IPDA 60, EMA 200)
+    requested_start = pd.to_datetime(start).tz_localize("UTC") if pd.to_datetime(start).tzinfo is None else pd.to_datetime(start)
+    warmup_days = 100 # Approx 2400 H1 bars and 100 Daily bars
+    warmup_start = (requested_start - pd.Timedelta(days=warmup_days)).strftime("%Y-%m-%d")
 
-    df_daily_orig = _download(symbol, "1d", start, end)
+    # 1. Download and Validation
+    # Note: We download from warmup_start, but ONLY generate trades after start
+    df_h1 = _download(symbol, "1h", warmup_start, end)
+    if df_h1 is None or len(df_h1) < _MIN_H1_BARS:
+        limit_date = (pd.Timestamp.now() - pd.Timedelta(days=729)).strftime("%Y-%m-%d")
+        if df_h1 is None:
+            raise ValueError(f"No 1H data found for {symbol} starting from {warmup_start}. Note: Yahoo Finance provides 1H data only from {limit_date} onwards.")
+        else:
+            raise ValueError(f"Not enough 1H data for {symbol} after warmup (found {len(df_h1)} bars, need {_MIN_H1_BARS}). Try a more recent range starting after {limit_date}.")
+
+    df_daily_orig = _download(symbol, "1d", warmup_start, end)
     if df_daily_orig is None or len(df_daily_orig) < _MIN_DAILY_BARS:
-        raise ValueError(f"No daily data for {symbol}.")
+        if df_daily_orig is None:
+            raise ValueError(f"No daily data found for {symbol} for the range {warmup_start} to {end}.")
+        else:
+            raise ValueError(f"Not enough daily data for {symbol} (found {len(df_daily_orig)} bars, need {_MIN_DAILY_BARS}). Range: {warmup_start} to {end}")
+
 
     # 2. Pre-Calculate Timeframes (Vectorized)
     logger.info("Pre-calculating timeframes and indicators...")
@@ -164,10 +192,15 @@ def run_smc_backtest(
 
     try:
         # Loop through H1 bars
-        # We start from the index where we have enough data
+        # We start from the index where we have enough data AND are past the requested start date
         for i in range(_MIN_H1_BARS, len(df_h1) - 1):
-            bar = df_h1.iloc[i]
             current_ts = df_h1.index[i]
+            
+            # Skip iterations before user's requested start date (this was just for warming up indicators)
+            if current_ts < requested_start:
+                continue
+
+            bar = df_h1.iloc[i]
 
             # ── Manage open trade ──────────────────────────────────────────────
             if current_trade is not None:
@@ -320,13 +353,42 @@ def run_smc_backtest(
 
 def _compute_stats(trades: list[dict], df_daily: pd.DataFrame, init: float) -> dict:
     completed = [t for t in trades if t.get("result") in {"Target Hit", "Stopped"}]
+    
+    # Safe Buy & Hold calculation
+    buy_hold_return = 0.0
+    if not df_daily.empty and len(df_daily) >= 2:
+        bnh_start = float(df_daily["Close"].iloc[0])
+        bnh_end = float(df_daily["Close"].iloc[-1])
+        if bnh_start > 0:
+            buy_hold_return = ((bnh_end - bnh_start) / bnh_start) * 100
+
+    # Initialize with default "zero" stats to prevent dashboard "dashes"
+    base_stats = {
+        "total_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown_pct": 0.0,
+        "max_drawdown_usd": 0.0,
+        "sharpe_ratio": 0.0,
+        "total_return_pct": 0.0,
+        "final_equity_usd": init,
+        "buy_hold_return_pct": round(buy_hold_return, 2),
+        "alpha_vs_bnh_pct": round(-buy_hold_return, 2),
+        "avg_confluence_score": 0.0,
+        "entry_model_breakdown": {},
+        "manifesto_threshold": MANIFESTO.confluence_threshold,
+        "manifesto_lookback_bars": MANIFESTO.structural_lookback_bars,
+    }
+
     if not completed:
-        return {
-            "error": (
-                "No completed trades found. "
-                "Try a wider date range or check that the manifesto filters are not too strict."
-            )
-        }
+        base_stats["message"] = (
+            "No qualified trades found in this period. "
+            f"The Manifesto confluence threshold is currently {MANIFESTO.confluence_threshold}. "
+            "Try a wider date range or a different symbol."
+        )
+        return base_stats
 
     wins = [t for t in completed if t["result"] == "Target Hit"]
     losses = [t for t in completed if t["result"] == "Stopped"]
@@ -354,10 +416,6 @@ def _compute_stats(trades: list[dict], df_daily: pd.DataFrame, init: float) -> d
     )
     final_equity = equity_curve[-1]
     total_return = ((final_equity - init) / init) * 100
-
-    bnh_start = float(df_daily["Close"].iloc[0])
-    bnh_end = float(df_daily["Close"].iloc[-1])
-    buy_hold_return = ((bnh_end - bnh_start) / bnh_start) * 100
 
     # Break down trades by entry model (manifesto models only)
     model_counts: dict[str, int] = {}

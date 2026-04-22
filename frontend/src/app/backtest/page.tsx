@@ -74,6 +74,7 @@ interface BacktestStats {
   wins: number;
   losses: number;
   avg_confluence_score?: number;
+  message?: string;
 }
 
 interface BacktestResult {
@@ -131,6 +132,7 @@ const SYMBOLS = [
   'EOS-USD',
   'THETA-USD',
   'SAND-USD',
+  'MANA-USD',
   'MANA-USD',
 ];
 
@@ -300,6 +302,13 @@ export default function BacktestPage() {
         )}
 
         {/* Stats Dashboard */}
+        {stats && stats.message && (
+          <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-300 flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 text-amber-400" />
+            <span>{stats.message}</span>
+          </div>
+        )}
+
         {stats && (
           <>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
