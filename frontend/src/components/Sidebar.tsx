@@ -17,7 +17,6 @@ export function Sidebar() {
 
   useEffect(() => {
     if (query.length < 1) {
-      setResults([]);
       return;
     }
     const timer = window.setTimeout(async () => {
@@ -31,6 +30,13 @@ export function Sidebar() {
     setQuery('');
     setResults([]);
     router.push(`/stock/${symbol}?market=CRYPTO`);
+  };
+
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
+    if (value.length < 1) {
+      setResults([]);
+    }
   };
 
   const navClass = (href: string) =>
@@ -55,7 +61,7 @@ export function Sidebar() {
             placeholder="Search BTC, ETH, SOL..."
             className="w-full rounded-md border border-slate-700 bg-slate-800 py-2 pl-9 pr-3 text-sm text-white outline-none transition-colors focus:border-cyan-500"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => handleQueryChange(e.target.value)}
           />
         </div>
         {results.length > 0 && (

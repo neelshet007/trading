@@ -230,6 +230,7 @@ async def download_backtest(
 
 
 @app.get("/backtest/stats")
+@app.get("/api/backtest")
 async def get_backtest_stats(
     symbol: str = "BTC-USD",
     start: str = "2023-01-01",

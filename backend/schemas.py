@@ -46,8 +46,8 @@ class ForensicLevels(BaseModel):
     stale_after_seconds: int
     data_age_seconds: float
     last_updated_utc: datetime
-    short: ForensicSidePlan
-    long: ForensicSidePlan
+    active_direction: str
+    trade_plan: ForensicSidePlan
 
 
 class AssetPulse(BaseModel):
@@ -154,6 +154,7 @@ class ForensicReport(BaseModel):
 class SetupResponse(BaseModel):
     symbol: str
     bias: str
+    direction_lock: str
     status: str
     probability_score: int
     verdict: str

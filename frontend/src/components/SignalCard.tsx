@@ -6,9 +6,11 @@ import { Badge } from './ui/badge';
 import { formatDisplayTime, getSignalClasses, getWhyNow, type SetupSignal } from '@/lib/market';
 
 export function SignalCard({ signal }: { signal: SetupSignal }) {
+  const tradePlan = signal.forensic_levels.trade_plan;
+  const href = `/stock/${signal.symbol}?market=CRYPTO&entry=${signal.trigger.entry_price}&sl=${signal.trigger.stop_loss}&tp=${signal.trigger.take_profit}`;
   return (
     <Card className="group border border-slate-800 bg-[linear-gradient(145deg,rgba(15,23,42,0.98),rgba(2,6,23,0.94))] shadow-[0_24px_80px_rgba(2,6,23,0.35)] transition-all hover:border-slate-600">
-      <Link href={`/stock/${signal.symbol}?market=CRYPTO`} className="block h-full">
+      <Link href={href} className="block h-full">
         <CardContent className="space-y-4 p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-2">
@@ -41,7 +43,7 @@ export function SignalCard({ signal }: { signal: SetupSignal }) {
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">
               <div className="flex items-center gap-1 text-slate-500"><Target className="h-4 w-4" /> Entry Range</div>
               <div className="mt-1 font-semibold text-white">
-                {signal.forensic_levels.short.entry_range_low.toFixed(2)} - {signal.forensic_levels.short.entry_range_high.toFixed(2)}
+                {tradePlan.entry_range_low.toFixed(2)} - {tradePlan.entry_range_high.toFixed(2)}
               </div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-slate-300">

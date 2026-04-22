@@ -4,6 +4,7 @@ import logging
 import math
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable, Optional
 
@@ -12,6 +13,7 @@ import pandas as pd
 import yfinance as yf
 
 from indicators import add_indicators
+from manifesto_config import load_manifesto_config
 from market_utils import ensure_utc, utc_now
 from schemas import (
     AssetPulse,
@@ -41,6 +43,7 @@ CORE_SYMBOLS = {"BTC-USD", "ETH-USD", "SOL-USD"}
 BIG_THREE_ORDER = {"BTC-USD": 0, "ETH-USD": 1, "SOL-USD": 2}
 ETF_CORRELATION_FACTORS = ["DXY proxy softens risk appetite", "Spot ETF flow tone matters for BTC and ETH"]
 STALE_AFTER_SECONDS = 300
+MANIFESTO = load_manifesto_config()
 
 
 @dataclass
@@ -104,13 +107,13 @@ def _returns(series: pd.Series) -> pd.Series:
 def infer_three_state_hmm(h1: pd.DataFrame) -> tuple[int, str, float]:
     returns = _returns(h1["Close"])
     if len(returns) < 50:
-        return 2, "Regime 2 - Directional Expansion", 0.5
+        return 2, MANIFESTO.regime_labels[2], 0.5
 
     vol = returns.rolling(24).std().dropna()
     trend = returns.rolling(24).mean().abs().dropna()
     shared = pd.concat([vol.rename("vol"), trend.rename("trend")], axis=1).dropna()
     if shared.empty:
-        return 2, "Regime 2 - Directional Expansion", 0.5
+        return 2, MANIFESTO.regime_labels[2], 0.5
 
     latest = shared.iloc[-1]
     vol_low, vol_high = shared["vol"].quantile([0.33, 0.66])
@@ -118,12 +121,12 @@ def infer_three_state_hmm(h1: pd.DataFrame) -> tuple[int, str, float]:
 
     if latest["vol"] <= vol_low and latest["trend"] <= trend_low:
         confidence = 1.0 - ((latest["vol"] / max(vol_low, 1e-9)) * 0.5)
-        return 1, "Regime 1 - Low Volatility Consolidation", round(float(min(max(confidence, 0.5), 0.95)), 2)
+        return 1, MANIFESTO.regime_labels[1], round(float(min(max(confidence, 0.5), 0.95)), 2)
     if latest["vol"] >= vol_high and latest["trend"] >= trend_high:
         confidence = min(0.95, 0.55 + ((latest["vol"] - vol_high) / max(vol_high, 1e-9)))
-        return 2, "Regime 2 - Directional Expansion", round(float(max(confidence, 0.55)), 2)
+        return 2, MANIFESTO.regime_labels[2], round(float(max(confidence, 0.55)), 2)
     confidence = min(0.92, 0.52 + ((latest["vol"] - vol_low) / max(vol_high - vol_low, 1e-9)) * 0.25)
-    return 3, "Regime 3 - High Volatility Repricing", round(float(max(confidence, 0.52)), 2)
+    return 3, MANIFESTO.regime_labels[3], round(float(max(confidence, 0.52)), 2)
 
 
 def _ipda_cycle(daily: pd.DataFrame) -> tuple[str, float, float]:
@@ -156,7 +159,7 @@ def _institutional_bias(daily: pd.DataFrame, h4: pd.DataFrame) -> str:
 
 
 def _find_recent_fvg(df: pd.DataFrame, bias: str) -> tuple[Optional[float], Optional[float], str]:
-    scan = df.tail(80).copy()
+    scan = df.tail(max(80, MANIFESTO.structural_lookback_bars * 3)).copy()
     if len(scan) < 5:
         return None, None, "No recent FVG"
 
@@ -174,7 +177,7 @@ def _find_recent_fvg(df: pd.DataFrame, bias: str) -> tuple[Optional[float], Opti
 
 
 def _find_order_block(df: pd.DataFrame, bias: str) -> tuple[Optional[float], Optional[float]]:
-    recent = df.tail(50)
+    recent = df.tail(max(50, MANIFESTO.structural_lookback_bars * 2))
     if bias == "bullish":
         candidates = recent[recent["Close"] < recent["Open"]]
     else:
@@ -186,11 +189,12 @@ def _find_order_block(df: pd.DataFrame, bias: str) -> tuple[Optional[float], Opt
 
 
 def _detect_choch_and_displacement(df: pd.DataFrame, bias: str) -> tuple[str, float]:
-    sample = df.tail(30).copy()
+    lookback = MANIFESTO.structural_lookback_bars
+    sample = df.tail(lookback + 8).copy()
     if len(sample) < 10:
         return "No clear CHoCH", 0.0
-    recent_high = float(sample["High"].iloc[-10:-1].max())
-    recent_low = float(sample["Low"].iloc[-10:-1].min())
+    recent_high = float(sample["High"].iloc[-lookback:-1].max())
+    recent_low = float(sample["Low"].iloc[-lookback:-1].min())
     close = float(sample["Close"].iloc[-1])
     atr_proxy = float((sample["High"] - sample["Low"]).tail(10).mean())
     displacement = abs(close - float(sample["Open"].iloc[-1])) / max(atr_proxy, 1e-9)
@@ -296,6 +300,10 @@ def _build_forensic_side(bundle: TimeframeBundle, bias: str) -> ForensicSidePlan
     )
 
 
+def _direction_lock(bias: str) -> str:
+    return "LONG" if bias == "bullish" else "SHORT"
+
+
 def _asset_pulse(symbol: str, timestamp: datetime | None, live_price: float | None) -> AssetPulse:
     if timestamp is None:
         return AssetPulse(symbol=symbol, status="STALE", last_updated_utc=None, data_age_seconds=None, live_price=live_price)
@@ -379,7 +387,8 @@ def _risk_envelope(symbol: str, entry: float, stop_loss: float, h1: pd.DataFrame
     size_cap = 0.15 if symbol == "ETH-USD" else 0.12 if symbol in CORE_SYMBOLS else 0.08
     recommended = max(0.02, min(size_cap, 0.02 + (confluence_total / 100)))
     slippage = round(min(18.5, base_slippage + (gjr_vol * 1000 * 0.35) + (recommended / size_cap) * 1.2), 2)
-    funding_clamp = round(min(18.0, 4.0 + gjr_vol * 220), 2)
+    funding_cap_bps = MANIFESTO.funding_clamp_hourly_pct * 100
+    funding_clamp = round(min(funding_cap_bps, 4.0 + gjr_vol * 220), 2)
     convexity_risk = round((gjr_vol * math.sqrt(24)) * (1 + slippage / 10), 4)
     fee_bps = 10.0
     total_friction = round(fee_bps + slippage, 2)
@@ -472,9 +481,12 @@ def _primary_failure(
     cvd: str,
     fvg_low: Optional[float],
     btc_headwind: bool,
+    confluence_total: int,
 ) -> str:
     if regime_state == 1:
         return "Regime 1 consolidation is suppressing directional follow-through."
+    if confluence_total < MANIFESTO.confluence_threshold:
+        return f"Manifesto confluence is below the {MANIFESTO.confluence_threshold:.1f}/{MANIFESTO.confluence_max_score:.1f} activation threshold."
     if bias == "bullish" and premium_discount != "discount":
         return "Price is not in discount and has not reached the 0.705 OTE long entry zone."
     if bias == "bullish" and not sweep_confirmed:
@@ -511,6 +523,8 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
     bias = _institutional_bias(bundle.daily, bundle.h4)
     if bias == "neutral":
         bias = "bearish" if float(bundle.h4["Close"].iloc[-1]) < float(bundle.h4["Close"].iloc[-8]) else "bullish"
+    direction_lock = _direction_lock(bias)
+    active_plan = _build_forensic_side(bundle, bias)
 
     ote, premium_discount = _fib_ote(bundle.h1, bias)
     fvg_low, fvg_high, structure_signal = _find_recent_fvg(bundle.m15, bias)
@@ -542,23 +556,14 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         status = "imbalance-missing"
 
     entry_model, confirmation = _entry_model(bundle.m1, bundle.m5, bias, ote)
-    forensic_levels = ForensicLevels(
-        live_price=round(current_price, 4),
-        status=data_status,
-        stale_after_seconds=STALE_AFTER_SECONDS,
-        data_age_seconds=round(data_age_seconds, 2),
-        last_updated_utc=last_timestamp,
-        short=_build_forensic_side(bundle, "bearish"),
-        long=_build_forensic_side(bundle, "bullish"),
-    )
     footprint = MarketFootprint(
         htf_range_low=round(range_low, 4),
         htf_range_high=round(range_high, 4),
         nearest_order_block_low=round(ob_low, 4) if ob_low is not None else None,
         nearest_order_block_high=round(ob_high, 4) if ob_high is not None else None,
-        nearest_fvg_low=round(fvg_low, 4),
-        nearest_fvg_high=round(fvg_high, 4),
-        fvg_atr_multiple=round(abs(fvg_high - fvg_low) / max(atr, 1e-9), 2),
+        nearest_fvg_low=round(fvg_low, 4) if fvg_low is not None else None,
+        nearest_fvg_high=round(fvg_high, 4) if fvg_high is not None else None,
+        fvg_atr_multiple=round(abs(fvg_high - fvg_low) / max(atr, 1e-9), 2) if fvg_low is not None and fvg_high is not None else None,
         premium_discount_state=premium_discount,
         ote_level=round(ote, 4),
         structure_signal=f"{structure_signal} | {choch_label}",
@@ -574,19 +579,30 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         order_flow_alignment=2 if "divergence" in cvd.lower() else 1,
     )
     confluence.total_score = min(
-        10,
+        int(MANIFESTO.confluence_max_score),
         confluence.trend_alignment
         + confluence.fvg_mitigation
         + confluence.idm_sweep
         + confluence.discount_premium
         + confluence.order_flow_alignment,
     )
+    if confluence.total_score < MANIFESTO.confluence_threshold:
+        status = "regime-neutral"
     risk = _risk_envelope(symbol, entry_price, stop_loss, bundle.h1, confluence.total_score)
+    forensic_levels = ForensicLevels(
+        live_price=round(current_price, 4),
+        status=data_status,
+        stale_after_seconds=STALE_AFTER_SECONDS,
+        data_age_seconds=round(data_age_seconds, 2),
+        last_updated_utc=last_timestamp,
+        active_direction=direction_lock,
+        trade_plan=active_plan,
+    )
     trigger = TriggerPlan(
         entry_model=entry_model,
         entry_price=round(entry_price, 4),
-        entry_band_low=round(min(entry_price, fvg_low, fvg_high), 4),
-        entry_band_high=round(max(entry_price, fvg_low, fvg_high), 4),
+        entry_band_low=round(min([value for value in (entry_price, fvg_low, fvg_high) if value is not None]), 4),
+        entry_band_high=round(max([value for value in (entry_price, fvg_low, fvg_high) if value is not None]), 4),
         stop_loss=round(stop_loss, 4),
         take_profit=round(take_profit, 4),
         invalidation="Abort if price closes through the OB boundary and fails to reclaim the swept liquidity pool.",
@@ -622,6 +638,7 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
         cvd=cvd,
         fvg_low=fvg_low,
         btc_headwind=False,
+        confluence_total=confluence.total_score,
     )
     why_buy = (
         f"Buy only if price trades back into discount and taps the 0.705 OTE near {ote:.4f}, "
@@ -658,6 +675,7 @@ def build_setup(bundle: TimeframeBundle) -> Optional[SetupResponse]:
     return SetupResponse(
         symbol=symbol,
         bias=bias,
+        direction_lock=direction_lock,
         status=status,
         probability_score=probability_score,
         verdict=verdict,

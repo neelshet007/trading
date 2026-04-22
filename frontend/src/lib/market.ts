@@ -51,8 +51,8 @@ export interface ForensicLevels {
   stale_after_seconds: number;
   data_age_seconds: number;
   last_updated_utc: string;
-  short: ForensicSidePlan;
-  long: ForensicSidePlan;
+  active_direction: string;
+  trade_plan: ForensicSidePlan;
 }
 
 export interface RiskEnvelope {
@@ -96,6 +96,7 @@ export interface NarrativeDetail {
 export interface SetupSignal {
   symbol: string;
   bias: 'bullish' | 'bearish' | 'neutral' | string;
+  direction_lock: 'LONG' | 'SHORT' | string;
   status: string;
   probability_score: number;
   verdict: string;
@@ -266,6 +267,10 @@ export function formatDisplayDate(timestamp?: string, timeZone = 'Asia/Kolkata')
 export function getWhyNow(signal?: SetupSignal | null) {
   if (!signal) return 'No qualified crypto catalyst is active right now.';
   return signal.narrative?.reason || signal.trigger.confirmation || signal.context.ipda_cycle;
+}
+
+export function getBaseAssetSymbol(symbol: string) {
+  return symbol.replace(/-USD$/i, '').replace(/[^A-Z0-9]/gi, '').toUpperCase();
 }
 
 export function isDataPulseStale(dataPulse?: DataPulse | null) {

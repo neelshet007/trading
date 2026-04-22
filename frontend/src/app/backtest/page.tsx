@@ -205,7 +205,7 @@ export default function BacktestPage() {
         { label: 'Final Equity',   value: fmtUsd(stats.final_equity_usd),        icon: TrendingUp,   color: 'cyan',    pos: (stats.final_equity_usd ?? 0) > 10000 },
         { label: 'BTC Buy & Hold', value: fmtPct(stats.buy_hold_return_pct, true), icon: BarChart3,  color: 'amber',   pos: (stats.buy_hold_return_pct ?? 0) > 0 },
         { label: 'SMC Alpha',      value: fmtPct(stats.alpha_vs_bnh_pct, true),  icon: Zap,          color: 'violet',  pos: (stats.alpha_vs_bnh_pct ?? 0) > 0  },
-        { label: 'Avg Score',      value: `${stats.avg_confluence_score ?? '—'}/8`,  icon: ShieldCheck,  color: 'amber',   pos: (stats.avg_confluence_score ?? 0) >= 6 },
+        { label: 'Avg Score',      value: `${stats.avg_confluence_score ?? '—'}/10`,  icon: ShieldCheck,  color: 'amber',   pos: (stats.avg_confluence_score ?? 0) >= 6 },
       ]
     : [];
 
